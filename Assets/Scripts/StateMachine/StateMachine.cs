@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class StateMachine<Estate> : MonoBehaviour where Estate : enum
+public abstract class StateMachine<Estate> : MonoBehaviour where Estate : struct, System.Enum
 {
-    protected Dictionary<Estate, BaseState<Estate>> States = new Dictionary<Estate, BasteState<Estate>>();
+    protected Dictionary<Estate, BaseState<Estate>> States = new Dictionary<Estate, BaseState<Estate>>();
 
-    protected BaseState<Estate> Current State;
+    protected BaseState<Estate> CurrentState;
 
     protected bool IsTransitioningState = false;
     
@@ -26,7 +26,7 @@ public abstract class StateMachine<Estate> : MonoBehaviour where Estate : enum
             CurrentState.UpdateState();
         } else if (!IsTransitioningState)
         {
-            TransitionToState(nextStateKey)
+            TransitionToState(nextStateKey);
         }
     }
 

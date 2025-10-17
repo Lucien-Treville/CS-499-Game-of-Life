@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseState<Estate> where Estate : enum
+public abstract class BaseState<Estate> where Estate : struct, System.Enum
 {
-
+    public Estate StateKey { get; private set; }
     public BaseState(Estate key)
     {
-        StateKey = key
+        StateKey = key;
     }
     public abstract void EnterState();
     public abstract void ExitState();

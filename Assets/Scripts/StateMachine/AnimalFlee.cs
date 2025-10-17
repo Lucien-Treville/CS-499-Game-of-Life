@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class AnimalFlee : BaseState<AnimalStateMachine.AnimalState>
 {
+    private AnimalStateMachine _machine;
+    public AnimalFlee(AnimalStateMachine machine, AnimalStateMachine.AnimalState key)
+        : base(key)
+    {
+        _machine = machine;
+    }
     public override void EnterState()
     {
 
@@ -19,8 +25,8 @@ public class AnimalFlee : BaseState<AnimalStateMachine.AnimalState>
 
     }
 
-    public override void Estate GetNextState()
+    public override AnimalStateMachine.AnimalState GetNextState()
     {
-
+        return StateKey;
     }
 }

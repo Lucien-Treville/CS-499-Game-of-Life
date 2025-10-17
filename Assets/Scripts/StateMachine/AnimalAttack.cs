@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class AnimalAttack : BaseState<AnimalStateMachine.AnimalState>
 {
+    private AnimalStateMachine _machine;
+    public AnimalAttack(AnimalStateMachine machine, AnimalStateMachine.AnimalState key)
+        : base(key)
+    {
+        _machine = machine;
+    }
     public override void EnterState()
     {
+        Debug.Log("Entering Attack");
 
     }
 
     public override void ExitState()
     {
+        Debug.Log("Exiting Attack");
 
     }
 
@@ -19,8 +27,9 @@ public class AnimalAttack : BaseState<AnimalStateMachine.AnimalState>
 
     }
 
-    public override void Estate GetNextState()
+    public override AnimalStateMachine.AnimalState GetNextState()
     {
-
+        // if no target in range, go to chase
+        return StateKey;
     }
 }

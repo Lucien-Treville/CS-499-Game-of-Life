@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class AnimalFindMate : BaseState<AnimalStateMachine.AnimalState>
 {
+    private AnimalStateMachine _machine;
+    public AnimalFindMate(AnimalStateMachine machine, AnimalStateMachine.AnimalState key)
+        : base(key)
+    {
+        _machine = machine;
+    }
     public override void EnterState()
     {
+        Debug.Log("Entering FindMate");
 
     }
 
     public override void ExitState()
     {
+        Debug.Log("Exiting FindMate");
 
     }
 
@@ -19,8 +27,11 @@ public class AnimalFindMate : BaseState<AnimalStateMachine.AnimalState>
 
     }
 
-    public override void Estate GetNextState()
+    public override AnimalStateMachine.AnimalState GetNextState()
     {
-        return null;
+        // if mate found, breed
+        // if fear, flee
+        // if hungry or thirsty, idle
+        return StateKey;
     }
 }
