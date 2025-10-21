@@ -4,5 +4,20 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Grasslands.unity
+    guid: d6b1e04032cef7a4abbb8a8f9b2680a6
+  - enabled: 1
+    path: Assets/Scenes/Tundra.unity
+    guid: 2d693469311fca743a6e04fefc9d07d4
+  - enabled: 1
+    path: Assets/Scenes/Swamp.unity
+    guid: 10ab8591d93083344b15f36e7fc5330c
+  - enabled: 1
+    path: Assets/Scenes/Desert.unity
+    guid: 1bcf7ed3b821b5442b754fbad6fa0868
+  - enabled: 1
+    path: Assets/Scenes/Blank.unity
+    guid: 7a157cff37ff57e4b9aae05a4c272bf6
   m_configObjects: {}
