@@ -11,6 +11,18 @@
 using UnityEngine;
 using Dist = MathNet.Numerics.Distributions; // For normal distribution sampling
 
+public struct PlantGenes
+{
+    public double[] nourishmentValueGene;
+    public double[] fruitingChanceGene; // (0-1], percent chance of producing fruit each update
+    public double[] sproutingChanceGene; // (0-1], percent chance of sprouting a new sapling when fruit is present)
+    public double[] heightGene;
+    public double[] healthGene;
+    public string specieName;
+}
+
+
+
 public class Plant : LivingEntity
 {
 
@@ -20,11 +32,9 @@ public class Plant : LivingEntity
     // plant attributes
     // genes
     public PlantSpecies speciesGeneData; // reference to ScriptableObject defining species attributes
-    public double[] nourishmentValueGene; 
-    public double[] fruitingChanceGene; // (0-1], percent chance of producing fruit each update
-    public double[] sproutingChanceGene; // (0-1], percent chance of sprouting a new sapling when fruit is present)
-    public double[] heightGene;
-    public double[] healthGene;
+    public PlantGenes genes;
+    public PlantGenes? parentGenes;
+
     // instance attributes
     public GrowthStage currentStage;
     public double nourishmentValue;
@@ -35,28 +45,38 @@ public class Plant : LivingEntity
     protected override void Start()
     {
         base.Start();
-        nourishmentValueGene   = speciesGeneData.nourishmentValueGene;
-        fruitingChanceGene     = speciesGeneData.fruitingChanceGene;
-        sproutingChanceGene    = speciesGeneData.sproutingChanceGene;
-        heightGene             = speciesGeneData.heightGene;
-        healthGene             = speciesGeneData.healthGene;
 
-        specieName          = speciesGeneData.specieName;
-        nourishmentValue    = Dist.Normal.Sample(nourishmentValueGene[0], nourishmentValueGene[1]);
-        fruitingChance      = Dist.Normal.Sample(fruitingChanceGene[0], fruitingChanceGene[1]);
-        sproutingChance     = Dist.Normal.Sample(sproutingChanceGene[0], sproutingChanceGene[1]);
-        height              = Dist.Normal.Sample(heightGene[0], heightGene[1]);
-        health              = Dist.Normal.Sample(healthGene[0], healthGene[1]);
-        currentStage        = GrowthStage.Sapling;
-        hasFruit            = false;
+        if (parentGenes.HasValue)
+            {
+            // Slightly mutate parent genes for child
+            genes = PlantGenesMutation(parentGenes.Value);
+            }
+        else
+            {
+            // First generation: use ScriptableObject
+            genes.nourishmentValueGene = speciesGeneData.nourishmentValueGene;
+            genes.fruitingChanceGene = speciesGeneData.fruitingChanceGene;
+            genes.sproutingChanceGene = speciesGeneData.sproutingChanceGene;
+            genes.heightGene = speciesGeneData.heightGene;
+            genes.healthGene = speciesGeneData.healthGene;
+            genes.specieName = speciesGeneData.specieName;
+            }
+
+        specieName = speciesGeneData.specieName;
+        nourishmentValue = Dist.Normal.Sample(genes.nourishmentValueGene[0], genes.nourishmentValueGene[1]);
+        fruitingChance = Dist.Normal.Sample(genes.fruitingChanceGene[0], genes.fruitingChanceGene[1]);
+        sproutingChance = Dist.Normal.Sample(genes.sproutingChanceGene[0], genes.sproutingChanceGene[1]);
+        height = Dist.Normal.Sample(genes.heightGene[0], genes.heightGene[1]);
+        health = Dist.Normal.Sample(genes.healthGene[0], genes.healthGene[1]);
+        currentStage = GrowthStage.Sapling;
+        hasFruit = false;
     }
 
-    public override void SimulateStep(float timeStep)
+    protected override void FixedUpdate()
     {
-        base.SimulateStep(timeStep);
+        base.FixedUpdate();
         Grow();
     }
-
 
     // override base class Grow method
     public override void Grow()
@@ -66,7 +86,7 @@ public class Plant : LivingEntity
         {
             case GrowthStage.Sapling:
                 // Check conditions to become a Young plant
-                if (age > 10)
+                if (age > 15)
                 {
                     currentStage = GrowthStage.Young;
                     height *= 1.5f; // random growth factor
@@ -75,7 +95,7 @@ public class Plant : LivingEntity
                 break;
             case GrowthStage.Young:
                 // Check conditions to become a Fruiting plant
-                if (age > 20)
+                if (age > 30)
                 {
                     currentStage = GrowthStage.Fruiting;
                     height *= 1.5f;
@@ -114,5 +134,24 @@ public class Plant : LivingEntity
     }
 
 
+    public PlantGenes PlantGenesMutation(PlantGenes parent)
+    {
+        PlantGenes mutatedGenes = parent;
+
+        // Apply small random mutations to each gene
+        mutatedGenes.nourishmentValueGene[0] += Random.Range(-0.5f, 0.5f);
+        mutatedGenes.fruitingChanceGene[0] += Random.Range(-0.05f, 0.05f);
+        mutatedGenes.sproutingChanceGene[0] += Random.Range(-0.05f, 0.05f);
+        mutatedGenes.heightGene[0] += Random.Range(-0.5f, 0.5f);
+        mutatedGenes.healthGene[0] += Random.Range(-0.5f, 0.5f);
+
+        mutatedGenes.nourishmentValueGene[1] += Random.Range(-0.05f, 0.05f);
+        mutatedGenes.fruitingChanceGene[1] += Random.Range(-0.05f, 0.05f);
+        mutatedGenes.sproutingChanceGene[1] += Random.Range(-0.05f, 0.05f);
+        mutatedGenes.heightGene[1] += Random.Range(-0.05f, 0.05f);
+        mutatedGenes.healthGene[1] += Random.Range(-0.05f, 0.05f);
+
+        return mutatedGenes;
+    }
 
 }
