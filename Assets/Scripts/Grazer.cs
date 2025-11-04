@@ -19,28 +19,52 @@ public class Grazer : Animal
         base.Start(); // Calls Animal.Start which calls LivingEntity.Start which assigns instanceID
         // Animal.Start sets currentStage = GrowthStage.Child
         // Animal.Start sets hungerLevel = 70
-        specieName = speciesGeneData.specieName;
-        movementSpeed = (int)Dist.Normal.Sample(speciesGeneData.movementSpeedGene[0], speciesGeneData.movementSpeedGene[1]);
-        reproductionChance = Dist.Normal.Sample(speciesGeneData.reproductionChanceGene[0], speciesGeneData.reproductionChanceGene[1]);
-        attackStrength = Dist.Normal.Sample(speciesGeneData.attackStrengthGene[0], speciesGeneData.attackStrengthGene[1]);
-        height = Dist.Normal.Sample(speciesGeneData.heightGene[0], speciesGeneData.heightGene[1]);
-        health = Dist.Normal.Sample(speciesGeneData.healthGene[0], speciesGeneData.healthGene[1]);
+
+        if (parent1Genes.HasValue && parent2Genes.HasValue)
+            {
+            // Average parent genes for child
+            genes = AverageGenes(parent1Genes.Value, parent2Genes.Value);
+            }
+        else
+            {
+            // First generation: use ScriptableObject
+            genes.attackStrengthGene = speciesGeneData.attackStrengthGene;
+            genes.heightGene = speciesGeneData.heightGene;
+            genes.healthGene = speciesGeneData.healthGene;
+            genes.movementSpeedGene = speciesGeneData.movementSpeedGene;
+            genes.reproductionChanceGene = speciesGeneData.reproductionChanceGene;
+            genes.specieName = speciesGeneData.specieName;
+            }
+
+        // assign instance attributes based on genes
+        specieName = genes.specieName;
+        movementSpeed = Dist.Normal.Sample(genes.movementSpeedGene[0], genes.movementSpeedGene[1]);
+        reproductionChance = Dist.Normal.Sample(genes.reproductionChanceGene[0], genes.reproductionChanceGene[1]);
+        attackStrength = Dist.Normal.Sample(genes.attackStrengthGene[0], genes.attackStrengthGene[1]);
+        height = Dist.Normal.Sample(genes.heightGene[0], genes.heightGene[1]);
+        health = Dist.Normal.Sample(genes.healthGene[0], genes.healthGene[1]);
+
     }
 
-    public override void SimulateStep(float timeStep)
+    protected override void FixedUpdate()
     {
-        base.SimulateStep(timeStep); // Call the base class SimulateStep method
-        // Additional simulation logic for Grazer can be added here
+        base.FixedUpdate(); // Call the base class FixedUpdate method
+        // Animal decrements hungerLevel and calls Grow
+        // LivingEntity increments age
+
     }
 
     public override void Grow()
     {
-        base.Grow();
         // Implement growth logic specific to Grazers here
+        // Animal Grow is called in FixedUpdate
     }
 
     public override void Die()
     {
         base.Die(); // Call the base class Die method to handle common death logic
     }
+
+
+
 }

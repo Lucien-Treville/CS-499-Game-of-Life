@@ -11,16 +11,16 @@ public class LivingEntity : MonoBehaviour
 
     // Common Attributes
     public string specieName;
-    public float age;
+    public double age;
     public double health; 
     public double height; // in meters
     public int instanceID; // unique ID assigned by Unity
 
 
     // On our variable simulation time step
-    public virtual void SimulateStep(float timeStep)
+    protected virtual void FixedUpdate()
     {
-        age += timeStep; // Increment age by the time step defined in driver script
+        age += Time.fixedDeltaTime; // Increment age by the fixed time step
 
     }
 
