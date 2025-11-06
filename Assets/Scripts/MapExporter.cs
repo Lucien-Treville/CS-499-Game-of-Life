@@ -7,7 +7,9 @@ public class MapExporter : MonoBehaviour
     public string outputFileName = "grasslands_template.json";
 
     // Editable prefab names (case sensitive)
-    private readonly string[] editableNames = { "flowers-tall", "flowers2", "tree-pine", "tree" };
+    private readonly string[] editableNames = { "flowers-tall", "flowers2", "rocks", "tree-pine", "tree" };
+
+
 
     [System.Serializable]
     public class MapObject
@@ -60,4 +62,33 @@ public class MapExporter : MonoBehaviour
 
         Debug.Log($"✅ Map exported successfully to: {path}");
     }
+    public string ExportCurrentMapToJSON()
+    {
+        MapData data = new MapData();
+
+        foreach (GameObject obj in FindObjectsOfType<GameObject>())
+        {
+            if (!obj.scene.IsValid()) continue;
+
+            string objName = obj.name.ToLower();
+
+            foreach (string editable in editableNames)
+            {
+                if (objName.Contains(editable.ToLower()))
+                {
+                    data.objects.Add(new MapObject
+                    {
+                        name = editable,
+                        position = obj.transform.position,
+                        rotation = obj.transform.rotation
+                    });
+                    break;
+                }
+            }
+        }
+
+        // Return JSON text (not saving to file here)
+        return JsonUtility.ToJson(data, true);
+    }
+
 }

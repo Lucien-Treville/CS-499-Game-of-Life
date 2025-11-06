@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3381953516182588387}
   - component: {fileID: -5754084199372789682}
   - component: {fileID: -7511558181221131132}
+  - component: {fileID: -8112225739562517552}
   m_Layer: 0
   m_Name: flowers-tall
   m_TagString: Placeable
@@ -81,3 +82,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &-8112225739562517552
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8343530470604283908}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5459912, y: 0.46164054, z: 0.6182552}
+  m_Center: {x: 0.0007338971, y: 0.23082027, z: 0.0009494424}

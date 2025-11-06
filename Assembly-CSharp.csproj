@@ -58,6 +58,7 @@
      <Compile Include="Assets\MapDataHolder.cs" />
      <Compile Include="Assets\Scripts\LevelMenu.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalStateMachine.cs" />
+     <Compile Include="Assets\Scripts\SceneLoader.cs" />
      <Compile Include="Assets\Scripts\StateMachine\BaseState.cs" />
      <Compile Include="Assets\Scripts\StateMachine\StateMachine.cs" />
      <Compile Include="Assets\Scripts\ScriptableObjects\GrazerSpecies.cs" />
@@ -78,7 +79,7 @@
      <Compile Include="Assets\Scripts\StateMachine\AnimalDrink.cs" />
      <Compile Include="Assets\Scripts\Plant.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalAttack.cs" />
-     <Compile Include="Assets\Scripts\DownloadTemplateButton.cs" />
+     <Compile Include="Assets\Scenes\MaintoSelect.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalFindMate.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalSleep.cs" />
      <Compile Include="Assets\Scripts\Camera\CornerUI.cs" />
@@ -707,6 +708,9 @@
  <Reference Include="Unity.TextMeshPro">
  <HintPath>C:/Users/katan/Documents/GitHub/CS-499-Game-of-Life/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
+ <Reference Include="Unity.2D.Sprite.Editor">
+ <HintPath>C:/Users/katan/Documents/GitHub/CS-499-Game-of-Life/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEditor.UI">
  <HintPath>C:/Users/katan/Documents/GitHub/CS-499-Game-of-Life/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
@@ -716,11 +720,11 @@
  <Reference Include="Unity.Rider.Editor">
  <HintPath>C:/Users/katan/Documents/GitHub/CS-499-Game-of-Life/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
  </Reference>
- <Reference Include="Unity.2D.Tilemap.Extras.Editor">
- <HintPath>C:/Users/katan/Documents/GitHub/CS-499-Game-of-Life/Library/ScriptAssemblies/Unity.2D.Tilemap.Extras.Editor.dll</HintPath>
- </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Users/katan/Documents/GitHub/CS-499-Game-of-Life/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.2D.Tilemap.Extras.Editor">
+ <HintPath>C:/Users/katan/Documents/GitHub/CS-499-Game-of-Life/Library/ScriptAssemblies/Unity.2D.Tilemap.Extras.Editor.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
