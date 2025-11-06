@@ -1,5 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class MapEditor : MonoBehaviour
 {
@@ -10,46 +11,86 @@ public class MapEditor : MonoBehaviour
     public GameObject flowerTallPrefab;
     public GameObject flower2Prefab;
 
+    // Parent for all placed objects
+    public Transform defaultMapRootTransform;
+
     private GameObject selectedPrefab;
     private List<GameObject> placedObjects = new List<GameObject>();
 
+    // Layer name for terrain
+    public string terrainLayerName = "Terrain";
+    private int terrainLayerMask;
+
     void Start()
     {
-        selectedPrefab = treePrefab; // default
+        selectedPrefab = treePrefab; // default prefab
+
+        // Build layer mask for raycast
+        terrainLayerMask = LayerMask.GetMask(terrainLayerName);
+
+        // Add any existing Placeable objects already in the scene
+        GameObject[] existingObjects = GameObject.FindGameObjectsWithTag("Placeable");
+        placedObjects.AddRange(existingObjects);
     }
 
     void Update()
     {
+        // ---------------- Left-click: place object ----------------
         if (Input.GetMouseButtonDown(0))
         {
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, terrainLayerMask))
             {
-                if (hit.collider.gameObject.name.Contains("block-grass-overhang-low"))
-                {
-                    GameObject newObj = Instantiate(selectedPrefab, hit.point, Quaternion.identity);
-                    placedObjects.Add(newObj);
-                }
+                GameObject newObj = Instantiate(selectedPrefab, hit.point, Quaternion.identity);
+                newObj.tag = "Placeable"; // mark as deletable
+                if (defaultMapRootTransform != null)
+                    newObj.transform.parent = defaultMapRootTransform; // parent under DefaultMapRoot
+                placedObjects.Add(newObj);
             }
         }
 
+        // ---------------- Right-click: delete object ----------------
         if (Input.GetMouseButtonDown(1))
         {
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                if (placedObjects.Contains(hit.collider.gameObject))
+                GameObject hitObj = hit.collider.gameObject;
+
+                // Climb to root with "Placeable" tag
+                while (hitObj.transform.parent != null && !hitObj.CompareTag("Placeable"))
                 {
-                    placedObjects.Remove(hit.collider.gameObject);
-                    Destroy(hit.collider.gameObject);
+                    hitObj = hitObj.transform.parent.gameObject;
+                }
+
+                if (hitObj.CompareTag("Placeable"))
+                {
+                    placedObjects.Remove(hitObj);
+                    DestroyRecursively(hitObj);
+                    Debug.Log("Deleted: " + hitObj.name);
                 }
             }
         }
     }
 
-    // Switch which prefab is selected
+    // Recursive destroy function to remove children as well
+    private void DestroyRecursively(GameObject obj)
+    {
+        foreach (Transform child in obj.transform)
+        {
+            DestroyRecursively(child.gameObject);
+        }
+        Destroy(obj);
+    }
+
+    // ---------------- Select prefab via UI button ----------------
     public void SelectPrefab(string prefabName)
     {
+        Debug.Log("Selected prefab: " + prefabName);
         switch (prefabName)
         {
             case "tree":

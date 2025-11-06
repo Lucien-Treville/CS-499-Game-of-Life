@@ -18,30 +18,25 @@ public class MapLoader : MonoBehaviour
         public List<MapObject> objects;
     }
 
-    // Prefabs for editable objects
     public GameObject treePrefab;
     public GameObject pinePrefab;
     public GameObject flowerTallPrefab;
     public GameObject flower2Prefab;
 
-    private void Start()
+    public void LoadMap(string jsonPath)
     {
-        string jsonPath = Path.Combine(Application.persistentDataPath, "grasslands_template.json");
-
         if (!File.Exists(jsonPath))
         {
-            Debug.LogWarning("No custom map JSON found. Using default layout.");
+            Debug.LogWarning("No map JSON found: " + jsonPath);
             return;
         }
 
         string json = File.ReadAllText(jsonPath);
         MapData map = JsonUtility.FromJson<MapData>(json);
 
-        // Spawn all editable objects
         foreach (MapObject obj in map.objects)
         {
             GameObject prefab = null;
-
             switch (obj.name)
             {
                 case "tree":
@@ -59,9 +54,12 @@ public class MapLoader : MonoBehaviour
             }
 
             if (prefab != null)
-                Instantiate(prefab, obj.position, obj.rotation);
+            {
+                GameObject instance = Instantiate(prefab, obj.position, obj.rotation);
+                instance.tag = "Placeable"; // mark for deletion
+            }
         }
 
-        Debug.Log("✅ Editable objects loaded from JSON: " + jsonPath);
+        Debug.Log("✅ Map loaded from JSON: " + jsonPath);
     }
 }
