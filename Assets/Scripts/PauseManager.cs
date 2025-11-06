@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PauseManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PauseManager : MonoBehaviour
     public Sprite pausedIcon;
     public Sprite unpausedIcon;
     public Image pauseButtonImage;
+    public TextMeshProUGUI TimeValueText;
 
     void Start()
     {
@@ -37,7 +39,7 @@ public class PauseManager : MonoBehaviour
             // Restore the time scale to its previous value
             Time.timeScale = timeScaleBeforePause;
             Debug.Log("Simulation Resumed");
-             // Set unpaused sprite
+            // Set unpaused sprite
             if (pauseButtonImage != null && unpausedIcon != null)
                 pauseButtonImage.sprite = unpausedIcon;
         }
@@ -45,6 +47,6 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-
+        TimeValueText.text = Time.time.ToString("F1");
     }
 }
