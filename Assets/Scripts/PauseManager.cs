@@ -5,12 +5,13 @@ using TMPro;
 public class PauseManager : MonoBehaviour
 {
     private bool isPaused = false;
-    private float timeScaleBeforePause;
+    public float timeScaleBeforePause;
 
     public Sprite pausedIcon;
     public Sprite unpausedIcon;
     public Image pauseButtonImage;
     public TextMeshProUGUI TimeValueText;
+    public GameObject pauseOverlay;
 
     void Start()
     {
@@ -33,6 +34,10 @@ public class PauseManager : MonoBehaviour
             // Set paused sprite
             if (pauseButtonImage != null && pausedIcon != null)
                 pauseButtonImage.sprite = pausedIcon;
+
+            // show pause overlay
+            if (pauseOverlay != null)
+                pauseOverlay.SetActive(true);
         }
         else
         {
@@ -42,11 +47,20 @@ public class PauseManager : MonoBehaviour
             // Set unpaused sprite
             if (pauseButtonImage != null && unpausedIcon != null)
                 pauseButtonImage.sprite = unpausedIcon;
+
+            // hide pause overlay
+            if (pauseOverlay != null)
+                pauseOverlay.SetActive(false);
         }
     }
 
     void Update()
     {
         TimeValueText.text = Time.time.ToString("F1");
+    }
+
+    public bool IsPaused()
+    {
+        return isPaused;
     }
 }

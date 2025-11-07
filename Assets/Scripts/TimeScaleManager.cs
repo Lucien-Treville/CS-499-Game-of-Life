@@ -7,6 +7,7 @@ public class TimeScaleManager : MonoBehaviour
     // Drag your UI elements here in the Inspector
     public Slider speedSlider;
     public TextMeshProUGUI speedText;
+    public PauseManager pauseManager;
 
     void Start()
     {
@@ -41,8 +42,16 @@ public class TimeScaleManager : MonoBehaviour
         if (speedSlider != null)
             speedSlider.value = roundedSpeed;
 
-        // Update the game's time scale
-        Time.timeScale = roundedSpeed;
+        // Only update time scale if not paused
+        if (pauseManager == null || !pauseManager.IsPaused())
+        {
+            Time.timeScale = roundedSpeed;
+        }
+        else
+        {
+            // If paused, ensure time scale remains 0
+            pauseManager.timeScaleBeforePause = roundedSpeed;
+        }
 
         UpdateSpeedText(roundedSpeed);
     }
