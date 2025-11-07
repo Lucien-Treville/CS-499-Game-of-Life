@@ -12,6 +12,7 @@ public class PauseManager : MonoBehaviour
     public Image pauseButtonImage;
     public TextMeshProUGUI TimeValueText;
     public GameObject pauseOverlay;
+    public GameObject cameraControlsUI;
 
     void Start()
     {
@@ -38,6 +39,9 @@ public class PauseManager : MonoBehaviour
             // show pause overlay
             if (pauseOverlay != null)
                 pauseOverlay.SetActive(true);
+
+            if (cameraControlsUI != null)
+                cameraControlsUI.SetActive(true);
         }
         else
         {
@@ -51,6 +55,9 @@ public class PauseManager : MonoBehaviour
             // hide pause overlay
             if (pauseOverlay != null)
                 pauseOverlay.SetActive(false);
+            
+            if (cameraControlsUI != null)
+                cameraControlsUI.SetActive(false);
         }
     }
 
