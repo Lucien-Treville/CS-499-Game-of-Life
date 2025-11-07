@@ -16,6 +16,7 @@ public class CameraController : MonoBehaviour
     public float rotationSpeed = 50f;      // Degrees per second
 
     private Camera cam;
+    public PauseManager pauseManager;
 
     void Start()
     {
@@ -24,6 +25,8 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        if (pauseManager != null && pauseManager.IsPaused())
+            return; // Do not process camera movement if paused
         HandleMovement();
         HandleZoom();
         HandleRotation();
@@ -53,7 +56,7 @@ public class CameraController : MonoBehaviour
         direction.y = 0;
 
         // Apply movement
-        transform.Translate(direction.normalized * speed * Time.deltaTime, Space.World);
+        transform.Translate(direction.normalized * speed * Time.unscaledDeltaTime, Space.World);
     }
 
     void HandleZoom()
@@ -61,7 +64,7 @@ public class CameraController : MonoBehaviour
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0.0f)
         {
-            cam.fieldOfView -= scroll * zoomSpeed * Time.deltaTime;
+            cam.fieldOfView -= scroll * zoomSpeed * Time.unscaledDeltaTime;
             cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minZoom, maxZoom);
         }
     }
@@ -69,8 +72,8 @@ public class CameraController : MonoBehaviour
     void HandleRotation()
     {
         if (Input.GetKey(KeyCode.Q))
-            transform.Rotate(Vector3.up, -rotationSpeed * Time.deltaTime, Space.World);
+            transform.Rotate(Vector3.up, -rotationSpeed * Time.unscaledDeltaTime, Space.World);
         if (Input.GetKey(KeyCode.E))
-            transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.World);
+            transform.Rotate(Vector3.up, rotationSpeed * Time.unscaledDeltaTime, Space.World);
     }
 }
