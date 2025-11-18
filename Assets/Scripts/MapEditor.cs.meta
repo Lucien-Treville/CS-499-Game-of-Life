@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3696cc8b7a8c7134886cb6c010c0377d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - mainCamera: {instanceID: 0}
+  - treePrefab: {fileID: 919132149155446097, guid: ca6ab80010ab1e847b872000df36a049, type: 3}
+  - pinePrefab: {fileID: 919132149155446097, guid: 76f803c88da57d447aca511a959ce66e, type: 3}
+  - flowerTallPrefab: {fileID: 919132149155446097, guid: 58a066c71e9f7e94e844858dbc0dcaea, type: 3}
+  - flower2Prefab: {fileID: 919132149155446097, guid: 5a66f9695ab9dc84eb8a168cea2348e5, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

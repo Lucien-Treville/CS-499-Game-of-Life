@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 9c57ed8b72c6ce64fa7a4208a24fa923
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Adigiana Toybox
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: c475b658700822144a2fb98b47c2f15c, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
