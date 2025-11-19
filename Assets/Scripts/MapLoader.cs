@@ -21,7 +21,7 @@ public class MapLoader : MonoBehaviour
         {"Predators", new Dictionary<string, object>
             {
                 {"Wolf", new List<object> { } },
-                {"Lion", new List<object> { } },
+                {"Tiger", new List<object> { } },
                 {"Snake", new List<object> { } }
             }
         },
@@ -50,7 +50,7 @@ public class MapLoader : MonoBehaviour
 
     // Prefabs for different map objects
     public GameObject wolfPrefab;
-    public GameObject lionPrefab;
+    public GameObject tigerPrefab;
     public GameObject snakePrefab;
     public GameObject rabbitPrefab;
     public GameObject sheepPrefab;
@@ -155,6 +155,12 @@ public class MapLoader : MonoBehaviour
 
     private void Spawner()
     {
+
+
+
+
+
+
         foreach (var categoryPair in jsonData)
         {
             var creatureDict = categoryPair.Value as Dictionary<string, object>;
@@ -175,8 +181,8 @@ public class MapLoader : MonoBehaviour
                         case "Wolf":
                             prefabToSpawn = wolfPrefab;
                             break;
-                        case "Lion":
-                            prefabToSpawn = lionPrefab;
+                        case "Tiger":
+                            prefabToSpawn = tigerPrefab;
                             break;
                         case "Snake":
                             prefabToSpawn = snakePrefab;

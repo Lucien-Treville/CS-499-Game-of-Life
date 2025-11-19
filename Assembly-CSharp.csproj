@@ -60,7 +60,6 @@
      <Compile Include="Assets\Models\Creatures\UrsaAnimation\LOW POLY CUBIC - Goat and Sheep Pack\scripts\AnimationController.cs" />
      <Compile Include="Assets\Scripts\Animal.cs" />
      <Compile Include="Assets\MapUploadManager.cs" />
-     <Compile Include="Assets\Scripts\UploadTemplateButton.cs" />
      <Compile Include="Assets\Scripts\ScriptableObjects\PlantSpecies.cs" />
      <Compile Include="Assets\Scripts\Grazer.cs" />
      <Compile Include="Assets\Scripts\LivingEntity.cs" />

@@ -902,6 +902,7 @@ GameObject:
   - component: {fileID: 5883155896844355907}
   - component: {fileID: 5883155896844355916}
   - component: {fileID: 5883155896844355917}
+  - component: {fileID: -5093910816279752028}
   m_Layer: 0
   m_Name: Tiger_001
   m_TagString: Untagged
@@ -934,7 +935,7 @@ CharacterController:
   m_GameObject: {fileID: 5883155896844355918}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Height: 1.44
   m_Radius: 1.13
@@ -971,7 +972,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5883155896844355918}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: be2f4aa750c530144bd7219a00354c98, type: 3}
   m_Name: 
@@ -995,7 +996,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5883155896844355918}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2c67ce836140b4479603ebcf944cddd, type: 3}
   m_Name: 
@@ -1008,6 +1009,29 @@ MonoBehaviour:
   m_MouseX: Mouse X
   m_MouseY: Mouse Y
   m_MouseScroll: Mouse ScrollWheel
+--- !u!114 &-5093910816279752028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883155896844355918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7de31148350a3b542b0cd622dfdbf3e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specieName: 
+  age: 0
+  health: 0
+  height: 0
+  instanceID: 0
+  movementSpeed: 0
+  hungerLevel: 0
+  reproductionChance: 0
+  attackStrength: 0
+  currentStage: 0
+  speciesGeneData: {fileID: 11400000, guid: cb27cb02f7b6ec842a11897b3a0a3131, type: 2}
 --- !u!1 &6083925854692512673
 GameObject:
   m_ObjectHideFlags: 0
