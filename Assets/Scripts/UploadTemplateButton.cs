@@ -12,7 +12,7 @@ public class UploadTemplateButton : MonoBehaviour
     {
         // Path to the user's Downloads folder
         string downloadsFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "\\Downloads";
-        sourcePath = Path.Combine(downloadsFolder, "grasslands_template.json");
+        sourcePath = Path.Combine(downloadsFolder, "SpawnSettings.JSON");
 
         uploadButton.onClick.AddListener(UploadTemplate);
     }
@@ -22,7 +22,7 @@ public class UploadTemplateButton : MonoBehaviour
         if (File.Exists(sourcePath))
         {
             // Copy the edited file into the persistentDataPath so the Grasslands scene loader can find it
-            string destinationPath = Path.Combine(Application.persistentDataPath, "grasslands_template.json");
+            string destinationPath = Path.Combine(Application.persistentDataPath, "SpawnSettings.JSON");
             File.Copy(sourcePath, destinationPath, true);
             Debug.Log($"✅ Custom template uploaded to: {destinationPath}");
 
