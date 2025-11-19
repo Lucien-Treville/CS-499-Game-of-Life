@@ -48,4 +48,17 @@ public class SceneLoader : MonoBehaviour
         }
 
     }
+
+    public void UploadCustomTemplate()
+    {
+        // open users file explorer to select a JSON file
+        string path = UnityEditor.EditorUtility.OpenFilePanel("Select Custom Template JSON", "", "json");
+        MapLoader.jsonFilePath = path;
+        MapLoader.jsonFileName = "userFile";
+        Debug.Log("Selected file: " + path);
+        SceneManager.LoadScene("Grasslands");
+
+    }
+
+
 }

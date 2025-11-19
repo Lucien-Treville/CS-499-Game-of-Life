@@ -62,6 +62,7 @@ public class MapLoader : MonoBehaviour
     public GameObject boulderPrefab;
 
     public static string jsonFileName = "SpawnSettings.JSON"; // or demo.json if user clicks on Demo button
+    public static string jsonFilePath;
 
     void Start()
     {
@@ -69,13 +70,17 @@ public class MapLoader : MonoBehaviour
         {
             case "SpawnSettings.JSON":
                 Debug.Log("Loading map from SpawnSettings.JSON");
-                string jsonPath = Path.Combine(Application.persistentDataPath, jsonFileName);
-                ReadJSON(jsonPath);
+                jsonFilePath = Path.Combine(Application.persistentDataPath, jsonFileName);
+                ReadJSON(jsonFilePath);
                 break;
             case "demo.json":
                 Debug.Log("Loading map from demo.json");
-                jsonPath = Path.Combine(Application.streamingAssetsPath, jsonFileName);
-                ReadJSON(jsonPath);
+                jsonFilePath = Path.Combine(Application.streamingAssetsPath, jsonFileName);
+                ReadJSON(jsonFilePath);
+                break;
+            case "userFile":
+                Debug.Log("Loading map from user selected file: " + jsonFilePath);
+                ReadJSON(jsonFilePath);
                 break;
             default:
                 Debug.Log(jsonFileName + " is not a recognized map file.");
