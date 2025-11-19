@@ -17,11 +17,11 @@ MonoBehaviour:
   - 10
   - 3
   fruitingChanceGene:
-  - 0.05
-  - 0.005
+  - 0.0004
+  - 0.00005
   sproutingChanceGene:
-  - 0.2
-  - 0.05
+  - 0.0004
+  - 0.00005
   heightGene:
   - 1
   - 0.2

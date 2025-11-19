@@ -127,8 +127,8 @@ public class MapLoader : MonoBehaviour
             }
         }
 
-        PrintJsonData();
-        Debug.Log("✅ Map loaded from JSON: " + jsonPath);
+        // PrintJsonData();
+        Debug.Log("Map loaded from JSON: " + jsonPath);
     }
 
     private void PrintJsonData()
@@ -158,9 +158,6 @@ public class MapLoader : MonoBehaviour
 
 
 
-
-
-
         foreach (var categoryPair in jsonData)
         {
             var creatureDict = categoryPair.Value as Dictionary<string, object>;
@@ -172,7 +169,7 @@ public class MapLoader : MonoBehaviour
                     var spawnArr = spawnObj as object[];
                     int count = (int)spawnArr[0];
                     Vector3 pos = (Vector3)spawnArr[1] + new Vector3(-115, 1.1f, -190);  // offset to center in scene
-                    Debug.Log($"Spawn {count} {creaturePair.Key} at {pos}");
+                    // Debug.Log($"Spawn {count} {creaturePair.Key} at {pos}");
 
                     // find prefab to use based on creaturePair.Key
                     GameObject prefabToSpawn = null;
@@ -218,16 +215,16 @@ public class MapLoader : MonoBehaviour
 
                     if (prefabToSpawn != null)
                     {
-                        Instantiate(prefabToSpawn, pos, Quaternion.identity);
+                        Instantiate(prefabToSpawn, pos, Quaternion.identity); // spawn first one at pos, rest will spawn in circle around
+                        if (PopulationManager.Instance != null)
+                            {
+                                // Pass the Name and Count to PopulationManager to initialize tracking
+                                PopulationManager.Instance.InitializeSpecies(creaturePair.Key, count);
+                            }
 
                         for (int i = 0; i < count-1; i++)
                         {
-                            // Instantiate(prefabToSpawn, pos, Quaternion.identity);
-                            // pos += new Vector3(2, 0, 2); // simple offset to avoid overlap
-
                             Vector3 newPos = pos;
-                            // prefabToSpawn.transform.localScale = new Vector3(10,10,10);
-
                             // change pos slightly for next spawn to avoid overlap
                             // have pos change in a circle around original pos
                             float angle = i * (360f / (count-1));
