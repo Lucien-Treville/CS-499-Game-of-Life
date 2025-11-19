@@ -19,7 +19,7 @@ public class MaintoSelect : MonoBehaviour
 
     public void OnMainMenuButton()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("TitleScreen");
     }
 
     public void OnReportButton()
@@ -27,5 +27,10 @@ public class MaintoSelect : MonoBehaviour
         Debug.Log("See Report Button Clicked");
     }
 
+
+    public void OnEndButton()
+    {
+        SceneManager.LoadScene("Report");
+    }
 
 }
