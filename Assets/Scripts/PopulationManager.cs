@@ -7,6 +7,7 @@ public class PopulationManager : MonoBehaviour
 
     // The Key is the species name (string), the Value is the stats object
     public Dictionary<string, SpeciesStats> populationData = new Dictionary<string, SpeciesStats>();
+    public float simStartTime;
 
     private void Awake()
     {
@@ -34,6 +35,7 @@ public class PopulationManager : MonoBehaviour
             SpeciesStats newStats = new SpeciesStats(speciesName, count);
             populationData.Add(speciesName, newStats);
             Debug.Log($"Initialized species: {speciesName} with count: {count}");
+            populationData[speciesName].AddToHistory(Time.time);
         }
     }
 
@@ -59,6 +61,7 @@ public class SpeciesStats
     public int currentCount;
     public int maxRecorded;
     public int minRecorded;
+    public List<PopulationHistoryPoint> history = new List<PopulationHistoryPoint>();
 
     // Constructor to set up the starting values
     public SpeciesStats(string speciesName, int startingCount)
@@ -73,5 +76,34 @@ public class SpeciesStats
     {
         if (currentCount > maxRecorded) maxRecorded = currentCount;
         if (currentCount < minRecorded && currentCount >= 0) minRecorded = currentCount;
+        AddToHistory(Time.time);
     }
+
+    public void AddToHistory(float time)
+    {
+        time -= PopulationManager.Instance.simStartTime;
+        if (history.Count > 0)
+        {
+            int lastIndex = history.Count - 1;
+
+            // We must copy the struct out to read/modify it
+            PopulationHistoryPoint lastPoint = history[lastIndex];
+
+            if (time - lastPoint.time <= 0.1f) // if deaths within 0.1 seconds, edit last entry
+            {
+                lastPoint.count = currentCount;
+                history[lastIndex] = lastPoint;
+                return; 
+            }
+        }
+        // if array is empty or time difference is more than 0.1s, add new entry
+        history.Add(new PopulationHistoryPoint { time = time, count = currentCount });
+    }
+}
+
+[System.Serializable]
+public struct PopulationHistoryPoint
+{
+    public float time;  // The X axis
+    public int count;   // The Y axis
 }

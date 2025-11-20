@@ -155,6 +155,7 @@ public class MapLoader : MonoBehaviour
 
     private void Spawner()
     {
+        PopulationManager.Instance.simStartTime = Time.time;
 
         foreach (var categoryPair in jsonData)
         {
