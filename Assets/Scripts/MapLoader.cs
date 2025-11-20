@@ -156,18 +156,18 @@ public class MapLoader : MonoBehaviour
     private void Spawner()
     {
 
-
-
         foreach (var categoryPair in jsonData)
         {
             var creatureDict = categoryPair.Value as Dictionary<string, object>;
             foreach (var creaturePair in creatureDict)
             {
                 var spawnList = creaturePair.Value as List<object>;
+                int totalCount = 0;
                 foreach (var spawnObj in spawnList)
                 {
                     var spawnArr = spawnObj as object[];
                     int count = (int)spawnArr[0];
+                    totalCount += count;
                     Vector3 pos = (Vector3)spawnArr[1] + new Vector3(-115, 1.1f, -190);  // offset to center in scene
                     // Debug.Log($"Spawn {count} {creaturePair.Key} at {pos}");
 
@@ -216,11 +216,7 @@ public class MapLoader : MonoBehaviour
                     if (prefabToSpawn != null)
                     {
                         Instantiate(prefabToSpawn, pos, Quaternion.identity); // spawn first one at pos, rest will spawn in circle around
-                        if (PopulationManager.Instance != null)
-                            {
-                                // Pass the Name and Count to PopulationManager to initialize tracking
-                                PopulationManager.Instance.InitializeSpecies(creaturePair.Key, count);
-                            }
+                        
 
                         for (int i = 0; i < count-1; i++)
                         {
@@ -237,6 +233,14 @@ public class MapLoader : MonoBehaviour
                         }
                     }
                 }
+                
+                if (PopulationManager.Instance != null)
+                    {
+                        // Pass the Name and Count to PopulationManager to initialize tracking
+                        PopulationManager.Instance.InitializeSpecies(creaturePair.Key, totalCount);
+                    }
+
+
             }
         }
     }

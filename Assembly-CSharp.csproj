@@ -43,6 +43,7 @@
      <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalEat.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalBreed.cs" />
+     <Compile Include="Assets\Scripts\ReportManager.cs" />
      <Compile Include="Assets\Models\Creatures\ithappy\Animals_FREE\Scripts\PlayerCamera.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalChase.cs" />
      <Compile Include="Assets\Scripts\MapExporter.cs" />
@@ -62,6 +63,7 @@
      <Compile Include="Assets\MapUploadManager.cs" />
      <Compile Include="Assets\Scripts\ScriptableObjects\PlantSpecies.cs" />
      <Compile Include="Assets\Scripts\Grazer.cs" />
+     <Compile Include="Assets\Scripts\PopulationManager.cs" />
      <Compile Include="Assets\Scripts\LivingEntity.cs" />
      <Compile Include="Assets\Scripts\Predator.cs" />
      <Compile Include="Assets\Scripts\Behaviours\Pursuit.cs" />
@@ -80,8 +82,6 @@
      <Compile Include="Assets\Scripts\StateMachine\AnimalSleep.cs" />
      <Compile Include="Assets\Scripts\Camera\CornerUI.cs" />
      <Compile Include="Assets\Scripts\Behaviours\Flee.cs" />
-     <Compile Include="Assets\Scripts\PopulationManager.cs" />
-     <Compile Include="Assets\Scripts\ReportManager.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
@@ -335,11 +335,11 @@
     <Reference Include="MathNet.Numerics">
         <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Assets\MathNet.Numerics.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Data.Sqlite">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Assets\Plugins\Mono.Data.Sqlite.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
         <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Assets\Plugins\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Data.Sqlite">
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Assets\Plugins\Mono.Data.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.48f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\mscorlib.dll</HintPath>

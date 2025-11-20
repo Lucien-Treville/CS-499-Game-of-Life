@@ -10,7 +10,11 @@ public class PopulationManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else Destroy(gameObject);
     }
 
@@ -40,9 +44,9 @@ public class PopulationManager : MonoBehaviour
         {
             populationData[speciesName].currentCount += amount;
             populationData[speciesName].UpdateStats();
-            
+
             // Debug log to verify it's working
-            Debug.Log($"Species: {speciesName} | Count: {populationData[speciesName].currentCount}");
+            Debug.Log($"Species: {speciesName} | Updated Count: {populationData[speciesName].currentCount}");
         }
     }
 }
@@ -68,6 +72,6 @@ public class SpeciesStats
     public void UpdateStats()
     {
         if (currentCount > maxRecorded) maxRecorded = currentCount;
-        if (currentCount < minRecorded && currentCount > 0) minRecorded = currentCount;
+        if (currentCount < minRecorded && currentCount >= 0) minRecorded = currentCount;
     }
 }

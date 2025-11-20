@@ -36,6 +36,7 @@ public class LivingEntity : MonoBehaviour
         // Placeholder for death logic
         // Need to implement logging of death
         // remove from GUI
+        PopulationManager.Instance.UpdateCount(specieName, -1);
         Destroy(gameObject);
     }
 

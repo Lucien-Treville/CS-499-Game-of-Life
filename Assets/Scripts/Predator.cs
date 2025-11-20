@@ -67,11 +67,6 @@ public class Predator : Animal
 
     public override void Die()
     {   
-        // decrement population count in PopulationManager
-        if (PopulationManager.Instance != null && gameObject.scene.isLoaded)
-        {
-            PopulationManager.Instance.UpdateCount(specieName, -1);
-        }
         base.Die(); // Call the base class Die method to handle common death logic
     }
 
