@@ -49,7 +49,6 @@
      <Compile Include="Assets\Scripts\MapExporter.cs" />
      <Compile Include="Assets\Models\Creatures\Rabbits\Demo\Scripts\AnimatorParamatersChange.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalIdle.cs" />
-     <Compile Include="Assets\MapDataHolder.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalStateMachine.cs" />
      <Compile Include="Assets\Scripts\SceneLoader.cs" />
      <Compile Include="Assets\Scripts\StateMachine\BaseState.cs" />
@@ -60,7 +59,6 @@
      <Compile Include="Assets\Scripts\ScriptableObjects\PredatorSpecies.cs" />
      <Compile Include="Assets\Models\Creatures\UrsaAnimation\LOW POLY CUBIC - Goat and Sheep Pack\scripts\AnimationController.cs" />
      <Compile Include="Assets\Scripts\Animal.cs" />
-     <Compile Include="Assets\MapUploadManager.cs" />
      <Compile Include="Assets\Scripts\ScriptableObjects\PlantSpecies.cs" />
      <Compile Include="Assets\Scripts\Grazer.cs" />
      <Compile Include="Assets\Scripts\PopulationManager.cs" />
@@ -76,7 +74,7 @@
      <Compile Include="Assets\Models\Creatures\Quirky Series Ultimate\_Scripts\QuirkySeriesDemo.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalAttack.cs" />
      <Compile Include="Assets\Models\Creatures\Quirky Series Ultimate\_Scripts\RotateOnScroll.cs" />
-     <Compile Include="Assets\Scenes\MaintoSelect.cs" />
+     <Compile Include="Assets\Scripts\MaintoSelect.cs" />
      <Compile Include="Assets\Models\Creatures\ithappy\Animals_FREE\Scripts\MovePlayerInput.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalFindMate.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalSleep.cs" />

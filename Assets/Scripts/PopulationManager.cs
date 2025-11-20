@@ -27,14 +27,14 @@ public class PopulationManager : MonoBehaviour
             // If we already have this species, just add to the count
             populationData[speciesName].currentCount += count;
             populationData[speciesName].UpdateStats();
-            Debug.Log($"Updated species: {speciesName} with count: {populationData[speciesName].currentCount}");
+            // Debug.Log($"Updated species: {speciesName} with count: {populationData[speciesName].currentCount}");
         }
         else
         {
             // Create a new entry for this species
             SpeciesStats newStats = new SpeciesStats(speciesName, count);
             populationData.Add(speciesName, newStats);
-            Debug.Log($"Initialized species: {speciesName} with count: {count}");
+            // Debug.Log($"Initialized species: {speciesName} with count: {count}");
             populationData[speciesName].AddToHistory(Time.time);
         }
     }
@@ -48,7 +48,7 @@ public class PopulationManager : MonoBehaviour
             populationData[speciesName].UpdateStats();
 
             // Debug log to verify it's working
-            Debug.Log($"Species: {speciesName} | Updated Count: {populationData[speciesName].currentCount}");
+            // Debug.Log($"Species: {speciesName} | Updated Count: {populationData[speciesName].currentCount}");
         }
     }
 }
