@@ -47,24 +47,24 @@ public class ReportManager : MonoBehaviour
     {
         // 1. Get the data and Sort it immediately
         // We convert the Dictionary Values to a List, then Order By MaxRecorded (Descending)
+        // also need to drop "Boulder" and "Stump" from list
         List<SpeciesStats> sortedStats = PopulationManager.Instance.populationData.Values
+            .Where(stat => stat.name != "Boulder" && stat.name != "Stump")  // Exclude "Boulder" and "Stump"
             .OrderByDescending(stat => stat.maxRecorded)
             .ToList();
-
+        
         // 2. Iterate through the UI rows
         int statsIndex = 0;
 
+        // 0th child is the header, so we start from 1
         for (int i = 1; i < populationCardContainer.childCount; i++)
         {
             Transform entryRow = populationCardContainer.GetChild(i);
 
             // Check if we still have species data to show
-            if (statsIndex < sortedStats.Count)
+            if (statsIndex < sortedStats.Count)     // think this is ai bs, dont need statsIndex?
             {
-                SpeciesStats data = sortedStats[statsIndex];
-                
-                // Ensure the row is visible
-                entryRow.gameObject.SetActive(true);
+                SpeciesStats data = sortedStats[statsIndex]; // -1 because we started from 1 in the loop, instead of statsIndex                
 
                 // 3. Assign Data to the 3 Children (Creature, Min, Max)
                 // Assuming order: Child 0 = Name, Child 1 = Min, Child 2 = Max
