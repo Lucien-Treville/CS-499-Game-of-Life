@@ -5,6 +5,7 @@ public class SpawnMenu : MonoBehaviour
     public GameObject[] objects;
 
     public LayerMask groundMask;
+    public VisibilityToggle visibilityToggle;
 
     private GameObject activeObject;
     void Awake()
@@ -14,7 +15,7 @@ public class SpawnMenu : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && visibilityToggle.isToggled)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;

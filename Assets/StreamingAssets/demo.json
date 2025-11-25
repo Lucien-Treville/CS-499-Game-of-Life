@@ -1,0 +1,25 @@
+{
+"Instruction Comment": "Using this JSON file, you may specify how many of each creature and where they should be spawned. All keys accept an array containing arrays of count and position pairs, where position is a 3-dimensional array (i.e. [ [count, [pos]], [count, [pos]] ]). For example, I want to spawn two clans of wolves, one clan at the origin with a count of 6 and another to the edge with a count of 4. My array would then be [ [6,[0,0,0]], [4,[12,0,-16] ]. An empty array indicates no creature should be spawned. ",
+"General Format": "EntityName: [ [count, [pos]], [count, [pos]], [count, [pos]] ]",
+
+"Predators":{
+"Wolf": [ [4, [-55, 0, 0]], [5, [67, 0, -40]] ],
+"Tiger": [ [5, [-36, 0, 36]] ],
+"Snake": [[6, [50,0,50]]]
+},
+"Grazers": {
+	"Rabbit": [[6, [-90,0,90]], [5, [10,0,-80]]],
+	"Sheep": [],
+	"Horse": [[6, [-30,0,-60]]]
+	},
+"Plants": {
+	"Berry Bush": [[3,[-80,0,-90]], [4,[65,0,-60]], [4, [-5,0,85]], [6,[80,0,80]]],
+	"Apple Tree": [[4, [-60,0,-45]], [5, [10,0,5]]],
+	"Flowers": [[8, [-80,0,80]]]
+	},
+"Obstacles": {
+	"Stump": [[3,[-20,0,5]]],
+	"Boulder": [[3, [10,0,-70]], [4,[80,0,30]]]
+	}
+
+}

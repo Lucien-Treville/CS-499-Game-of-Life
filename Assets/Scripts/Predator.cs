@@ -23,6 +23,11 @@ public class Predator : Animal
             {
             // Average parent genes for child
             genes = AverageGenes(parent1Genes.Value, parent2Genes.Value);
+            // increment population count in PopulationManager
+            if (PopulationManager.Instance != null)
+            {
+                PopulationManager.Instance.UpdateCount(specieName, 1);
+            }
             }
         else
             {
@@ -41,6 +46,8 @@ public class Predator : Animal
         attackStrength = Dist.Normal.Sample(genes.attackStrengthGene[0], genes.attackStrengthGene[1]);
         height = Dist.Normal.Sample(genes.heightGene[0], genes.heightGene[1]);
         health = Dist.Normal.Sample(genes.healthGene[0], genes.healthGene[1]);
+        
+        
     }
 
     protected override void FixedUpdate()
@@ -59,7 +66,8 @@ public class Predator : Animal
     }
 
     public override void Die()
-    {
+    {   
         base.Die(); // Call the base class Die method to handle common death logic
     }
+
 }

@@ -440,6 +440,7 @@ GameObject:
   - component: {fileID: 9003410764456430701}
   - component: {fileID: 4203687711656398374}
   - component: {fileID: 8592144788571991367}
+  - component: {fileID: 1304007088607568934}
   m_Layer: 0
   m_Name: Dog_001
   m_TagString: Untagged
@@ -546,6 +547,29 @@ MonoBehaviour:
   m_MouseX: Mouse X
   m_MouseY: Mouse Y
   m_MouseScroll: Mouse ScrollWheel
+--- !u!114 &1304007088607568934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2629182449500102118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7de31148350a3b542b0cd622dfdbf3e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specieName: 
+  age: 0
+  health: 0
+  height: 0
+  instanceID: 0
+  movementSpeed: 0
+  hungerLevel: 0
+  reproductionChance: 0
+  attackStrength: 0
+  currentStage: 0
+  speciesGeneData: {fileID: 11400000, guid: 872c381d325a9a84da6b88513d0b804e, type: 2}
 --- !u!1 &2735724662372591797
 GameObject:
   m_ObjectHideFlags: 0
