@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{81112bcf-2c88-d7fb-7d4b-22092396cbfb}</ProjectGuid>
+    <ProjectGuid>{78cf9b9c-147a-5324-f291-882565189b50}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -43,14 +43,16 @@
      <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalEat.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalBreed.cs" />
-     <Compile Include="Assets\Scripts\ReportManager.cs" />
      <Compile Include="Assets\Models\Creatures\ithappy\Animals_FREE\Scripts\PlayerCamera.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalChase.cs" />
      <Compile Include="Assets\Scripts\MapExporter.cs" />
      <Compile Include="Assets\Models\Creatures\Rabbits\Demo\Scripts\AnimatorParamatersChange.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalIdle.cs" />
+     <Compile Include="Assets\MapDataHolder.cs" />
+     <Compile Include="Assets\Scripts\LevelMenu.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalStateMachine.cs" />
      <Compile Include="Assets\Scripts\SceneLoader.cs" />
+     <Compile Include="Assets\Scripts\D+DMenu\SpawnMenu.cs" />
      <Compile Include="Assets\Scripts\StateMachine\BaseState.cs" />
      <Compile Include="Assets\Scripts\StateMachine\StateMachine.cs" />
      <Compile Include="Assets\Scripts\ScriptableObjects\GrazerSpecies.cs" />
@@ -59,9 +61,10 @@
      <Compile Include="Assets\Scripts\ScriptableObjects\PredatorSpecies.cs" />
      <Compile Include="Assets\Models\Creatures\UrsaAnimation\LOW POLY CUBIC - Goat and Sheep Pack\scripts\AnimationController.cs" />
      <Compile Include="Assets\Scripts\Animal.cs" />
+     <Compile Include="Assets\MapUploadManager.cs" />
+     <Compile Include="Assets\Scripts\UploadTemplateButton.cs" />
      <Compile Include="Assets\Scripts\ScriptableObjects\PlantSpecies.cs" />
      <Compile Include="Assets\Scripts\Grazer.cs" />
-     <Compile Include="Assets\Scripts\PopulationManager.cs" />
      <Compile Include="Assets\Scripts\LivingEntity.cs" />
      <Compile Include="Assets\Scripts\Predator.cs" />
      <Compile Include="Assets\Scripts\Behaviours\Pursuit.cs" />
@@ -74,12 +77,15 @@
      <Compile Include="Assets\Models\Creatures\Quirky Series Ultimate\_Scripts\QuirkySeriesDemo.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalAttack.cs" />
      <Compile Include="Assets\Models\Creatures\Quirky Series Ultimate\_Scripts\RotateOnScroll.cs" />
-     <Compile Include="Assets\Scripts\MaintoSelect.cs" />
      <Compile Include="Assets\Models\Creatures\ithappy\Animals_FREE\Scripts\MovePlayerInput.cs" />
+     <Compile Include="Assets\Scripts\D+DMenu\VisibilityToggle.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalFindMate.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalSleep.cs" />
      <Compile Include="Assets\Scripts\Camera\CornerUI.cs" />
      <Compile Include="Assets\Scripts\Behaviours\Flee.cs" />
+     <Compile Include="Assets\Scripts\MaintoSelect.cs" />
+     <Compile Include="Assets\Scripts\PopulationManager.cs" />
+     <Compile Include="Assets\Scripts\ReportManager.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
@@ -331,13 +337,13 @@
         <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.48f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
     <Reference Include="MathNet.Numerics">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Assets\MathNet.Numerics.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Assets\Plugins\Newtonsoft.Json.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Assets\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Data.Sqlite">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Assets\Plugins\Mono.Data.Sqlite.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Assets\Plugins\Mono.Data.Sqlite.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Assets\Plugins\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.48f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\mscorlib.dll</HintPath>
@@ -688,52 +694,52 @@
         <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.48f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Tilemap.Extras">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.2D.Tilemap.Extras.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.2D.Tilemap.Extras.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Tilemap.Editor">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.2D.Tilemap.Editor.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.2D.Tilemap.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.Postprocessing.Runtime.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Sprite.Editor">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Editor">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.Postprocessing.Editor.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.Postprocessing.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PlasticSCM.Editor">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Tilemap.Extras.Editor">
-        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\CheckingMain\CS-499-Game-of-Life\Library\ScriptAssemblies\Unity.2D.Tilemap.Extras.Editor.dll</HintPath>
+        <HintPath>C:\Users\lucie\Documents\School\Fall25\CS499\LookNewMap\LargerMap\Library\ScriptAssemblies\Unity.2D.Tilemap.Extras.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
