@@ -467,7 +467,6 @@ GameObject:
   - component: {fileID: 8999338503545881367}
   - component: {fileID: 3961114142717461643}
   - component: {fileID: 3701583169001772672}
-  - component: {fileID: 4717976370444601023}
   m_Layer: 0
   m_Name: Taipan
   m_TagString: Untagged
@@ -527,7 +526,7 @@ LODGroup:
   m_Enabled: 1
 --- !u!95 &3701583169001772672
 Animator:
-  serializedVersion: 5
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -540,35 +539,10 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4717976370444601023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4807929556901506227}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7de31148350a3b542b0cd622dfdbf3e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  specieName: 
-  age: 0
-  health: 0
-  height: 0
-  instanceID: 0
-  movementSpeed: 0
-  hungerLevel: 0
-  reproductionChance: 0
-  attackStrength: 0
-  currentStage: 0
-  speciesGeneData: {fileID: 11400000, guid: 14dbc649681b2114e931efd55f85866e, type: 2}
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5062559287153234616
 GameObject:
   m_ObjectHideFlags: 0
