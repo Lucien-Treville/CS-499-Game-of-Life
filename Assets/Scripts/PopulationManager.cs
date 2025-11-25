@@ -9,6 +9,12 @@ public class PopulationManager : MonoBehaviour
     public Dictionary<string, SpeciesStats> populationData = new Dictionary<string, SpeciesStats>();
     public float simStartTime;
 
+    // -------------------------------
+    // ADDED: Timer for logging history
+    public float logInterval = 1f;
+    private float timer = 0f;
+    // -------------------------------
+
     private void Awake()
     {
         if (Instance == null)
@@ -19,27 +25,55 @@ public class PopulationManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    // 1. Initialize a specific species (Called by Spawner)
+    private void Start()
+    {
+        // -------------------------------
+        // ADDED: Mark simulation start
+        simStartTime = Time.time;
+        // -------------------------------
+    }
+
+    private void Update()
+    {
+        // -------------------------------
+        // ADDED: Log species counts every X seconds
+        timer += Time.deltaTime;
+        if (timer >= logInterval)
+        {
+            timer = 0f;
+
+            // Log each species once per interval
+            foreach (var sp in populationData.Values)
+            {
+                sp.AddToHistory(Time.time - simStartTime);
+            }
+        }
+        // -------------------------------
+    }
+
+    // 1. Initialize a specific species (Called by Spawner/PopulationCounter)
     public void InitializeSpecies(string speciesName, int count)
     {
         if (populationData.ContainsKey(speciesName))
         {
-            // If we already have this species, just add to the count
+            // If species exists, update count
             populationData[speciesName].currentCount += count;
             populationData[speciesName].UpdateStats();
             Debug.Log($"Updated species: {speciesName} with count: {populationData[speciesName].currentCount}");
         }
         else
         {
-            // Create a new entry for this species
+            // Create brand new species entry
             SpeciesStats newStats = new SpeciesStats(speciesName, count);
             populationData.Add(speciesName, newStats);
             Debug.Log($"Initialized species: {speciesName} with count: {count}");
-            populationData[speciesName].AddToHistory(Time.time);
+
+            // First history entry
+            newStats.AddToHistory(Time.time - simStartTime);
         }
     }
 
-    // 2. Handle changes (Called by Creatures)
+    // 2. Handle changes (Called by Creatures when born/removed)
     public void UpdateCount(string speciesName, int amount)
     {
         if (populationData.ContainsKey(speciesName))
@@ -47,12 +81,10 @@ public class PopulationManager : MonoBehaviour
             populationData[speciesName].currentCount += amount;
             populationData[speciesName].UpdateStats();
 
-            // Debug log to verify it's working
             Debug.Log($"Species: {speciesName} | Updated Count: {populationData[speciesName].currentCount}");
         }
     }
 }
-
 
 [System.Serializable]
 public class SpeciesStats
@@ -63,7 +95,6 @@ public class SpeciesStats
     public int minRecorded;
     public List<PopulationHistoryPoint> history = new List<PopulationHistoryPoint>();
 
-    // Constructor to set up the starting values
     public SpeciesStats(string speciesName, int startingCount)
     {
         name = speciesName;
@@ -76,28 +107,35 @@ public class SpeciesStats
     {
         if (currentCount > maxRecorded) maxRecorded = currentCount;
         if (currentCount < minRecorded && currentCount >= 0) minRecorded = currentCount;
-        AddToHistory(Time.time);
+
+        // Log changes immediately
+        AddToHistory(Time.time - PopulationManager.Instance.simStartTime);
     }
 
     public void AddToHistory(float time)
     {
-        time -= PopulationManager.Instance.simStartTime;
         if (history.Count > 0)
         {
             int lastIndex = history.Count - 1;
 
-            // We must copy the struct out to read/modify it
+            // Copy the struct properly
             PopulationHistoryPoint lastPoint = history[lastIndex];
 
-            if (time - lastPoint.time <= 0.1f) // if deaths within 0.1 seconds, edit last entry
+            // If the event happens within 0.1 seconds, overwrite instead of adding
+            if (time - lastPoint.time <= 0.1f)
             {
                 lastPoint.count = currentCount;
                 history[lastIndex] = lastPoint;
-                return; 
+                return;
             }
         }
-        // if array is empty or time difference is more than 0.1s, add new entry
-        history.Add(new PopulationHistoryPoint { time = time, count = currentCount });
+
+        // Add new timepoint
+        history.Add(new PopulationHistoryPoint
+        {
+            time = time,
+            count = currentCount
+        });
     }
 }
 
