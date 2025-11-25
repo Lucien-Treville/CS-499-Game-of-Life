@@ -74,8 +74,8 @@ public class ReportManager : MonoBehaviour
 
                 // Set the text
                 if (nameText != null) nameText.text = data.name;
-                if (minText != null)  minText.text = "Min: " + data.minRecorded.ToString();
-                if (maxText != null)  maxText.text = "Max: " + data.maxRecorded.ToString();
+                if (minText != null)  minText.text = data.minRecorded.ToString();
+                if (maxText != null)  maxText.text = data.maxRecorded.ToString();
 
                 statsIndex++;
             }
