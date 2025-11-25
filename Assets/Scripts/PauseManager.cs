@@ -14,10 +14,17 @@ public class PauseManager : MonoBehaviour
     public GameObject pauseOverlay;
     public GameObject cameraControlsUI;
 
+
+    public void TestButton()
+    {
+        Debug.Log("Pause button clicked");
+    }
+
     void Start()
     {
         // Initialize with a default value just in case
         timeScaleBeforePause = Time.timeScale;
+        // TogglePause(); // Start paused
     }
 
     public void TogglePause()

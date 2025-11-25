@@ -61,7 +61,7 @@ public class MapLoader : MonoBehaviour
     public GameObject stumpPrefab;
     public GameObject boulderPrefab;
 
-    public static string jsonFileName = "SpawnSettings.JSON"; // or demo.json if user clicks on Demo button
+    public static string jsonFileName = "demo.json"; // or demo.json if user clicks on Demo button
     public static string jsonFilePath;
 
     void Start()
@@ -169,8 +169,8 @@ public class MapLoader : MonoBehaviour
                     var spawnArr = spawnObj as object[];
                     int count = (int)spawnArr[0];
                     totalCount += count;
-                    Vector3 pos = (Vector3)spawnArr[1] + new Vector3(-115, 1.1f, -190);  // offset to center in scene
-                    // Debug.Log($"Spawn {count} {creaturePair.Key} at {pos}");
+                    Vector3 pos = (Vector3)spawnArr[1] + new Vector3(27, 1.1f, -30);  // offset to center in scene
+                    /// Debug.Log($"Spawn {count} {creaturePair.Key} at {pos}");
 
                     // find prefab to use based on creaturePair.Key
                     GameObject prefabToSpawn = null;

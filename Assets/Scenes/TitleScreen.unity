@@ -205,7 +205,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2007685597}
+      - m_Target: {fileID: 2007685592}
         m_TargetAssemblyTypeName: MaintoSelect, Assembly-CSharp
         m_MethodName: OnPlayButton
         m_Mode: 1
@@ -337,7 +337,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2007685597}
+      - m_Target: {fileID: 2007685592}
         m_TargetAssemblyTypeName: MaintoSelect, Assembly-CSharp
         m_MethodName: OnQuitButton
         m_Mode: 1
@@ -717,7 +717,6 @@ GameObject:
   - component: {fileID: 2007685594}
   - component: {fileID: 2007685593}
   - component: {fileID: 2007685592}
-  - component: {fileID: 2007685597}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -734,7 +733,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2007685591}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a0cc4502bd552441b2358613508564c, type: 3}
+  m_Script: {fileID: 11500000, guid: 557fe2d27e811b24394a8c40dc74cbd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2007685593
@@ -820,15 +819,3 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &2007685597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2007685591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b88a9dccc66f6ac4e939842ca704c6f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

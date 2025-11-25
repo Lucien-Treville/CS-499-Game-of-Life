@@ -5,6 +5,7 @@ public class VisibilityToggle : MonoBehaviour
 {
     [SerializeField] private Toggle toggle;   // Reference to the Toggle
     [SerializeField] private GameObject panel; // Reference to the Panel you want to show/hide
+    public bool isToggled = false;
 
     private void Awake()
     {
@@ -21,6 +22,8 @@ public class VisibilityToggle : MonoBehaviour
         // Set panel active state based on toggle
         if (panel != null)
             panel.SetActive(isOn);
+
+        isToggled = isOn;
     }
 
     private void OnDestroy()
