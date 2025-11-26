@@ -4,6 +4,7 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 // using System.Diagnostics;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
 
 
 // MapLoader is responsible for loading a map from a JSON file and instantiating the appropriate game objects
@@ -15,6 +16,17 @@ using UnityEngine.SceneManagement;
 
 public class MapLoader : MonoBehaviour
 {
+    private float jsonMin = -100f;
+    private float jsonMax = 100f;
+
+    // We will calculate these automatically from the NavMesh
+    private float worldMinX, worldMaxX;
+    private float worldMinZ, worldMaxZ;
+    private float defaultY;
+    public float clusterRadius = 6f; // Minimum distance from water's edge
+    public LayerMask groundLayer; // Set this to "Terrain" or "Default" (Exclude Player/Creatures!)
+
+
 
     // dictionary to hold json data
     private static Dictionary<string, object> jsonData;
@@ -34,6 +46,11 @@ public class MapLoader : MonoBehaviour
 
     public static string jsonFileName = "demo.json"; // or demo.json if user clicks on Demo button
     public static string jsonFilePath;
+
+    void Awake()
+    {
+        CalculateNavMeshBounds();
+    }
 
     void Start()
     {
@@ -183,7 +200,6 @@ public class MapLoader : MonoBehaviour
                     var spawnArr = spawnObj as object[];
                     int count = (int)spawnArr[0];
                     totalCount += count;
-                    Vector3 pos = (Vector3)spawnArr[1] + new Vector3(27, 1.1f, -30);  // offset to center in scene
                     /// Debug.Log($"Spawn {count} {creaturePair.Key} at {pos}");
 
                     // find prefab to use based on creaturePair.Key
@@ -228,6 +244,8 @@ public class MapLoader : MonoBehaviour
                             break;
                     }
 
+                    Vector3 pos = GetValidSpawnPoint(((Vector3)spawnArr[1]).x, ((Vector3)spawnArr[1]).z, prefabToSpawn);
+                    
                     if (prefabToSpawn != null)
                     {
                         Instantiate(prefabToSpawn, pos, Quaternion.identity); // spawn first one at pos, rest will spawn in circle around
@@ -260,7 +278,140 @@ public class MapLoader : MonoBehaviour
         }
     }
 
+    private void CalculateNavMeshBounds()
+    {
+        // 1. Get all vertices in the NavMesh
+        NavMeshTriangulation triangulation = NavMesh.CalculateTriangulation();
 
+        if (triangulation.vertices.Length == 0)
+        {
+            Debug.LogError("No NavMesh found! Did you bake it?");
+            return;
+        }
+
+        // 2. Iterate to find the Min and Max extent of the world
+        // Initialize with the first vertex
+        Bounds bounds = new Bounds(triangulation.vertices[0], Vector3.zero);
+
+        foreach (Vector3 vertex in triangulation.vertices)
+        {
+            bounds.Encapsulate(vertex);
+        }
+
+        worldMinX = bounds.min.x;
+        worldMaxX = bounds.max.x;
+        worldMinZ = bounds.min.z;
+        worldMaxZ = bounds.max.z;
+        defaultY = bounds.center.y; // Good starting height for raycasts
+
+        Debug.Log($"World Bounds Auto-Detected: X[{worldMinX} to {worldMaxX}], Z[{worldMinZ} to {worldMaxZ}]");
+    }
+
+
+public Vector3 GetValidSpawnPoint(float jsonX, float jsonZ, GameObject creaturePrefab)
+{
+    // --- STEP 1: GET SAFE X/Z FROM NAVMESH ---
+    // (This part works, so we keep it to handle Water avoidance)
+    
+    float percentX = Mathf.InverseLerp(jsonMin, jsonMax, jsonX);
+    float percentZ = Mathf.InverseLerp(jsonMin, jsonMax, jsonZ);
+    float realX = Mathf.Lerp(worldMinX, worldMaxX, percentX);
+    float realZ = Mathf.Lerp(worldMinZ, worldMaxZ, percentZ);
+
+    Vector3 targetPos = new Vector3(realX, defaultY, realZ);
+    Vector3 finalPos = targetPos; // Default fallback
+
+    NavMeshHit hit;
+    if (NavMesh.SamplePosition(targetPos, out hit, 30.0f, NavMesh.AllAreas))
+    {
+        Vector3 safePoint = hit.position;
+
+        // Coastline push logic (Keep this!)
+        NavMeshHit edgeHit;
+        if (NavMesh.FindClosestEdge(safePoint, out edgeHit, NavMesh.AllAreas))
+        {
+            if (edgeHit.distance < clusterRadius)
+            {
+                float pushDistance = clusterRadius - edgeHit.distance + 0.5f; 
+                safePoint += edgeHit.normal * pushDistance;
+            }
+        }
+        
+        // We now have the perfect X and Z. 
+        // BUT, we ignore the NavMesh's Y. It causes sinking.
+        finalPos = safePoint;
+    }
+
+    // --- STEP 2: THE "SKY DROP" (Fixing the Y-Axis) ---
+    
+    // Start high above the safe X/Z point
+    Vector3 skyOrigin = new Vector3(finalPos.x, 10f, finalPos.z);
+    RaycastHit groundHit;
+
+    // Raycast specifically against the Ground Layer
+    if (Physics.Raycast(skyOrigin, Vector3.down, out groundHit, 20f, groundLayer))
+    {
+        // This gives us the EXACT surface of the visual mesh/terrain
+        finalPos.y = groundHit.point.y;
+        
+        // Visual Debug: Draw a green line where the ray hit
+        Debug.DrawLine(skyOrigin, groundHit.point, Color.green, 10f);
+    }
+    else
+    {
+        // If we missed the ground (cave? hole?), fallback to NavMesh Y
+        Debug.LogWarning($"Raycast missed ground at {finalPos.x}, {finalPos.z}");
+    }
+
+    // --- STEP 3: APPLY PIVOT CORRECTION ---
+    // Now we lift the creature so its feet sit on that exact point
+    float legHeight = GetLegHeight(creaturePrefab);
+    finalPos.y += legHeight;
+
+    return finalPos;
+}
+
+// Helper: Calculates distance from Pivot (0,0,0) to Feet (Min Y)
+// Accounts for the Prefab's scale to prevent sinking.
+private float GetLegHeight(GameObject prefab)
+{
+    Debug.Log("Actually entered GetLegHeight for prefab: " + prefab.name);
+    if (prefab == null) return 0f;
+
+    // 1. Get the root scale of the prefab
+    // If your prefab is scaled to 2.0 on the Y axis, we need to double the offset.
+    float rootScaleY = prefab.transform.localScale.y;
+
+    // 2. Check Skinned Mesh (Most common for animated creatures)
+    SkinnedMeshRenderer skinnedMesh = prefab.GetComponentInChildren<SkinnedMeshRenderer>();
+    if (skinnedMesh != null && skinnedMesh.sharedMesh != null)
+    {
+        // bounds.min.y is the lowest point of the mesh in local space.
+        // We take the absolute value (e.g., -0.9 becomes 0.9)
+        // Then multiply by scale to get the "World" height relative to pivot.
+        return Mathf.Abs(skinnedMesh.sharedMesh.bounds.min.y) * rootScaleY;
+    }
+
+    // 3. Check Standard Mesh (Static objects/props)
+    MeshFilter meshFilter = prefab.GetComponentInChildren<MeshFilter>();
+    if (meshFilter != null && meshFilter.sharedMesh != null)
+    {
+        return Mathf.Abs(meshFilter.sharedMesh.bounds.min.y) * rootScaleY;
+    }
+
+    // 4. Fallback to Collider (Capsules/Boxes)
+    // Useful if the mesh is missing or complex, but a collider exists.
+    Collider col = prefab.GetComponentInChildren<Collider>();
+    if (col != null)
+    {
+        // For standard Unity capsules, the pivot is in the center.
+        // So the feet are exactly half the height (extents.y) away from the center.
+        return col.bounds.extents.y * rootScaleY;
+    }
+
+    Debug.LogWarning("No valid renderer or collider found on prefab: " + prefab.name);
+    return 0f; // No valid renderer/collider found
+}
 
 }
 
