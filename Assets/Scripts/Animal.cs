@@ -112,7 +112,8 @@ public class Animal : LivingEntity
                 if (age > 15)
                 {
                     currentStage = GrowthStage.Teen;
-                    height *= 1.5f; // random growth factor
+                    // increase scale to represent growth
+                    transform.localScale *= 1.5f;
                     Debug.Log($"Animal, {specieName}, (ID: {instanceID}) has grown to the Teen stage.");
                 }
                 break;
@@ -121,7 +122,7 @@ public class Animal : LivingEntity
                 if (age > 30)
                 {
                     currentStage = GrowthStage.Adult;
-                    height *= 1.5f;
+                    transform.localScale *= 1.5f;
                     Debug.Log($"Animal, {specieName}, (ID: {instanceID}) is now in the Adult stage.");
                 }
                 break;

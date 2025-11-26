@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2292353451049794605}
   - component: {fileID: 1047145668264166051}
   - component: {fileID: -3488817795685704654}
+  - component: {fileID: 1012005775632174969}
   m_Layer: 0
   m_Name: Tiger_001
   m_TagString: Untagged
@@ -154,6 +155,20 @@ MonoBehaviour:
   _machine: {fileID: 0}
   currentStage: 0
   speciesGeneData: {fileID: 11400000, guid: cb27cb02f7b6ec842a11897b3a0a3131, type: 2}
+--- !u!64 &1012005775632174969
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667490550083428476}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4375777618007034134, guid: 8739604ff156c91408e3f6352de03dbc, type: 3}
 --- !u!1 &903040259909171859
 GameObject:
   m_ObjectHideFlags: 0
