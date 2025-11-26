@@ -5,10 +5,12 @@ using UnityEngine;
 public class AnimalEat : BaseState<AnimalStateMachine.AnimalState>
 {
     private AnimalStateMachine _machine;
-    public AnimalEat(AnimalStateMachine machine, AnimalStateMachine.AnimalState key)
+    private Animal _animal;
+    public AnimalEat(AnimalStateMachine machine, AnimalStateMachine.AnimalState key, Animal animal)
         : base(key)
     {
         _machine = machine;
+        _animal = animal;
     }
     public override void EnterState()
     {
@@ -31,6 +33,9 @@ public class AnimalEat : BaseState<AnimalStateMachine.AnimalState>
     {
         // if food is gone, but still hungry, findfood
         // if not hungry, idle
+
+        if (_animal.hungerLevel > _animal.hungerThreshold) return AnimalStateMachine.AnimalState.Idle;
+
         return StateKey;
     }
 }

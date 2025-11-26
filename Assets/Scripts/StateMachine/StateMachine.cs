@@ -16,8 +16,7 @@ public abstract class StateMachine<Estate> : MonoBehaviour where Estate : struct
         CurrentState.EnterState();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Estate nextStateKey = CurrentState.GetNextState();
 

@@ -5,10 +5,13 @@ using UnityEngine;
 public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
 {
     private AnimalStateMachine _machine;
-    public AnimalChase(AnimalStateMachine machine, AnimalStateMachine.AnimalState key)
+    private Animal _animal;
+    private Transform target;
+    public AnimalChase(AnimalStateMachine machine, AnimalStateMachine.AnimalState key, Animal animal)
         : base(key)
     {
         _machine = machine;
+        _animal = animal;
     }
     public override void EnterState()
     {
@@ -24,6 +27,9 @@ public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
 
     public override void UpdateState()
     {
+        target = _animal.GetTarget();
+
+        _animal.PursueTargetTransform(target);
 
     }
 
@@ -31,6 +37,9 @@ public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
     {
         // if in range, attack
         // if no prey in range, find food
+
+        if (target == null) return AnimalStateMachine.AnimalState.Idle;
+
         return StateKey;
     }
 }

@@ -565,6 +565,7 @@ GameObject:
   - component: {fileID: 37377490412823100}
   - component: {fileID: 3237471781375441557}
   - component: {fileID: 1095417119727044859}
+  - component: {fileID: -726691444875608972}
   m_Layer: 0
   m_Name: Rabbit 1
   m_TagString: Untagged
@@ -648,6 +649,46 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-726691444875608972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 131319039843492172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a117d6bacd29112408027103125c3c0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specieName: 
+  age: 0
+  health: 0
+  height: 0
+  instanceID: 0
+  movementSpeed: 0
+  hungerLevel: 0
+  thirstLevel: 0
+  sleepLevel: 0
+  fearLevel: 0
+  reproductionChance: 0
+  attackStrength: 0
+  isPredator: 0
+  isBreedable: 0
+  mate: {fileID: 0}
+  threat: {fileID: 0}
+  hungerThreshold: 0
+  thirstThreshold: 0
+  fleeThreshold: 0
+  sleepThreshold: 0
+  visionInterval: 0
+  visibleEntities: []
+  agent: {fileID: 0}
+  currentTarget: {fileID: 0}
+  currentTargetPos: {fileID: 0}
+  _machine: {fileID: 0}
+  currentStage: 0
+  speciesGeneData: {fileID: 11400000, guid: 7c9e6737b9f76c245b9fdc1a29078b18, type: 2}
 --- !u!1 &131389729738583124
 GameObject:
   m_ObjectHideFlags: 0

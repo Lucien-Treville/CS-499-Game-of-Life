@@ -787,6 +787,7 @@ GameObject:
   - component: {fileID: 500078792939999956}
   - component: {fileID: 3557026099151688088}
   - component: {fileID: 1569846543461116819}
+  - component: {fileID: 6691376323329947310}
   m_Layer: 0
   m_Name: Dog_001
   m_TagString: Untagged
@@ -887,6 +888,46 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6691376323329947310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6809041187645326175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7de31148350a3b542b0cd622dfdbf3e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specieName: 
+  age: 0
+  health: 0
+  height: 0
+  instanceID: 0
+  movementSpeed: 0
+  hungerLevel: 0
+  thirstLevel: 0
+  sleepLevel: 0
+  fearLevel: 0
+  reproductionChance: 0
+  attackStrength: 0
+  isPredator: 0
+  isBreedable: 0
+  mate: {fileID: 0}
+  threat: {fileID: 0}
+  hungerThreshold: 0
+  thirstThreshold: 0
+  fleeThreshold: 0
+  sleepThreshold: 0
+  visionInterval: 0
+  visibleEntities: []
+  agent: {fileID: 0}
+  currentTarget: {fileID: 0}
+  currentTargetPos: {fileID: 0}
+  _machine: {fileID: 0}
+  currentStage: 0
+  speciesGeneData: {fileID: 11400000, guid: 872c381d325a9a84da6b88513d0b804e, type: 2}
 --- !u!1 &6914457497302595084
 GameObject:
   m_ObjectHideFlags: 0

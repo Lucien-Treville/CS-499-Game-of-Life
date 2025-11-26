@@ -5,10 +5,12 @@ using UnityEngine;
 public class AnimalAttack : BaseState<AnimalStateMachine.AnimalState>
 {
     private AnimalStateMachine _machine;
-    public AnimalAttack(AnimalStateMachine machine, AnimalStateMachine.AnimalState key)
+    private Animal _animal;
+    public AnimalAttack(AnimalStateMachine machine, AnimalStateMachine.AnimalState key, Animal animal)
         : base(key)
     {
         _machine = machine;
+        _animal = animal;
     }
     public override void EnterState()
     {

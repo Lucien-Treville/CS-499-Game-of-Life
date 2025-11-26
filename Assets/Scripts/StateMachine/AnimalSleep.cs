@@ -5,10 +5,12 @@ using UnityEngine;
 public class AnimalSleep : BaseState<AnimalStateMachine.AnimalState>
 {
     private AnimalStateMachine _machine;
-    public AnimalSleep(AnimalStateMachine machine, AnimalStateMachine.AnimalState key)
+    private Animal _animal;
+    public AnimalSleep(AnimalStateMachine machine, AnimalStateMachine.AnimalState key, Animal animal)
         : base(key)
     {
         _machine = machine;
+        _animal = animal;
     }
 
     public override void EnterState()
@@ -25,12 +27,14 @@ public class AnimalSleep : BaseState<AnimalStateMachine.AnimalState>
 
     public override void UpdateState()
     {
-        // decrement sleepy
+        // increment sleepy
     }
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
-        // if sleepy = 0 or fear > 10 go to idle
+        // if sleepy = 100 or fear > 10 go to idle
+        if (_animal.sleepLevel == 100) return AnimalStateMachine.AnimalState.Sleep;
+
         return StateKey;
     }
 }
