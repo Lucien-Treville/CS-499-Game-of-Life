@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json.Linq;
 // using System.Diagnostics;
+using UnityEngine.SceneManagement;
 
 
 // MapLoader is responsible for loading a map from a JSON file and instantiating the appropriate game objects
@@ -14,39 +15,9 @@ using Newtonsoft.Json.Linq;
 
 public class MapLoader : MonoBehaviour
 {
-    
-    // dictionary to hold json data
-    private Dictionary<string, object> jsonData = new Dictionary<string, object>
-    {
-        {"Predators", new Dictionary<string, object>
-            {
-                {"Wolf", new List<object> { } },
-                {"Tiger", new List<object> { } },
-                {"Snake", new List<object> { } }
-            }
-        },
-        {"Grazers", new Dictionary<string, object>
-            {
-                {"Rabbit", new List<object> { } },
-                {"Sheep", new List<object> { } },
-                {"Horse", new List<object> { } }
-            }
-        },
-        {"Plants", new Dictionary<string, object>
-            {
-                {"Berry Bush", new List<object> { } },
-                {"Apple Tree", new List<object> { } },
-                {"Flowers", new List<object> { } }
-            }
-        },
-        {"Obstacles", new Dictionary<string, object>
-            {
-                {"Stump", new List<object> { } },
-                {"Boulder", new List<object> { } }
-            }
-        }
-    };
 
+    // dictionary to hold json data
+    private static Dictionary<string, object> jsonData;
 
     // Prefabs for different map objects
     public GameObject wolfPrefab;
@@ -66,6 +37,39 @@ public class MapLoader : MonoBehaviour
 
     void Start()
     {
+        // initialize jsonData structure every new simulation
+        jsonData = new Dictionary<string, object>
+        {
+            {"Predators", new Dictionary<string, object>
+                {
+                    {"Wolf", new List<object> { } },
+                    {"Tiger", new List<object> { } },
+                    {"Snake", new List<object> { } }
+                }
+            },
+            {"Grazers", new Dictionary<string, object>
+                {
+                    {"Rabbit", new List<object> { } },
+                    {"Sheep", new List<object> { } },
+                    {"Horse", new List<object> { } }
+                }
+            },
+            {"Plants", new Dictionary<string, object>
+                {
+                    {"Berry Bush", new List<object> { } },
+                    {"Apple Tree", new List<object> { } },
+                    {"Flowers", new List<object> { } }
+                }
+            },
+            {"Obstacles", new Dictionary<string, object>
+                {
+                    {"Stump", new List<object> { } },
+                    {"Boulder", new List<object> { } }
+                }
+            }
+        };
+
+
         switch (jsonFileName)
         {
             case "SpawnSettings.JSON":
@@ -86,11 +90,11 @@ public class MapLoader : MonoBehaviour
                 Debug.Log(jsonFileName + " is not a recognized map file.");
                 break;
         }
-        
+
         Spawner();
     }
 
-    public void ReadJSON(string jsonPath)
+    public static void ReadJSON(string jsonPath)
     {
         if (!File.Exists(jsonPath))
         {
@@ -121,8 +125,18 @@ public class MapLoader : MonoBehaviour
                         posArr[1].ToObject<float>(),
                         posArr[2].ToObject<float>()
                     );
-                    ((List<object>)((Dictionary<string, object>)jsonData[creatureType])[name]).Add(new object[] { count, position });
-                    // instantiate prefabs based on name and position here
+
+                    if (position.y != 0)
+                        throw new System.Exception("Y position must be 0 in JSON spawn data. Found y=" + position.y + " for " + name);
+
+                    if (position.x < -100 || position.x > 100 || position.z < -100 || position.z > 100)
+                        throw new System.Exception("Spawn position out of bounds in JSON spawn data. Found position " + position + " for " + name + " (must be within -100 to 100 for x and z)");
+
+                    if (SceneManager.GetActiveScene().name == "Grasslands")
+                    {
+                        ((List<object>)((Dictionary<string, object>)jsonData[creatureType])[name]).Add(new object[] { count, position });
+                        // instantiate prefabs based on name and position here
+                    }
                 }
             }
         }
@@ -217,29 +231,29 @@ public class MapLoader : MonoBehaviour
                     if (prefabToSpawn != null)
                     {
                         Instantiate(prefabToSpawn, pos, Quaternion.identity); // spawn first one at pos, rest will spawn in circle around
-                        
 
-                        for (int i = 0; i < count-1; i++)
+
+                        for (int i = 0; i < count - 1; i++)
                         {
                             Vector3 newPos = pos;
                             // change pos slightly for next spawn to avoid overlap
                             // have pos change in a circle around original pos
-                            float angle = i * (360f / (count-1));
+                            float angle = i * (360f / (count - 1));
                             float x = Mathf.Cos(angle * Mathf.Deg2Rad) * 5f;
                             float z = Mathf.Sin(angle * Mathf.Deg2Rad) * 5f;
                             newPos += new Vector3(x, 0, z);
                             // Debug.Log($"Instantiated {creaturePair.Key} at newPos:{newPos}\tpos:{pos}");
-                            
+
                             Instantiate(prefabToSpawn, newPos, Quaternion.identity);
                         }
                     }
                 }
-                
+
                 if (PopulationManager.Instance != null)
-                    {
-                        // Pass the Name and Count to PopulationManager to initialize tracking
-                        PopulationManager.Instance.InitializeSpecies(creaturePair.Key, totalCount);
-                    }
+                {
+                    // Pass the Name and Count to PopulationManager to initialize tracking
+                    PopulationManager.Instance.InitializeSpecies(creaturePair.Key, totalCount);
+                }
 
 
             }

@@ -70,7 +70,7 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        TimeValueText.text = Time.time.ToString("F1");
+        TimeValueText.text = Time.timeSinceLevelLoad.ToString("F1");
     }
 
     public bool IsPaused()
