@@ -667,7 +667,7 @@ MonoBehaviour:
   health: 0
   height: 0
   instanceID: 0
-  movementSpeed: 0
+  movementSpeed: 3
   hungerLevel: 0
   thirstLevel: 0
   sleepLevel: 0
@@ -676,18 +676,18 @@ MonoBehaviour:
   attackStrength: 0
   isPredator: 0
   isBreedable: 0
-  mate: {fileID: 0}
-  threat: {fileID: 0}
-  hungerThreshold: 0
+  hungerThreshold: 80
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
-  visionInterval: 0
+  visionInterval: 2
   visibleEntities: []
   agent: {fileID: 0}
   currentTarget: {fileID: 0}
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
+  mate: {fileID: 0}
+  threat: {fileID: 0}
   currentStage: 0
   speciesGeneData: {fileID: 11400000, guid: 7c9e6737b9f76c245b9fdc1a29078b18, type: 2}
 --- !u!64 &2552954925779893251
@@ -699,7 +699,7 @@ MeshCollider:
   m_GameObject: {fileID: 131319039843492172}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30

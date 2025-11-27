@@ -139,20 +139,20 @@ MonoBehaviour:
   fearLevel: 0
   reproductionChance: 0
   attackStrength: 0
-  isPredator: 0
+  isPredator: 1
   isBreedable: 0
-  mate: {fileID: 0}
-  threat: {fileID: 0}
-  hungerThreshold: 0
+  hungerThreshold: 80
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
-  visionInterval: 0
+  visionInterval: 3
   visibleEntities: []
   agent: {fileID: 0}
   currentTarget: {fileID: 0}
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
+  mate: {fileID: 0}
+  threat: {fileID: 0}
   currentStage: 0
   speciesGeneData: {fileID: 11400000, guid: cb27cb02f7b6ec842a11897b3a0a3131, type: 2}
 --- !u!64 &1012005775632174969
@@ -164,7 +164,7 @@ MeshCollider:
   m_GameObject: {fileID: 667490550083428476}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30

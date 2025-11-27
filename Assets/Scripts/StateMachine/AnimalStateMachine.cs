@@ -23,9 +23,11 @@ public class AnimalStateMachine : StateMachine<AnimalStateMachine.AnimalState>
     public void setAnimal(Animal animal)
     {
         _animal = animal;
+        InitializeStates();
+
     }
 
-    void Awake()
+    private void InitializeStates()
     {
         States[AnimalState.Idle] = new AnimalIdle(this, AnimalState.Idle, _animal);
         States[AnimalState.Breed] = new AnimalBreed(this, AnimalState.Breed, _animal);

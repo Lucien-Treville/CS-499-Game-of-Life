@@ -50,8 +50,7 @@ public class Animal : LivingEntity
     public double attackStrength;
     public bool isPredator; // true if predator
     public bool isBreedable = false; // true if looking to breed
-    public Animal mate = null;
-    public Animal threat = null; // flee "target"
+   
 
     public double hungerThreshold; // determines stage of hunger in which animal will look for food
     public double thirstThreshold; // determines stage of thirst in which animal will look for drink
@@ -63,11 +62,12 @@ public class Animal : LivingEntity
     public float visionInterval; // how often the animal checks it vision
     public List<LivingEntity> visibleEntities = new List<LivingEntity>(); // the list of the visible entities 
 
-    GameObject targetObj; 
     public NavMeshAgent agent; // for navigation
-    public LivingEntity currentTarget; 
+    public LivingEntity currentTarget;
     public Transform currentTargetPos; // food/prey target
     public AnimalStateMachine _machine;
+    public Animal mate = null;
+    public Animal threat = null; // flee "target"
 
     public GrowthStage currentStage;
     // public AnimalState currentState; // not implemented yet, but public variable for other entities to read
@@ -76,7 +76,7 @@ public class Animal : LivingEntity
     {
         base.Start(); // assigns instanceID
         agent = GetComponent<NavMeshAgent>(); // for pathfinding
-        _machine = new AnimalStateMachine();
+        _machine = gameObject.AddComponent<AnimalStateMachine>();
         _machine.setAnimal(this);
         StartCoroutine(VisionRoutine()); 
 
