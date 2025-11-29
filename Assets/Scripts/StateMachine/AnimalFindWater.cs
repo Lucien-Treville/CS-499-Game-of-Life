@@ -31,6 +31,9 @@ public class AnimalFindWater : BaseState<AnimalStateMachine.AnimalState>
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
+        // if dead, DIE
+        if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
+
         // if drink found, drink
         // if fear, flee
 

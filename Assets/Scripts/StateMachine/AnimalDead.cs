@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimalSleep : BaseState<AnimalStateMachine.AnimalState>
+public class AnimalDead : BaseState<AnimalStateMachine.AnimalState>
 {
     private AnimalStateMachine _machine;
     private Animal _animal;
-    public AnimalSleep(AnimalStateMachine machine, AnimalStateMachine.AnimalState key, Animal animal)
+    public AnimalDead(AnimalStateMachine machine, AnimalStateMachine.AnimalState key, Animal animal)
         : base(key)
     {
         _machine = machine;
@@ -15,29 +15,26 @@ public class AnimalSleep : BaseState<AnimalStateMachine.AnimalState>
 
     public override void EnterState()
     {
-        Debug.Log("Entering Sleep");
-
+        Debug.Log("Entering Dead");
+        _animal.ClearTarget();
     }
 
     public override void ExitState()
     {
         Debug.Log("Exiting Idle");
-
     }
 
     public override void UpdateState()
     {
-        // increment sleepy
+        // no updates
     }
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
-        // if dead, DIE
-        if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
+        // no state changes
 
-        // if sleepy = 100 or fear > 10 go to idle
-        if (_animal.sleepLevel == 100) return AnimalStateMachine.AnimalState.Sleep;
 
         return StateKey;
     }
+
 }

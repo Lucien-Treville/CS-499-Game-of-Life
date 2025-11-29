@@ -105,6 +105,7 @@
     <Compile Include="Assets\Scripts\StateMachine\AnimalSleep.cs" />
     <Compile Include="Assets\Scripts\Camera\CornerUI.cs" />
     <Compile Include="Assets\Scripts\Behaviours\Flee.cs" />
+    <Compile Include="Assets\Scripts\StateMachine\AnimalDead.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

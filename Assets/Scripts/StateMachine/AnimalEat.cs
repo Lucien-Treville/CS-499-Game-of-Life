@@ -6,6 +6,7 @@ public class AnimalEat : BaseState<AnimalStateMachine.AnimalState>
 {
     private AnimalStateMachine _machine;
     private Animal _animal;
+    private LivingEntity _target;
     public AnimalEat(AnimalStateMachine machine, AnimalStateMachine.AnimalState key, Animal animal)
         : base(key)
     {
@@ -26,12 +27,20 @@ public class AnimalEat : BaseState<AnimalStateMachine.AnimalState>
 
     public override void UpdateState()
     {
-
+        _target = _animal.GetTargetEntity();
+        if (_target != null) _animal.Eat(_target);
     }
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
+        _target = _animal.GetTargetEntity();
+
+        // if dead, DIE
+        if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
+
         // if food is gone, but still hungry, findfood
+
+        if (_animal.hungerLevel <= _animal.hungerThreshold && _target == null) return AnimalStateMachine.AnimalState.FindFood;
         // if not hungry, idle
 
         if (_animal.hungerLevel > _animal.hungerThreshold) return AnimalStateMachine.AnimalState.Idle;

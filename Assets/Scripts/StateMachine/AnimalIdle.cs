@@ -16,6 +16,7 @@ public class AnimalIdle : BaseState<AnimalStateMachine.AnimalState>
     public override void EnterState()
     {
         Debug.Log("Entering Idle");
+        _animal.ClearTarget();
     }
 
     public override void ExitState()
@@ -32,6 +33,9 @@ public class AnimalIdle : BaseState<AnimalStateMachine.AnimalState>
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
+        // if dead, DIE
+        if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
+
         // if sleepy > threshold && fear = 0 sleep key
 
         // if fear > 40 flee key

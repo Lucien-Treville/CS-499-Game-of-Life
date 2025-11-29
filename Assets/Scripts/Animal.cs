@@ -15,6 +15,7 @@ using Dist = MathNet.Numerics.Distributions; // For normal distribution sampling
 
 public struct AnimalGenes
 {
+    public double[] nourishmentValueGene;
     public double[] movementSpeedGene;
     public double[] reproductionChanceGene;
     public double[] attackStrengthGene;
@@ -57,8 +58,8 @@ public class Animal : LivingEntity
     public double fleeThreshold; // determines flee threshold
     public double sleepThreshold; // determines when animal sleeps
 
-    private float visionRange; // how far the animal can see
-    private float visionAngle; // the angle the animal can see
+    public float visionRange; // how far the animal can see
+    public float visionAngle; // the angle the animal can see
     public float visionInterval; // how often the animal checks it vision
     public List<LivingEntity> visibleEntities = new List<LivingEntity>(); // the list of the visible entities 
 
@@ -140,6 +141,12 @@ public class Animal : LivingEntity
     {
         AnimalGenes childGenes = new AnimalGenes();
         // for each gene field, average mean and stddev with slight mutation
+
+        childGenes.nourishmentValueGene = new double[]
+        {
+                (p1.nourishmentValueGene[0] + p2.nourishmentValueGene[0]) / 2 + Dist.Normal.Sample(0, 0.1),
+                (p1.nourishmentValueGene[1] + p2.nourishmentValueGene[1]) / 2 + Dist.Normal.Sample(0, 0.05)
+        };
 
         childGenes.movementSpeedGene = new double[]
         {
@@ -277,6 +284,7 @@ public class Animal : LivingEntity
 
         // Filter for predators only
         List<Animal> predators = visible
+            .Where(e => e != null)
             .OfType<Animal>()                         // only animals
             .Where(a => a != this && a.isPredator)    // must be predator and not self
             .ToList();
@@ -305,6 +313,7 @@ public class Animal : LivingEntity
 
         // 2) Filter by type or species
         List<Animal> potentialTargets = visible
+            .Where(e => e != null)
             .OfType<Animal>()
             .Where(e => e != this && e.specieName == this.specieName && e.isBreedable == true)  // filters for own species
             .ToList();
@@ -375,23 +384,52 @@ public class Animal : LivingEntity
     private LivingEntity FindClosestAnimal()
     {
         return visibleEntities
-            .Where(e => e != this && e is Animal && e.specieName != this.specieName)
-            .OrderBy(e => Vector3.Distance(transform.position, e.transform.position))
-           .FirstOrDefault();
+            .Where(e => e != null)                // filter out destroyed UnityEngine.Objects early
+            .OfType<Animal>()                     // cast to Animal safely
+            .Where(a => a != this && a.specieName != this.specieName)
+            .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
+            .FirstOrDefault();
+
+            
     }
 
     private LivingEntity FindClosestPlant()
     {
         return visibleEntities
-            .Where(e => e is Plant)
+            .Where(e => e != null)
+            .OfType<Plant>()
             .OrderBy(e => Vector3.Distance(transform.position, e.transform.position))
             .FirstOrDefault();
     }
 
+    public LivingEntity GetTargetEntity() 
+    {
+        if (this.currentTarget != null) return currentTarget;
+        return null;
+    }
+
+    // returns the transform of the current target
     public Transform GetTarget()
     {
-        return this.currentTarget.transform;
+        if (this.currentTarget != null) return this.currentTarget.transform;
+        return null;
     }
+
+    public void ClearTarget()
+    {
+        this.currentTarget = null;
+    }
+
+    public float GetTargetDistance() 
+        {
+        Transform target = this.GetTarget();
+        if (target != null)
+        {
+            return Vector3.Distance(this.transform.position, target.position);
+
+        }
+        return -1f;
+    } 
 
     public void PursueTargetTransform(Transform t)
     {
@@ -432,7 +470,8 @@ public class Animal : LivingEntity
 
     public Transform GetThreat()
     {
-        return this.threat.transform;
+        if (this.threat != null) return this.threat.transform;
+        return null;
     }
 
     public void Flee(Transform threat)
@@ -455,16 +494,31 @@ public class Animal : LivingEntity
         agent.SetDestination(fleeTarget);
     }
 
-    public void SufferAttack(double damage)
+
+    public void AttackAnimal(LivingEntity animalTarget)
     {
-        this.health -= damage;
-
-        if (this.health <= 0)
-        {
-            Die();
-        }
-
+        double damage = this.attackStrength;
+        animalTarget.SufferAttack(damage);
     }
+
+    public void Eat(LivingEntity food)
+    {
+        if (food is Plant plant)
+        {
+            hungerLevel = Min(100.0, hungerLevel + plant.nourishmentValue);
+            plant.RemoveCorpse(); // consume the plant
+            ClearTarget();
+        }
+        else if (food is Animal prey)
+        {
+            hungerLevel = Min(100.0, hungerLevel + prey.nourishmentValue);
+            prey.RemoveCorpse(); // consume the prey
+            ClearTarget();
+
+        }
+    }
+
+    
 
 
 }

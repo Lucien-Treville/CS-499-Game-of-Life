@@ -127,24 +127,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7de31148350a3b542b0cd622dfdbf3e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  specieName: 
+  specieName: tiger
   age: 0
   health: 0
   height: 0
   instanceID: 0
-  movementSpeed: 0
+  movementSpeed: 6
   hungerLevel: 0
   thirstLevel: 0
   sleepLevel: 0
   fearLevel: 0
   reproductionChance: 0
-  attackStrength: 0
+  attackStrength: 30
   isPredator: 1
   isBreedable: 0
   hungerThreshold: 80
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
+  visionRange: 200
+  visionAngle: 120
   visionInterval: 3
   visibleEntities: []
   agent: {fileID: 0}
@@ -164,7 +166,7 @@ MeshCollider:
   m_GameObject: {fileID: 667490550083428476}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30

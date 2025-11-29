@@ -18,6 +18,7 @@ public class AnimalStateMachine : StateMachine<AnimalStateMachine.AnimalState>
         Breed,
         Drink,
         Eat,
+        Dead,
     }
 
     public void setAnimal(Animal animal)
@@ -40,6 +41,7 @@ public class AnimalStateMachine : StateMachine<AnimalStateMachine.AnimalState>
         States[AnimalState.Attack] = new AnimalAttack(this, AnimalState.Attack, _animal);
         States[AnimalState.Drink] = new AnimalDrink(this, AnimalState.Drink, _animal);
         States[AnimalState.Eat] = new AnimalEat(this, AnimalState.Eat, _animal);
+        States[AnimalState.Dead] = new AnimalDead(this, AnimalState.Dead, _animal);
 
 
 

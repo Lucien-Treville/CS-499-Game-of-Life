@@ -37,7 +37,7 @@ public class Plant : LivingEntity
 
     // instance attributes
     public GrowthStage currentStage;
-    public double nourishmentValue;
+    // public double nourishmentValue; animals are nourishing too
     public double fruitingChance;
     public double sproutingChance;
     public bool hasFruit;

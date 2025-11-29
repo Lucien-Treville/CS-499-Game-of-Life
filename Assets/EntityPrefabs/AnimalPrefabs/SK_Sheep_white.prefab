@@ -2685,7 +2685,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   specieName: 
   age: 0
-  health: 0
+  health: 50
   height: 0
   instanceID: 0
   movementSpeed: 0
@@ -2697,18 +2697,20 @@ MonoBehaviour:
   attackStrength: 0
   isPredator: 0
   isBreedable: 0
-  mate: {fileID: 0}
-  threat: {fileID: 0}
   hungerThreshold: 0
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
+  visionRange: 200
+  visionAngle: 260
   visionInterval: 0
   visibleEntities: []
   agent: {fileID: 0}
   currentTarget: {fileID: 0}
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
+  mate: {fileID: 0}
+  threat: {fileID: 0}
   currentStage: 0
   speciesGeneData: {fileID: 11400000, guid: dd5f75c9eb6f487498fd6035fccdfd1d, type: 2}
 --- !u!65 &-4807218586395442877

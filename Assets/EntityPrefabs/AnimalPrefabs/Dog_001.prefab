@@ -903,11 +903,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   specieName: 
   age: 0
-  health: 0
+  health: 50
   height: 0
   instanceID: 0
-  movementSpeed: 1
-  hungerLevel: 0
+  movementSpeed: 5
+  hungerLevel: 20
   thirstLevel: 0
   sleepLevel: 0
   fearLevel: 0
@@ -915,11 +915,13 @@ MonoBehaviour:
   attackStrength: 0
   isPredator: 1
   isBreedable: 0
-  hungerThreshold: 0
+  hungerThreshold: 80
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
-  visionInterval: 0
+  visionRange: 300
+  visionAngle: 160
+  visionInterval: 3
   visibleEntities: []
   agent: {fileID: 0}
   currentTarget: {fileID: 0}
@@ -938,7 +940,7 @@ MeshCollider:
   m_GameObject: {fileID: 6809041187645326175}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30

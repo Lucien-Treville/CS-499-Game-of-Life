@@ -663,22 +663,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   specieName: 
   age: 0
-  health: 0
+  health: 40
   height: 0
   instanceID: 0
-  movementSpeed: 0
+  movementSpeed: 3
   hungerLevel: 0
   thirstLevel: 0
   sleepLevel: 0
   fearLevel: 0
   reproductionChance: 0
-  attackStrength: 0
+  attackStrength: 70
   isPredator: 1
   isBreedable: 0
-  hungerThreshold: 80
+  hungerThreshold: 60
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
+  visionRange: 6
+  visionAngle: 120
   visionInterval: 1.5
   visibleEntities: []
   agent: {fileID: 0}
@@ -698,7 +700,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 6802353888705948949}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   m_Radius: 0.34157354
   m_Height: 1.4099154
   m_Direction: 1
