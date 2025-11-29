@@ -4,6 +4,17 @@ using System.IO;
 
 public class SceneLoader : MonoBehaviour
 {
+
+
+    void Start()
+    {
+        if (PopulationManager.Instance != null)
+        {
+            PopulationManager.Instance = null;
+        }
+    }
+
+
     public void LoadGrasslandsDemo()
     {
         MapLoader.jsonFileName = "demo.json";
@@ -55,6 +66,15 @@ public class SceneLoader : MonoBehaviour
         string path = UnityEditor.EditorUtility.OpenFilePanel("Select Custom Template JSON", "", "json");
         MapLoader.jsonFilePath = path;
         MapLoader.jsonFileName = "userFile";
+        try
+        {
+            MapLoader.ReadJSON(path);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("Error reading custom JSON file: " + ex.Message);
+            return;
+        }
         Debug.Log("Selected file: " + path);
         SceneManager.LoadScene("Grasslands");
 

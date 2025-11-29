@@ -783,10 +783,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6139886573927979493}
-  - component: {fileID: 8912221127589748567}
   - component: {fileID: 500078792939999956}
+  - component: {fileID: 8912221127589748567}
   - component: {fileID: 3557026099151688088}
   - component: {fileID: 1569846543461116819}
+  - component: {fileID: 6691376323329947310}
+  - component: {fileID: 6935843309250375240}
   m_Layer: 0
   m_Name: Dog_001
   m_TagString: Untagged
@@ -810,24 +812,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!143 &8912221127589748567
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6809041187645326175}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 0.63
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.49, z: 0}
 --- !u!95 &500078792939999956
 Animator:
   serializedVersion: 5
@@ -849,6 +833,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!143 &8912221127589748567
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6809041187645326175}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 0.63
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.49, z: 0}
 --- !u!195 &3557026099151688088
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -869,7 +871,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 0
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 5
   m_ObstacleAvoidanceType: 4
 --- !u!54 &1569846543461116819
 Rigidbody:
@@ -887,6 +889,60 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6691376323329947310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6809041187645326175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7de31148350a3b542b0cd622dfdbf3e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specieName: 
+  age: 0
+  health: 0
+  height: 0
+  instanceID: 0
+  movementSpeed: 1
+  hungerLevel: 0
+  thirstLevel: 0
+  sleepLevel: 0
+  fearLevel: 0
+  reproductionChance: 0
+  attackStrength: 0
+  isPredator: 1
+  isBreedable: 0
+  hungerThreshold: 0
+  thirstThreshold: 0
+  fleeThreshold: 0
+  sleepThreshold: 0
+  visionInterval: 0
+  visibleEntities: []
+  agent: {fileID: 0}
+  currentTarget: {fileID: 0}
+  currentTargetPos: {fileID: 0}
+  _machine: {fileID: 0}
+  mate: {fileID: 0}
+  threat: {fileID: 0}
+  currentStage: 0
+  speciesGeneData: {fileID: 11400000, guid: 872c381d325a9a84da6b88513d0b804e, type: 2}
+--- !u!64 &6935843309250375240
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6809041187645326175}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 1172191465821915620, guid: 0c0f883d7bc25dd4d84c3c7795a4a332, type: 3}
 --- !u!1 &6914457497302595084
 GameObject:
   m_ObjectHideFlags: 0

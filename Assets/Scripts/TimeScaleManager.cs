@@ -11,6 +11,8 @@ public class TimeScaleManager : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1.0f;
+        
         // Set the slider's initial value to match the game's time scale
         if (speedSlider != null)
         {

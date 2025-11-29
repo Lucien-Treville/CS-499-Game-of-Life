@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AnimalStateMachine : StateMachine<AnimalStateMachine.AnimalState>
 {
+    private Animal _animal;
     public enum AnimalState
     {
         Idle,
@@ -19,19 +20,27 @@ public class AnimalStateMachine : StateMachine<AnimalStateMachine.AnimalState>
         Eat,
     }
 
-    void Awake()
+    public void setAnimal(Animal animal)
     {
-        States[AnimalState.Idle] = new AnimalIdle(this, AnimalState.Idle);
-        States[AnimalState.Breed] = new AnimalBreed(this, AnimalState.Breed);
-        States[AnimalState.Sleep] = new AnimalSleep(this, AnimalState.Sleep);
-        States[AnimalState.FindMate] = new AnimalIdle(this, AnimalState.FindMate);
-        States[AnimalState.FindWater] = new AnimalBreed(this, AnimalState.FindWater);
-        States[AnimalState.FindFood] = new AnimalSleep(this, AnimalState.FindFood);
-        States[AnimalState.Chase] = new AnimalIdle(this, AnimalState.Chase);
-        States[AnimalState.Flee] = new AnimalBreed(this, AnimalState.Flee);
-        States[AnimalState.Attack] = new AnimalSleep(this, AnimalState.Attack);
-        States[AnimalState.Drink] = new AnimalIdle(this, AnimalState.Drink);
-        States[AnimalState.Eat] = new AnimalBreed(this, AnimalState.Eat);
+        _animal = animal;
+        InitializeStates();
+
+    }
+
+    private void InitializeStates()
+    {
+        States[AnimalState.Idle] = new AnimalIdle(this, AnimalState.Idle, _animal);
+        States[AnimalState.Breed] = new AnimalBreed(this, AnimalState.Breed, _animal);
+        States[AnimalState.Sleep] = new AnimalSleep(this, AnimalState.Sleep, _animal);
+        States[AnimalState.FindMate] = new AnimalFindMate(this, AnimalState.FindMate, _animal);
+        States[AnimalState.FindWater] = new AnimalFindWater(this, AnimalState.FindWater, _animal);
+        States[AnimalState.FindFood] = new AnimalFindFood(this, AnimalState.FindFood, _animal);
+        States[AnimalState.Chase] = new AnimalChase(this, AnimalState.Chase, _animal);
+        States[AnimalState.Flee] = new AnimalFlee(this, AnimalState.Flee, _animal);
+        States[AnimalState.Attack] = new AnimalAttack(this, AnimalState.Attack, _animal);
+        States[AnimalState.Drink] = new AnimalDrink(this, AnimalState.Drink, _animal);
+        States[AnimalState.Eat] = new AnimalEat(this, AnimalState.Eat, _animal);
+
 
 
         CurrentState = States[AnimalState.Idle];

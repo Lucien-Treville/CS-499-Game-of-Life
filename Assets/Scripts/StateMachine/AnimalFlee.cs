@@ -5,10 +5,12 @@ using UnityEngine;
 public class AnimalFlee : BaseState<AnimalStateMachine.AnimalState>
 {
     private AnimalStateMachine _machine;
-    public AnimalFlee(AnimalStateMachine machine, AnimalStateMachine.AnimalState key)
+    private Animal _animal;
+    public AnimalFlee(AnimalStateMachine machine, AnimalStateMachine.AnimalState key, Animal animal)
         : base(key)
     {
         _machine = machine;
+        _animal = animal;
     }
     public override void EnterState()
     {
@@ -22,11 +24,18 @@ public class AnimalFlee : BaseState<AnimalStateMachine.AnimalState>
 
     public override void UpdateState()
     {
+        _animal.UpdateFear();
+        Transform threat = _animal.GetThreat();
+        _animal.Flee(threat);
 
     }
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
+        // if fear < threshold = idle key
+
+        if (_animal.fearLevel < _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Idle;
+        // else
         return StateKey;
     }
 }

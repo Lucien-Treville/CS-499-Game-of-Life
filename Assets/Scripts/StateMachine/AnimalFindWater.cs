@@ -5,10 +5,12 @@ using UnityEngine;
 public class AnimalFindWater : BaseState<AnimalStateMachine.AnimalState>
 {
     private AnimalStateMachine _machine;
-    public AnimalFindWater(AnimalStateMachine machine, AnimalStateMachine.AnimalState key)
+    private Animal _animal;
+    public AnimalFindWater(AnimalStateMachine machine, AnimalStateMachine.AnimalState key, Animal animal)
         : base(key)
     {
         _machine = machine;
+        _animal = animal;
     }
     public override void EnterState()
     {
@@ -24,13 +26,15 @@ public class AnimalFindWater : BaseState<AnimalStateMachine.AnimalState>
 
     public override void UpdateState()
     {
-
+        _animal.Wander();
     }
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
         // if drink found, drink
         // if fear, flee
+
+        if (_animal.fearLevel > _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Flee;
         return StateKey;
     }
 }
