@@ -154,13 +154,14 @@ public class PopulationGraph : MonoBehaviour
                 if (pt.time < minX) minX = pt.time;
                 if (pt.time > maxX) maxX = pt.time;
                 if (pt.count < minY) minY = pt.count;
-                if (pt.count > minY) maxY = pt.count;
+                if (pt.count > maxY) maxY = pt.count;  // <-- FIXED
             }
         }
 
         if (minX == maxX) maxX += 1f;
         if (minY == maxY) maxY += 1f;
     }
+
 
     void DrawAxes()
     {
@@ -235,8 +236,8 @@ public class PopulationGraph : MonoBehaviour
 
             RectTransform rt = label.GetComponent<RectTransform>();
 
-            rt.anchorMin = new Vector2(1, 0);
-            rt.anchorMax = new Vector2(1, 0);
+            rt.anchorMin = new Vector2(0, 0);
+            rt.anchorMax = new Vector2(0, 0);
             rt.pivot = new Vector2(0, 0.5f);
 
             // Proper spacing vertically
