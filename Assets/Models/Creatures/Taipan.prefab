@@ -467,6 +467,7 @@ GameObject:
   - component: {fileID: 8999338503545881367}
   - component: {fileID: 3961114142717461643}
   - component: {fileID: 3701583169001772672}
+  - component: {fileID: -4708210296135385380}
   m_Layer: 0
   m_Name: Taipan
   m_TagString: Untagged
@@ -526,7 +527,7 @@ LODGroup:
   m_Enabled: 1
 --- !u!95 &3701583169001772672
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -539,10 +540,24 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-4708210296135385380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4807929556901506227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 363f7b3fa781cae439de634e0e8a6d67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5062559287153234616
 GameObject:
   m_ObjectHideFlags: 0

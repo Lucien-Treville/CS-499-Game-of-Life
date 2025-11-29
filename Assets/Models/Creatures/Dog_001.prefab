@@ -441,6 +441,7 @@ GameObject:
   - component: {fileID: 4203687711656398374}
   - component: {fileID: 8592144788571991367}
   - component: {fileID: 1304007088607568934}
+  - component: {fileID: 1961183158983284202}
   m_Layer: 0
   m_Name: Dog_001
   m_TagString: Untagged
@@ -566,10 +567,39 @@ MonoBehaviour:
   instanceID: 0
   movementSpeed: 0
   hungerLevel: 0
+  thirstLevel: 0
+  sleepLevel: 0
+  fearLevel: 0
   reproductionChance: 0
   attackStrength: 0
+  isPredator: 0
+  isBreedable: 0
+  hungerThreshold: 0
+  thirstThreshold: 0
+  fleeThreshold: 0
+  sleepThreshold: 0
+  visionInterval: 0
+  visibleEntities: []
+  agent: {fileID: 0}
+  currentTarget: {fileID: 0}
+  currentTargetPos: {fileID: 0}
+  _machine: {fileID: 0}
+  mate: {fileID: 0}
+  threat: {fileID: 0}
   currentStage: 0
   speciesGeneData: {fileID: 11400000, guid: 872c381d325a9a84da6b88513d0b804e, type: 2}
+--- !u!114 &1961183158983284202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2629182449500102118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 363f7b3fa781cae439de634e0e8a6d67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2735724662372591797
 GameObject:
   m_ObjectHideFlags: 0

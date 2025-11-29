@@ -567,6 +567,7 @@ GameObject:
   - component: {fileID: 1095417119727044859}
   - component: {fileID: -726691444875608972}
   - component: {fileID: 2552954925779893251}
+  - component: {fileID: -7020863494787325897}
   m_Layer: 0
   m_Name: Rabbit 1
   m_TagString: Untagged
@@ -704,6 +705,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 0962bdca27eaca34aaa15f7fdf608faf, type: 3}
+--- !u!114 &-7020863494787325897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 131319039843492172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 363f7b3fa781cae439de634e0e8a6d67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &131389729738583124
 GameObject:
   m_ObjectHideFlags: 0

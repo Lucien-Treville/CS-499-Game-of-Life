@@ -902,6 +902,7 @@ GameObject:
   - component: {fileID: 5883155896844355907}
   - component: {fileID: 5883155896844355916}
   - component: {fileID: 5883155896844355917}
+  - component: {fileID: 2328738670814495979}
   m_Layer: 0
   m_Name: Tiger_001
   m_TagString: Untagged
@@ -1008,6 +1009,18 @@ MonoBehaviour:
   m_MouseX: Mouse X
   m_MouseY: Mouse Y
   m_MouseScroll: Mouse ScrollWheel
+--- !u!114 &2328738670814495979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883155896844355918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 363f7b3fa781cae439de634e0e8a6d67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6083925854692512673
 GameObject:
   m_ObjectHideFlags: 0

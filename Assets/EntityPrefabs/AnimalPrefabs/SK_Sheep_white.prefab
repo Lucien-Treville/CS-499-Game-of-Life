@@ -2568,6 +2568,7 @@ GameObject:
   - component: {fileID: 2590562551135433721}
   - component: {fileID: 297798453621781282}
   - component: {fileID: -4807218586395442877}
+  - component: {fileID: 450779223414314703}
   m_Layer: 0
   m_Name: SK_Sheep_white
   m_TagString: Untagged
@@ -2697,8 +2698,6 @@ MonoBehaviour:
   attackStrength: 0
   isPredator: 0
   isBreedable: 0
-  mate: {fileID: 0}
-  threat: {fileID: 0}
   hungerThreshold: 0
   thirstThreshold: 0
   fleeThreshold: 0
@@ -2709,6 +2708,8 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
+  mate: {fileID: 0}
+  threat: {fileID: 0}
   currentStage: 0
   speciesGeneData: {fileID: 11400000, guid: dd5f75c9eb6f487498fd6035fccdfd1d, type: 2}
 --- !u!65 &-4807218586395442877
@@ -2724,6 +2725,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.2284662, z: 1.4351877}
   m_Center: {x: 0, y: 0.6402741, z: 0.21759391}
+--- !u!114 &450779223414314703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7759776975684516640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 363f7b3fa781cae439de634e0e8a6d67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7759776975688789851
 GameObject:
   m_ObjectHideFlags: 0
