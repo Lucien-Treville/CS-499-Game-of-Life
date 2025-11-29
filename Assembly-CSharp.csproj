@@ -58,7 +58,6 @@
      <Compile Include="Assets\Models\Creatures\ithappy\Animals_FREE\Scripts\PlayerCamera.cs" />
      <Compile Include="Assets\Scripts\ToggleSpawner.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalChase.cs" />
-     <Compile Include="Assets\Scripts\MapExporter.cs" />
      <Compile Include="Assets\Models\Creatures\Rabbits\Demo\Scripts\AnimatorParamatersChange.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalIdle.cs" />
      <Compile Include="Assets\Scripts\StateMachine\AnimalStateMachine.cs" />
@@ -68,7 +67,6 @@
      <Compile Include="Assets\Scripts\ChartSelector.cs" />
      <Compile Include="Assets\Scripts\StateMachine\StateMachine.cs" />
      <Compile Include="Assets\Scripts\ScriptableObjects\GrazerSpecies.cs" />
-     <Compile Include="Assets\Scripts\MapEditor.cs" />
      <Compile Include="Assets\Scripts\Database\Database.cs" />
      <Compile Include="Assets\Scripts\ScriptableObjects\PredatorSpecies.cs" />
      <Compile Include="Assets\Models\Creatures\UrsaAnimation\LOW POLY CUBIC - Goat and Sheep Pack\scripts\AnimationController.cs" />
