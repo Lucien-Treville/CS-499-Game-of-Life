@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -7511558181221131132}
   - component: {fileID: -8112225739562517552}
   - component: {fileID: 2728488253852752466}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: flowers-tall
   m_TagString: Placeable
   m_Icon: {fileID: 0}
@@ -112,10 +112,12 @@ MonoBehaviour:
   age: 0
   health: 0
   height: 0
+  nourishmentValue: 0
   instanceID: 0
+  isDead: 0
+  isCorpse: 0
   speciesGeneData: {fileID: 11400000, guid: 2591241ce250e9b49b80da14e500b9f4, type: 2}
   currentStage: 0
-  nourishmentValue: 0
   fruitingChance: 0
   sproutingChance: 0
   hasFruit: 0

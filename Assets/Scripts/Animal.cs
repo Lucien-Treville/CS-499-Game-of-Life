@@ -60,7 +60,7 @@ public class Animal : LivingEntity
 
     public float visionRange; // how far the animal can see
     public float visionAngle; // the angle the animal can see
-    public float visionInterval; // how often the animal checks it vision
+    public float visionInterval = 5f; // how often the animal checks it vision
     public List<LivingEntity> visibleEntities = new List<LivingEntity>(); // the list of the visible entities 
 
     public NavMeshAgent agent; // for navigation
@@ -93,6 +93,7 @@ public class Animal : LivingEntity
 
     protected override void FixedUpdate()
     {
+        if (isDead) return;
         base.FixedUpdate();
         Grow();
         if (hungerLevel <= 0)
@@ -223,7 +224,7 @@ public class Animal : LivingEntity
     // This builds a list of visible plants and animals by first creating a spherical collider, and then using raycasts to filter out occluded entites
     public List<LivingEntity> GetVisibleEntities()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, visionRange);
+        Collider[] hits = Physics.OverlapSphere(transform.position, visionRange, LayerMask.GetMask("LivingEntity"));
         List<LivingEntity> visible = new List<LivingEntity>();
 
         foreach (var hit in hits)
@@ -276,7 +277,7 @@ public class Animal : LivingEntity
     // looks for the closest predator to determine if fleeing is necessary
     public Animal DetectThreats()
     {
-        if (isPredator) return null;
+        // if (isPredator) return null;
 
         List<LivingEntity> visible = visibleEntities;
 
