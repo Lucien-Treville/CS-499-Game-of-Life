@@ -9,6 +9,8 @@ public class SpawnMenu : MonoBehaviour
     public VisibilityToggle visibilityToggle;
 
     private GameObject activeObject;
+
+
     void Awake()
     {
         SelectObject(0);
@@ -28,6 +30,13 @@ public class SpawnMenu : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 300f, groundMask))
             {
                 Instantiate(activeObject, hit.point, Quaternion.identity);
+                // update population manager after instantiating creature
+                // Debug.LogWarning("Initializing species: " + activeObject.name);
+                PopulationManager.Instance.InitializeSpecies(activeObject.name, 1);
+
+
+
+
                 Debug.Log("Spawned on: " + hit.collider.gameObject.name);
             }
         }

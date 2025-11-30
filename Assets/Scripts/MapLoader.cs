@@ -43,6 +43,7 @@ public class MapLoader : MonoBehaviour
     public GameObject flowerPrefab;
     public GameObject stumpPrefab;
     public GameObject boulderPrefab;
+    public GameObject grassPrefab;
 
     public static string jsonFileName = "demo.json"; // or demo.json if user clicks on Demo button
     public static string jsonFilePath;
@@ -75,7 +76,8 @@ public class MapLoader : MonoBehaviour
                 {
                     {"Berry Bush", new List<object> { } },
                     {"Apple Tree", new List<object> { } },
-                    {"Flowers", new List<object> { } }
+                    {"Flowers", new List<object> { } },
+                    {"Grass", new List<object> { } }
                 }
             },
             {"Obstacles", new Dictionary<string, object>
@@ -123,8 +125,6 @@ public class MapLoader : MonoBehaviour
         JObject root = JObject.Parse(json);
 
         var firstKeys = new[] { "Predators", "Grazers", "Plants", "Obstacles" };
-        // Example: Extract all creatures from "Predators"
-        var predators = root["Predators"];
         foreach (var creatureType in firstKeys)
         {
             var creatures = root[creatureType];
@@ -149,10 +149,15 @@ public class MapLoader : MonoBehaviour
                     if (position.x < -100 || position.x > 100 || position.z < -100 || position.z > 100)
                         throw new System.Exception("Spawn position out of bounds in JSON spawn data. Found position " + position + " for " + name + " (must be within -100 to 100 for x and z)");
 
+                    if (count < 0)
+                        throw new System.Exception("Spawn count cannot be negative in JSON spawn data. Found count=" + count + " for " + name);
+                    if (count > 15)
+                        throw new System.Exception("High spawn count (" + count + " > 15) for " + name + ", may cause performance issues or spawning problems.");
+
                     if (SceneManager.GetActiveScene().name == "Grasslands")
                     {
+                        // Debug.Log($"Parsed spawn: {count} x {name} at {position} in {creatureType}");
                         ((List<object>)((Dictionary<string, object>)jsonData[creatureType])[name]).Add(new object[] { count, position });
-                        // instantiate prefabs based on name and position here
                     }
                 }
             }
@@ -238,6 +243,9 @@ public class MapLoader : MonoBehaviour
                             break;
                         case "Boulder":
                             prefabToSpawn = boulderPrefab;
+                            break;
+                        case "Grass":
+                            prefabToSpawn = grassPrefab;
                             break;
                         default:
                             Debug.LogWarning("No prefab found for " + creaturePair.Key);

@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 ﻿using UnityEngine;
 using System.Collections.Generic;
+=======
+using UnityEngine;
+using System.Collections.Generic; 
+using TMPro;
+using UnityEngine.UI;
+>>>>>>> origin/main
 
 public class PopulationManager : MonoBehaviour
 {
     public static PopulationManager Instance;
+    public TextMeshProUGUI TerminationText;
+    public Canvas TerminationCanvas;
 
     public Dictionary<string, SpeciesStats> populationData = new Dictionary<string, SpeciesStats>();
     public float simStartTime;
@@ -43,12 +52,77 @@ public class PopulationManager : MonoBehaviour
             {
                 sp.AddToHistory(Time.time - simStartTime);
             }
+            // check termination conditions
+            if (GetPlantCount() <= 0)
+            {
+                Debug.Log("All plants have been eliminated! Simulation ending.");
+                TerminationText.text = "All plants have been eliminated! Grazers are soon to starve, causing predators to starve as well. Simulation ending.";
+                TerminationCanvas.gameObject.SetActive(true);
+                Time.timeScale = 0f;
+                // Implement additional termination logic here (e.g., stop simulation, notify user)
+            }
+            if (GetGrazerCount() <= 0)
+            {
+                Debug.Log("All grazers have been eliminated! Simulation ending.");
+                TerminationText.text = "All grazers have been eliminated! Predators are soon to starve. Simulation ending.";
+                TerminationCanvas.gameObject.SetActive(true);
+                Time.timeScale = 0f;
+                // Implement additional termination logic here (e.g., stop simulation, notify user)
+            }
         }
     }
 
+<<<<<<< HEAD
     // ---------------------------------------------------------
     // 1. Initialize a species (Spawner/PopulationCounter calls this)
     // ---------------------------------------------------------
+=======
+
+    // make getter methods for predator, grazer, and plant currentCount for termination conditions
+    public int GetPredatorCount()
+    {
+        List<string> predatorSpecies = new List<string> { "Wolf", "Tiger", "Snake" };
+        int totalPredators = 0;
+        foreach (string species in predatorSpecies)
+        {
+            if (populationData.ContainsKey(species))
+            {
+                totalPredators += populationData[species].currentCount;
+            }
+        }
+        return totalPredators;
+    }
+
+    public int GetGrazerCount()
+    {
+        List<string> grazerSpecies = new List<string> { "Sheep", "Rabbit", "Horse" };
+        int totalGrazers = 0;
+        foreach (string species in grazerSpecies)
+        {
+            if (populationData.ContainsKey(species))
+            {
+                totalGrazers += populationData[species].currentCount;
+            }
+        }
+        return totalGrazers;
+    }
+
+    public int GetPlantCount()
+    {
+        List<string> plantSpecies = new List<string> { "Berry Bush", "Apple Tree", "Flowers", "Grass" };
+        int totalPlants = 0;
+        foreach (string species in plantSpecies)
+        {
+            if (populationData.ContainsKey(species))
+            {
+                totalPlants += populationData[species].currentCount;
+            }
+        }
+        return totalPlants;
+    }
+
+    // 1. Initialize a specific species (Called by Spawner/PopulationCounter)
+>>>>>>> origin/main
     public void InitializeSpecies(string speciesName, int count)
     {
         if (populationData.ContainsKey(speciesName))
@@ -93,7 +167,13 @@ public class PopulationManager : MonoBehaviour
             populationData[speciesName].currentCount += amount;
             populationData[speciesName].UpdateStats();
 
+<<<<<<< HEAD
             Debug.Log($"[POP-MANAGER] Species '{speciesName}' count changed by {amount} → now {populationData[speciesName].currentCount}");
+=======
+            Debug.Log($"Species: {speciesName} | Updated Count: {populationData[speciesName].currentCount}");
+
+            
+>>>>>>> origin/main
         }
     }
 }
