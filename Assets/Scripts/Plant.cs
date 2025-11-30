@@ -89,7 +89,7 @@ public class Plant : LivingEntity
                 if (age > 15)
                 {
                     currentStage = GrowthStage.Young;
-                    height *= 1.5f; // random growth factor
+                    transform.localScale *= 1.5f; // random growth factor
                     Debug.Log($"Plant, {specieName}, (ID: {instanceID}) has grown to the Young stage.");
                 }
                 break;
