@@ -10,14 +10,6 @@ public class SpawnMenu : MonoBehaviour
 
     private GameObject activeObject;
 
-    // public Dictionary<string, string> prefabToSpeciesName = new Dictionary<string, string>()
-    // {
-    //     {"RabbitPrefab", "Rabbit" },
-    //     {"FoxPrefab", "Fox" },
-    //     {"WolfPrefab", "Wolf" },
-    //     {"DeerPrefab", "Deer" },
-    //     {"BearPrefab", "Bear" }
-    // };
 
     void Awake()
     {
@@ -39,7 +31,7 @@ public class SpawnMenu : MonoBehaviour
             {
                 Instantiate(activeObject, hit.point, Quaternion.identity);
                 // update population manager after instantiating creature
-                Debug.LogWarning("Initializing species: " + activeObject.name);
+                // Debug.LogWarning("Initializing species: " + activeObject.name);
                 PopulationManager.Instance.InitializeSpecies(activeObject.name, 1);
 
 

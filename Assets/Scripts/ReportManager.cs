@@ -14,7 +14,13 @@ public class ReportManager : MonoBehaviour
     {
         if (PopulationManager.Instance == null) Debug.Log("PopulationManager instance not found. Did you start the simulation?");
         if (populationCardContainer == null) Debug.LogError("You forgot to assign the Population Card Container in the Inspector!");
-     
+
+
+        // testing
+        Debug.Log($"Population manager shows {PopulationManager.Instance.GetPredatorCount()} predators currently.");
+        Debug.Log($"Population manager shows {PopulationManager.Instance.GetGrazerCount()} grazers currently.");
+        Debug.Log($"Population manager shows {PopulationManager.Instance.GetPlantCount()} plants currently.");
+
         // PrintSpeciesCounts();
         
         PopulateReport();
@@ -25,6 +31,8 @@ public class ReportManager : MonoBehaviour
     {
 
     }
+
+    // for testing, prints in Debug.Log all species counts and histories
     public void PrintSpeciesCounts()
     {
         if (PopulationManager.Instance != null)

@@ -1,6 +1,5 @@
 using UnityEngine;
-using System.Collections.Generic; // Required for Dictionaries
-
+using System.Collections.Generic; 
 public class PopulationManager : MonoBehaviour
 {
     public static PopulationManager Instance;
@@ -49,6 +48,50 @@ public class PopulationManager : MonoBehaviour
             }
         }
         // -------------------------------
+    }
+
+
+    // make getter methods for predator, grazer, and plant currentCount for termination conditions
+    public int GetPredatorCount()
+    {
+        List<string> predatorSpecies = new List<string> { "Wolf", "Tiger", "Snake" };
+        int totalPredators = 0;
+        foreach (string species in predatorSpecies)
+        {
+            if (populationData.ContainsKey(species))
+            {
+                totalPredators += populationData[species].currentCount;
+            }
+        }
+        return totalPredators;
+    }
+
+    public int GetGrazerCount()
+    {
+        List<string> grazerSpecies = new List<string> { "Sheep", "Rabbit", "Horse" };
+        int totalGrazers = 0;
+        foreach (string species in grazerSpecies)
+        {
+            if (populationData.ContainsKey(species))
+            {
+                totalGrazers += populationData[species].currentCount;
+            }
+        }
+        return totalGrazers;
+    }
+
+    public int GetPlantCount()
+    {
+        List<string> plantSpecies = new List<string> { "Berry Bush", "Apple Tree", "Flowers", "Grass" };
+        int totalPlants = 0;
+        foreach (string species in plantSpecies)
+        {
+            if (populationData.ContainsKey(species))
+            {
+                totalPlants += populationData[species].currentCount;
+            }
+        }
+        return totalPlants;
     }
 
     // 1. Initialize a specific species (Called by Spawner/PopulationCounter)
