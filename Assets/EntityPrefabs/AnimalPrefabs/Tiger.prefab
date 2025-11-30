@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -3488817795685704654}
   - component: {fileID: 1012005775632174969}
   m_Layer: 0
-  m_Name: Tiger_001
+  m_Name: Tiger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

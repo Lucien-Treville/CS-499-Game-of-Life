@@ -534,7 +534,7 @@ GameObject:
   - component: {fileID: 790717749187890581}
   - component: {fileID: -8552031770256655360}
   m_Layer: 0
-  m_Name: Taipan
+  m_Name: Snake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

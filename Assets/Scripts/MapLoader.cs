@@ -156,7 +156,7 @@ public class MapLoader : MonoBehaviour
 
                     if (SceneManager.GetActiveScene().name == "Grasslands")
                     {
-                        Debug.Log($"Parsed spawn: {count} x {name} at {position} in {creatureType}");
+                        // Debug.Log($"Parsed spawn: {count} x {name} at {position} in {creatureType}");
                         ((List<object>)((Dictionary<string, object>)jsonData[creatureType])[name]).Add(new object[] { count, position });
                     }
                 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 934920323918738111}
   - component: {fileID: -3338756651545665293}
   m_Layer: 0
-  m_Name: tree
+  m_Name: Apple Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -692,7 +692,7 @@ GameObject:
   - component: {fileID: -4502618485523898141}
   - component: {fileID: 3793294230342720868}
   m_Layer: 0
-  m_Name: Horse_001 1
+  m_Name: Horse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

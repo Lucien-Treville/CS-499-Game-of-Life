@@ -2569,7 +2569,7 @@ GameObject:
   - component: {fileID: 297798453621781282}
   - component: {fileID: -4807218586395442877}
   m_Layer: 0
-  m_Name: SK_Sheep_white
+  m_Name: Sheep
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
