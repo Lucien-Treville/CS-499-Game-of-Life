@@ -1,8 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic; 
+using TMPro;
+using UnityEngine.UI;
+
 public class PopulationManager : MonoBehaviour
 {
     public static PopulationManager Instance;
+    public TextMeshProUGUI TerminationText;
+    public Canvas TerminationCanvas;
 
     // The Key is the species name (string), the Value is the stats object
     public Dictionary<string, SpeciesStats> populationData = new Dictionary<string, SpeciesStats>();
@@ -45,6 +50,23 @@ public class PopulationManager : MonoBehaviour
             foreach (var sp in populationData.Values)
             {
                 sp.AddToHistory(Time.time - simStartTime);
+            }
+            // check termination conditions
+            if (GetPlantCount() <= 0)
+            {
+                Debug.Log("All plants have been eliminated! Simulation ending.");
+                TerminationText.text = "All plants have been eliminated! Grazers are soon to starve, causing predators to starve as well. Simulation ending.";
+                TerminationCanvas.gameObject.SetActive(true);
+                Time.timeScale = 0f;
+                // Implement additional termination logic here (e.g., stop simulation, notify user)
+            }
+            if (GetGrazerCount() <= 0)
+            {
+                Debug.Log("All grazers have been eliminated! Simulation ending.");
+                TerminationText.text = "All grazers have been eliminated! Predators are soon to starve. Simulation ending.";
+                TerminationCanvas.gameObject.SetActive(true);
+                Time.timeScale = 0f;
+                // Implement additional termination logic here (e.g., stop simulation, notify user)
             }
         }
         // -------------------------------
@@ -125,6 +147,8 @@ public class PopulationManager : MonoBehaviour
             populationData[speciesName].UpdateStats();
 
             Debug.Log($"Species: {speciesName} | Updated Count: {populationData[speciesName].currentCount}");
+
+            
         }
     }
 }
