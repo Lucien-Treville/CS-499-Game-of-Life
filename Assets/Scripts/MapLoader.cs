@@ -149,10 +149,15 @@ public class MapLoader : MonoBehaviour
                     if (position.x < -100 || position.x > 100 || position.z < -100 || position.z > 100)
                         throw new System.Exception("Spawn position out of bounds in JSON spawn data. Found position " + position + " for " + name + " (must be within -100 to 100 for x and z)");
 
+                    if (count < 0)
+                        throw new System.Exception("Spawn count cannot be negative in JSON spawn data. Found count=" + count + " for " + name);
+                    if (count > 15)
+                        throw new System.Exception("High spawn count (" + count + " > 15) for " + name + ", may cause performance issues or spawning problems.");
+
                     if (SceneManager.GetActiveScene().name == "Grasslands")
                     {
+                        Debug.Log($"Parsed spawn: {count} x {name} at {position} in {creatureType}");
                         ((List<object>)((Dictionary<string, object>)jsonData[creatureType])[name]).Add(new object[] { count, position });
-                        // instantiate prefabs based on name and position here
                     }
                 }
             }
