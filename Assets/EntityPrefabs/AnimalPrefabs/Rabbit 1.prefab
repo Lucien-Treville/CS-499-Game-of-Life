@@ -680,15 +680,17 @@ MonoBehaviour:
   isPredator: 0
   isBreedable: 0
   hungerThreshold: 80
-  thirstThreshold: 0
+  thirstThreshold: 40
   fleeThreshold: 0
   sleepThreshold: 0
   visionRange: 200
   visionAngle: 240
   visionInterval: 10
   visibleEntities: []
+  watersources: []
   agent: {fileID: 0}
   currentTarget: {fileID: 0}
+  waterTarget: {fileID: 0}
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
   mate: {fileID: 0}
