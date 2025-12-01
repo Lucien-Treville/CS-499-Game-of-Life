@@ -25,20 +25,18 @@ public class HeatMapRenderer : MonoBehaviour
 
     // --------- ANIMAL SPECIES COLORS ----------
     // NOTE: keys MUST match the parsed species names (see ParseSpeciesName).
-    private static readonly Dictionary<string, Color> speciesColors = new Dictionary<string, Color>
+    public static readonly Dictionary<string, Color> speciesColors = new Dictionary<string, Color>
 {
-    { "Rabbit", new Color(1f, 0.9f, 0.2f) },   // Yellow
-    { "Wolf",   new Color(1f, 0.2f, 0.2f) },   // Red
-    { "Horse",  new Color(0.2f, 0.4f, 1f) },   // Blue
-    { "Snake",  new Color(0.6f, 0.2f, 0.8f) }, // Purple
-    { "Lion",   new Color(1f, 0.5f, 0.1f) },   // Orange
-    { "Tiger",  new Color(1f, 0.3f, 0.1f) },   // Deep Orange
-    { "Sheep",  new Color(0.6f, 1f, 0.6f) },   // Soft Green
-    { "Dog",    new Color(0.9f, 0.5f, 1f) },   // Pink-violet
+    { "Rabbit",    new Color(1f, 0.9f, 0.2f) },     // Yellow
+    { "Wolf",      new Color(0.25f, 0.35f, 0.55f) }, // Dark Gray-Blue
+    { "Tiger",     new Color(1f, 0.55f, 0.0f) },     // Orange
+    { "Horse",     new Color(0.2f, 0.4f, 1f) },      // Blue
+    { "Snake",     new Color(0.6f, 0.2f, 0.8f) },    // Purple
 
-    // ⭐ NEW SPECIES
-    { "Taipan", new Color(0.4f, 0.9f, 0.4f) }  // Light green (snake)
+    // NEW CREATURES
+    { "Sheep",       new Color(0.6f, 0.4f, 0.2f) },     // Brown
 };
+
 
 
     private const int SPREAD_RADIUS = 3;

@@ -1,31 +1,44 @@
-<<<<<<< HEAD
-﻿using UnityEngine;
-using System.Collections.Generic;
-=======
 using UnityEngine;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
->>>>>>> origin/main
 
 public class PopulationManager : MonoBehaviour
 {
     public static PopulationManager Instance;
+
     public TextMeshProUGUI TerminationText;
     public Canvas TerminationCanvas;
 
     public Dictionary<string, SpeciesStats> populationData = new Dictionary<string, SpeciesStats>();
+
     public float simStartTime;
-
-    // Logging timer
-    public float logInterval = 1f;
     private float timer = 0f;
+    public float logInterval = 1f;
 
-    // -------------------------------
-    // DEBUG: Track duplicates
-    private Dictionary<string, int> debugAddCount = new Dictionary<string, int>();
-    // -------------------------------
+    // ============================================================
+    //  UNIFIED COLOR DICTIONARY (Used by BOTH Graph + Heatmap)
+    // ============================================================
+    public static readonly Dictionary<string, Color> SpeciesColors =
+        new Dictionary<string, Color>()
+    {
+        { "Rabbit",    new Color(1f, 0.9f, 0.2f) },   // Yellow
+        { "Wolf",      new Color(0.8f, 0.0f, 0.0f) }, // Dark Red
+        { "Tiger",     new Color(1f, 0.5f, 0.1f) },   // Orange
+        { "Horse",     new Color(0.2f, 0.4f, 1f) },   // Blue
+        { "Snake",     new Color(0.6f, 0.2f, 0.8f) }, // Purple
+        { "Sheep",     new Color(0.6f, 0.4f, 0.2f) },   // brown
 
+        // Plants
+        { "Grass",         new Color(0.7f, 1f, 0.7f) },
+        { "BerryBush",     new Color(0.4f, 0.75f, 0.4f) },
+        { "AppleTree",     new Color(0.2f, 0.6f, 0.2f) },
+        { "Flowers",       new Color(1f, 0.4f, 1f) }
+    };
+
+    // ============================================================
+    // UNITY LIFECYCLE
+    // ============================================================
     private void Awake()
     {
         if (Instance == null)
@@ -48,136 +61,144 @@ public class PopulationManager : MonoBehaviour
         {
             timer = 0f;
 
+            // This only logs history when the timer ticks, which is fine for logging populations
+            // that don't change often (like plants) or for a backup log.
             foreach (var sp in populationData.Values)
-            {
                 sp.AddToHistory(Time.time - simStartTime);
-            }
-            // check termination conditions
-            if (GetPlantCount() <= 0)
-            {
-                Debug.Log("All plants have been eliminated! Simulation ending.");
-                TerminationText.text = "All plants have been eliminated! Grazers are soon to starve, causing predators to starve as well. Simulation ending.";
-                TerminationCanvas.gameObject.SetActive(true);
-                Time.timeScale = 0f;
-                // Implement additional termination logic here (e.g., stop simulation, notify user)
-            }
-            if (GetGrazerCount() <= 0)
-            {
-                Debug.Log("All grazers have been eliminated! Simulation ending.");
-                TerminationText.text = "All grazers have been eliminated! Predators are soon to starve. Simulation ending.";
-                TerminationCanvas.gameObject.SetActive(true);
-                Time.timeScale = 0f;
-                // Implement additional termination logic here (e.g., stop simulation, notify user)
-            }
+
+            CheckTermination();
         }
     }
 
-<<<<<<< HEAD
-    // ---------------------------------------------------------
-    // 1. Initialize a species (Spawner/PopulationCounter calls this)
-    // ---------------------------------------------------------
-=======
+    // ============================================================
+    // TERMINATION RULES
+    // ============================================================
+    private void CheckTermination()
+    {
+        if (GetPlantCount() <= 0)
+        {
+            Terminate("All plants have been eliminated! Grazers will starve next.");
+        }
 
-    // make getter methods for predator, grazer, and plant currentCount for termination conditions
+        if (GetGrazerCount() <= 0)
+        {
+            Terminate("All grazers have been eliminated! Predators will starve next.");
+        }
+    }
+
+    private void Terminate(string message)
+    {
+        TerminationText.text = message;
+        TerminationCanvas.gameObject.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    // ============================================================
+    // GROUPED COUNT HELPERS
+    // ============================================================
     public int GetPredatorCount()
     {
-        List<string> predatorSpecies = new List<string> { "Wolf", "Tiger", "Snake" };
-        int totalPredators = 0;
-        foreach (string species in predatorSpecies)
-        {
-            if (populationData.ContainsKey(species))
-            {
-                totalPredators += populationData[species].currentCount;
-            }
-        }
-        return totalPredators;
+        string[] preds = { "Wolf", "Tiger", "Snake" };
+        int total = 0;
+
+        foreach (var sp in preds)
+            if (populationData.ContainsKey(sp))
+                total += populationData[sp].currentCount;
+
+        return total;
     }
 
     public int GetGrazerCount()
     {
-        List<string> grazerSpecies = new List<string> { "Sheep", "Rabbit", "Horse" };
-        int totalGrazers = 0;
-        foreach (string species in grazerSpecies)
-        {
-            if (populationData.ContainsKey(species))
-            {
-                totalGrazers += populationData[species].currentCount;
-            }
-        }
-        return totalGrazers;
+        string[] grazers = { "Sheep", "Rabbit", "Horse" };
+        int total = 0;
+
+        foreach (var sp in grazers)
+            if (populationData.ContainsKey(sp))
+                total += populationData[sp].currentCount;
+
+        return total;
     }
 
     public int GetPlantCount()
     {
-        List<string> plantSpecies = new List<string> { "Berry Bush", "Apple Tree", "Flowers", "Grass" };
-        int totalPlants = 0;
-        foreach (string species in plantSpecies)
-        {
-            if (populationData.ContainsKey(species))
-            {
-                totalPlants += populationData[species].currentCount;
-            }
-        }
-        return totalPlants;
+        string[] plants = { "BerryBush", "AppleTree", "Flowers", "Grass" };
+        int total = 0;
+
+        foreach (var sp in plants)
+            if (populationData.ContainsKey(sp))
+                total += populationData[sp].currentCount;
+
+        return total;
     }
 
-    // 1. Initialize a specific species (Called by Spawner/PopulationCounter)
->>>>>>> origin/main
+    // ============================================================
+    // SPECIES REGISTRATION
+    // ============================================================
     public void InitializeSpecies(string speciesName, int count)
+{
+    if (populationData.ContainsKey(speciesName))
     {
-        if (populationData.ContainsKey(speciesName))
-        {
-            populationData[speciesName].currentCount += count;
-            populationData[speciesName].UpdateStats();
-
-            Debug.Log($"[POP-MANAGER] Updated species '{speciesName}', count now {populationData[speciesName].currentCount}");
-        }
-        else
-        {
-            // Create brand new species entry
-            SpeciesStats newStats = new SpeciesStats(speciesName, count);
-            populationData.Add(speciesName, newStats);
-
-            // ---------------------------------------------------------
-            // DEBUG CALL STACK (clean one-liner)
-            var trace = new System.Diagnostics.StackTrace();
-            var caller = trace.GetFrame(1).GetMethod();
-            Debug.Log($"[POP-MANAGER] Added NEW species '{speciesName}' | count={count} | called by: {caller.DeclaringType.Name}.{caller.Name}");
-            // ---------------------------------------------------------
-
-            // ---------------------------------------------------------
-            // DEBUG DUPLICATE REGISTRATION TRACKER
-            if (!debugAddCount.ContainsKey(speciesName))
-                debugAddCount[speciesName] = 0;
-            debugAddCount[speciesName]++;
-            Debug.Log($"[DEBUG] Species '{speciesName}' has been registered {debugAddCount[speciesName]} time(s).");
-            // ---------------------------------------------------------
-
-            newStats.AddToHistory(Time.time - simStartTime);
-        }
+        populationData[speciesName].currentCount += count;
+        populationData[speciesName].UpdateStats();
+    }
+    else
+    {
+        SpeciesStats newStats = new SpeciesStats(speciesName, count);
+        populationData.Add(speciesName, newStats);
     }
 
-    // ---------------------------------------------------------
-    // 2. Handle count changes
-    // ---------------------------------------------------------
-    public void UpdateCount(string speciesName, int amount)
+    // 🔥 ALWAYS record the history point when a species appears
+    float t = Time.time - simStartTime;
+    populationData[speciesName].AddToHistory(t);
+}
+
+
+    // ============================================================
+    // COUNT UPDATES
+    // ============================================================
+public void UpdateCount(string speciesName, int amount)
+{
+    if (!populationData.ContainsKey(speciesName))
+        return;
+
+    SpeciesStats stats = populationData[speciesName];
+
+    stats.currentCount += amount;
+    stats.UpdateStats();
+
+    // 🔥 RECORD IMMEDIATELY ON CHANGE (Births/Spawns)
+    float t = Time.time - simStartTime;
+    stats.AddToHistory(t);  
+
+    Debug.Log($"[POP-MANAGER] {speciesName} changed by {amount}, now {stats.currentCount}");
+}
+
+
+    // ============================================================
+    // DEATHS (Called by AnimalIdentity)
+    // ============================================================
+    public void ReportDeath(string speciesName)
     {
-        if (populationData.ContainsKey(speciesName))
-        {
-            populationData[speciesName].currentCount += amount;
-            populationData[speciesName].UpdateStats();
+        if (!populationData.ContainsKey(speciesName))
+            return;
 
-<<<<<<< HEAD
-            Debug.Log($"[POP-MANAGER] Species '{speciesName}' count changed by {amount} → now {populationData[speciesName].currentCount}");
-=======
-            Debug.Log($"Species: {speciesName} | Updated Count: {populationData[speciesName].currentCount}");
+        SpeciesStats stats = populationData[speciesName];
+        
+        stats.currentCount--;
+        stats.UpdateStats(); // Updates max/min
 
-            
->>>>>>> origin/main
-        }
+        // 🔥 FIX: Immediately record the new count at the exact time of death
+        float t = Time.time - simStartTime;
+        stats.AddToHistory(t); 
+
+        Debug.Log($"[POP-MANAGER] {speciesName} death reported. Count is now {stats.currentCount}");
     }
 }
 
+// ============================================================
+// SPECIES STATS + HISTORY
+// ============================================================
 [System.Serializable]
 public class SpeciesStats
 {
@@ -185,44 +206,35 @@ public class SpeciesStats
     public int currentCount;
     public int maxRecorded;
     public int minRecorded;
+
     public List<PopulationHistoryPoint> history = new List<PopulationHistoryPoint>();
 
-    public SpeciesStats(string speciesName, int startingCount)
+    public SpeciesStats(string n, int start)
     {
-        name = speciesName;
-        currentCount = startingCount;
-        maxRecorded = startingCount;
-        minRecorded = startingCount;
+        name = n;
+        currentCount = start;
+        maxRecorded = start;
+        minRecorded = start;
     }
 
     public void UpdateStats()
     {
         if (currentCount > maxRecorded) maxRecorded = currentCount;
-        if (currentCount < minRecorded && currentCount >= 0) minRecorded = currentCount;
+        if (currentCount < minRecorded) minRecorded = currentCount;
 
-        AddToHistory(Time.time - PopulationManager.Instance.simStartTime);
+        // 🛑 REMOVED: AddToHistory is now only called when the count changes (in PopulationManager)
+        // This prevents duplicate history points for every Update() tick.
     }
 
     public void AddToHistory(float time)
     {
-        if (history.Count > 0)
+        // Avoid logging if the last point was at the exact same time
+        if (history.Count > 0 && history[history.Count - 1].time == time && history[history.Count - 1].count == currentCount)
         {
-            int lastIndex = history.Count - 1;
-            PopulationHistoryPoint lastPoint = history[lastIndex];
-
-            if (time - lastPoint.time <= 0.1f)
-            {
-                lastPoint.count = currentCount;
-                history[lastIndex] = lastPoint;
-                return;
-            }
+            return;
         }
-
-        history.Add(new PopulationHistoryPoint
-        {
-            time = time,
-            count = currentCount
-        });
+        
+        history.Add(new PopulationHistoryPoint() { time = time, count = currentCount });
     }
 }
 
