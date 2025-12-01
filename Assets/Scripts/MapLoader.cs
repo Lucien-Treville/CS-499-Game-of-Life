@@ -55,6 +55,10 @@ public class MapLoader : MonoBehaviour
 
     void Start()
     {
+        PopulationManager.Instance.simStartTime = Time.time;
+
+        if (jsonFileName == "DnDeditor") return; 
+
         // initialize jsonData structure every new simulation
         jsonData = new Dictionary<string, object>
         {
@@ -191,7 +195,7 @@ public class MapLoader : MonoBehaviour
 
     private void Spawner()
     {
-        PopulationManager.Instance.simStartTime = Time.time;
+        
 
         foreach (var categoryPair in jsonData)
         {
@@ -322,7 +326,7 @@ public Vector3 GetValidSpawnPoint(float jsonX, float jsonZ, GameObject creatureP
     // (This part works, so we keep it to handle Water avoidance)
     float percentX, percentZ, realX, realZ;
     Vector3 targetPos = new Vector3(0,0,0);
-    switch (spaghettiID)
+    switch (spaghettiID)    // I want this function for spawning children but need to skip the json section, please forgive this spaghetti
     {
         case 1:
             percentX = Mathf.InverseLerp(jsonMin, jsonMax, jsonX);

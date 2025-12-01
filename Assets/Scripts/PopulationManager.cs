@@ -123,7 +123,7 @@ public class PopulationManager : MonoBehaviour
         {
             // If species exists, update count
             populationData[speciesName].currentCount += count;
-            populationData[speciesName].UpdateStats();
+            // populationData[speciesName].UpdateStats();
             Debug.Log($"Updated species: {speciesName} with count: {populationData[speciesName].currentCount}");
         }
         else
@@ -166,8 +166,8 @@ public class SpeciesStats
     {
         name = speciesName;
         currentCount = startingCount;
-        maxRecorded = startingCount;
-        minRecorded = startingCount;
+        maxRecorded = 0;
+        minRecorded = 1000;
     }
 
     public void UpdateStats()
