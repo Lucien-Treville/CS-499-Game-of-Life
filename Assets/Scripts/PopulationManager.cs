@@ -82,6 +82,11 @@ public class PopulationManager : MonoBehaviour
         {
             Terminate("All grazers have been eliminated! Predators will starve next.");
         }
+
+        if (GetPredatorCount() <= 0)
+        {
+            Terminate("All predators have been eliminated! Grazers will consume all plants next.");
+        }
     }
 
     private void Terminate(string message)
