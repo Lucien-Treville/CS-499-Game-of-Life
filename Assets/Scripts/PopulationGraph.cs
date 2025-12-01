@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System.Collections.Generic;
 
 public class PopulationGraph : MonoBehaviour
@@ -29,7 +28,7 @@ public class PopulationGraph : MonoBehaviour
 
     private float minX, maxX, minY, maxY;
 
-    // Allowed species on this chart
+    // EXACT species names
     public readonly string[] AllowedSpecies =
     {
         "Rabbit",
@@ -39,26 +38,22 @@ public class PopulationGraph : MonoBehaviour
         "Snake",
         "Sheep",
         "Grass",
-        "BerryBush",
-        "AppleTree",
+        "Berry Bush",
+        "Apple Tree",
         "Flowers"
     };
-
 
     void Start()
     {
         RefreshGraph();
     }
 
-    // =========================================================================
-    // MAIN GRAPH RENDERING
-    // =========================================================================
     public void RefreshGraph()
     {
-        if (PopulationManager.Instance == null)
+        if (!ValidateGraphReferences())
             return;
 
-        if (!ValidateGraphReferences())
+        if (PopulationManager.Instance == null)
             return;
 
         CalculateBounds();
@@ -67,18 +62,14 @@ public class PopulationGraph : MonoBehaviour
         foreach (var entry in PopulationManager.Instance.populationData)
         {
             if (System.Array.Exists(AllowedSpecies, s => s == entry.Key))
-            {
                 DrawSpecies(entry.Key);
-            }
         }
     }
 
-    public void ToggleSpecies(string species, bool isOn)
+    public void ToggleSpecies(string species, bool on)
     {
-        if (isOn)
-            DrawSpecies(species);
-        else
-            ClearSpecies(species);
+        if (on) DrawSpecies(species);
+        else ClearSpecies(species);
     }
 
     private void DrawSpecies(string species)
@@ -88,48 +79,41 @@ public class PopulationGraph : MonoBehaviour
         if (!PopulationManager.Instance.populationData.ContainsKey(species))
             return;
 
-        var stats = PopulationManager.Instance.populationData[species];
-
+        SpeciesStats stats = PopulationManager.Instance.populationData[species];
         if (stats.history.Count == 0)
             return;
 
         List<GameObject> points = new List<GameObject>();
         List<GameObject> lines = new List<GameObject>();
 
-        // Graph color matches heatmap + species dictionary
         Color color = PopulationManager.SpeciesColors.ContainsKey(species)
             ? PopulationManager.SpeciesColors[species]
             : Color.white;
 
         Vector2? prev = null;
 
-        foreach (var entry in stats.history)
+        foreach (PopulationHistoryPoint entry in stats.history)
         {
             Vector2 pos = TransformPoint(entry.time, entry.count);
 
-            // Create point
-            GameObject point = GameObject.Instantiate(pointPrefab, graphArea);
-            RectTransform pRT = point.GetComponent<RectTransform>();
-            pRT.anchoredPosition = pos;
-            point.GetComponent<Image>().color = color;
+            GameObject p = Instantiate(pointPrefab, graphArea);
+            p.GetComponent<Image>().color = color;
+            p.GetComponent<RectTransform>().anchoredPosition = pos;
+            points.Add(p);
 
-            points.Add(point);
-
-            // Create line segment
             if (prev.HasValue)
             {
-                GameObject seg = GameObject.Instantiate(linePrefab, graphArea);
+                GameObject seg = Instantiate(linePrefab, graphArea);
+                Image img = seg.GetComponent<Image>();
+                img.color = color;
+
                 RectTransform rt = seg.GetComponent<RectTransform>();
-
-                seg.GetComponent<Image>().color = color;
-
                 Vector2 dir = (pos - prev.Value).normalized;
-                float dist = Vector2.Distance(pos, prev.Value);
+                float dist = Vector2.Distance(prev.Value, pos);
 
                 rt.sizeDelta = new Vector2(dist, 3f);
-                rt.anchoredPosition = (prev.Value + pos) * 0.5f;
-                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                rt.rotation = Quaternion.Euler(0, 0, angle);
+                rt.anchoredPosition = (prev.Value + pos) / 2f;
+                rt.localRotation = Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
 
                 lines.Add(seg);
             }
@@ -141,24 +125,21 @@ public class PopulationGraph : MonoBehaviour
         activeLines[species] = lines;
     }
 
-    // =========================================================================
-    // CLEANUP
-    // =========================================================================
     public void ClearSpecies(string species)
     {
         if (activePoints.ContainsKey(species))
         {
-            foreach (var p in activePoints[species]) GameObject.Destroy(p);
+            foreach (GameObject g in activePoints[species])
+                Destroy(g);
         }
+
         if (activeLines.ContainsKey(species))
         {
-            foreach (var l in activeLines[species]) GameObject.Destroy(l);
+            foreach (GameObject g in activeLines[species])
+                Destroy(g);
         }
     }
 
-    // =========================================================================
-    // AXIS LABELS
-    // =========================================================================
     private void DrawAxes()
     {
         GenerateXLabels();
@@ -168,17 +149,17 @@ public class PopulationGraph : MonoBehaviour
     private void GenerateXLabels()
     {
         foreach (Transform c in xAxis.transform)
-            GameObject.Destroy(c.gameObject);
+            Destroy(c.gameObject);
 
         float width = xAxis.rect.width;
 
         for (int i = 0; i < xLabelCount; i++)
         {
             float t = (float)i / (xLabelCount - 1);
-            float timeVal = Mathf.Lerp(minX, maxX, t);
+            float val = Mathf.Lerp(minX, maxX, t);
 
-            GameObject label = GameObject.Instantiate(xLabelPrefab, xAxis.transform);
-            label.GetComponent<Text>().text = timeVal.ToString("F1");
+            GameObject label = Instantiate(xLabelPrefab, xAxis.transform);
+            label.GetComponent<Text>().text = val.ToString("F1");
 
             RectTransform rt = label.GetComponent<RectTransform>();
             rt.anchoredPosition = new Vector2(t * width, 0f);
@@ -188,7 +169,7 @@ public class PopulationGraph : MonoBehaviour
     private void GenerateYLabels()
     {
         foreach (Transform c in yAxis.transform)
-            GameObject.Destroy(c.gameObject);
+            Destroy(c.gameObject);
 
         float height = yAxis.rect.height;
 
@@ -197,7 +178,7 @@ public class PopulationGraph : MonoBehaviour
             float t = (float)i / (yLabelCount - 1);
             float val = Mathf.Lerp(minY, maxY, t);
 
-            GameObject label = GameObject.Instantiate(yLabelPrefab, yAxis.transform);
+            GameObject label = Instantiate(yLabelPrefab, yAxis.transform);
             label.GetComponent<Text>().text = Mathf.RoundToInt(val).ToString();
 
             RectTransform rt = label.GetComponent<RectTransform>();
@@ -205,9 +186,6 @@ public class PopulationGraph : MonoBehaviour
         }
     }
 
-    // =========================================================================
-    // BOUNDS + TRANSFORM
-    // =========================================================================
     private void CalculateBounds()
     {
         minX = float.MaxValue;
@@ -220,7 +198,7 @@ public class PopulationGraph : MonoBehaviour
             if (!System.Array.Exists(AllowedSpecies, s => s == entry.Key))
                 continue;
 
-            foreach (var pt in entry.Value.history)
+            foreach (PopulationHistoryPoint pt in entry.Value.history)
             {
                 if (pt.time < minX) minX = pt.time;
                 if (pt.time > maxX) maxX = pt.time;
@@ -236,21 +214,17 @@ public class PopulationGraph : MonoBehaviour
 
     private Vector2 TransformPoint(float time, int count)
     {
-        float width = graphArea.rect.width;
-        float height = graphArea.rect.height;
+        float w = graphArea.rect.width;
+        float h = graphArea.rect.height;
 
         float nx = Mathf.InverseLerp(minX, maxX, time);
         float ny = Mathf.InverseLerp(minY, maxY, count);
 
-        return new Vector2(nx * width, ny * height);
+        return new Vector2(nx * w, ny * h);
     }
 
     private bool ValidateGraphReferences()
     {
-        return graphArea != null &&
-               xAxis != null &&
-               yAxis != null &&
-               xLabelPrefab != null &&
-               yLabelPrefab != null;
+        return graphArea && xAxis && yAxis && xLabelPrefab && yLabelPrefab;
     }
 }
