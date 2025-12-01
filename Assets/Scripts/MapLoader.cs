@@ -383,7 +383,7 @@ public Vector3 GetValidSpawnPoint(float jsonX, float jsonZ, GameObject creatureP
 // Accounts for the Prefab's scale to prevent sinking.
 private float GetLegHeight(GameObject prefab)
 {
-    Debug.Log("Actually entered GetLegHeight for prefab: " + prefab.name);
+    // Debug.Log("Actually entered GetLegHeight for prefab: " + prefab.name);
     if (prefab == null) return 0f;
 
     // 1. Get the root scale of the prefab

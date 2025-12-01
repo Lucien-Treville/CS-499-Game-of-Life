@@ -65,7 +65,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1f56fcde0783bc7409e068236204e5d0, type: 3}
       propertyPath: m_Name
-      value: berry bush 2 Variant
+      value: Berry Bush
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1f56fcde0783bc7409e068236204e5d0, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f56fcde0783bc7409e068236204e5d0, type: 3}
@@ -74,6 +78,20 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1f56fcde0783bc7409e068236204e5d0, type: 3}
   m_PrefabInstance: {fileID: 8786791713179314872}
   m_PrefabAsset: {fileID: 0}
+--- !u!136 &-5942566769319558639
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8444703759852574697}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 2.3951623
+  m_Height: 4.7953534
+  m_Direction: 1
+  m_Center: {x: -0.42742848, y: 1.4600629, z: 0.1158461}
 --- !u!208 &4834222060062470187
 NavMeshObstacle:
   m_ObjectHideFlags: 0

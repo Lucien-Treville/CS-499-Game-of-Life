@@ -12,19 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d3b5b370821704aba6e5a31031744d, type: 3}
   m_Name: AppleTreeSO
   m_EditorClassIdentifier: 
+  plantPrefab: {fileID: 1711503246089632638, guid: f31575b60216cae4b8ad885782bd713e, type: 3}
   specieName: Apple Tree
   nourishmentValueGene:
-  - 10
-  - 3
+  - 10.017315566539764
+  - 3.019972912967205
   fruitingChanceGene:
-  - 0.0004
-  - 0.00005
+  - 0.002
+  - 0.0005
   sproutingChanceGene:
-  - 0.0004
-  - 0.00005
+  - 0.002
+  - 0.0005
   heightGene:
-  - 1
-  - 0.2
+  - 1.443790003657341
+  - 0.1585758149623871
   healthGene:
-  - 150
-  - 25
+  - 148.98089468479156
+  - 24.99068514816463

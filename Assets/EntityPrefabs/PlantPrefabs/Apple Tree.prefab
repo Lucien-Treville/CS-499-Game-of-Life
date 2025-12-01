@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 2056926285454238148}
   - component: {fileID: 934920323918738111}
   - component: {fileID: -3338756651545665293}
-  m_Layer: 0
+  - component: {fileID: 1772297252436479967}
+  m_Layer: 7
   m_Name: Apple Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,6 +74,19 @@ MonoBehaviour:
   fruitingChance: 0
   sproutingChance: 0
   hasFruit: 0
+--- !u!65 &1772297252436479967
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1711503246089632638}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2.236518, z: 1}
+  m_Center: {x: 0, y: 1.0700076, z: 0}
 --- !u!1 &2661815457432536332
 GameObject:
   m_ObjectHideFlags: 0
@@ -84,7 +98,7 @@ GameObject:
   - component: {fileID: 162043670030984692}
   - component: {fileID: 1959050568231560229}
   - component: {fileID: 703193023443086253}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +179,7 @@ GameObject:
   - component: {fileID: 4132675549776708245}
   - component: {fileID: 3276867244405631942}
   - component: {fileID: 8770291312262879034}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}

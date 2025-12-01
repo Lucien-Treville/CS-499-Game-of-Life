@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 5855307280600847536}
   - component: {fileID: 125573746661030364}
   - component: {fileID: 6261007680619885408}
-  m_Layer: 0
+  - component: {fileID: -5925152261079453818}
+  m_Layer: 7
   m_Name: Grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,6 +73,19 @@ MonoBehaviour:
   fruitingChance: 0
   sproutingChance: 0
   hasFruit: 0
+--- !u!65 &-5925152261079453818
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6487974429602647562}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.6469761, y: 0.40815517, z: 1}
+  m_Center: {x: -0.01279287, y: 0.13407563, z: 0}
 --- !u!1 &9218580428647508647
 GameObject:
   m_ObjectHideFlags: 0
@@ -83,7 +97,7 @@ GameObject:
   - component: {fileID: 407235169693789780}
   - component: {fileID: 7157683474679020754}
   - component: {fileID: 4071602164176042442}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}

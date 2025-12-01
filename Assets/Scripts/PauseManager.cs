@@ -13,6 +13,7 @@ public class PauseManager : MonoBehaviour
     public TextMeshProUGUI TimeValueText;
     public GameObject pauseOverlay;
     public GameObject cameraControlsUI;
+    public GameObject terminationCanvas;
 
 
     public void TestButton()
@@ -29,6 +30,7 @@ public class PauseManager : MonoBehaviour
 
     public void TogglePause()
     {
+        if (terminationCanvas.gameObject.activeInHierarchy) return;
         isPaused = !isPaused; // Flip the boolean
 
         if (isPaused)
