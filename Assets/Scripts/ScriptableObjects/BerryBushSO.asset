@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: BerryBushSO
   m_EditorClassIdentifier: 
   plantPrefab: {fileID: 8444703759852574697, guid: a101fe6b13efba2408fa98a580236349, type: 3}
-  specieName: ' Berry Bush'
+  specieName: Berry Bush
   nourishmentValueGene:
-  - 8.335952997207642
-  - 1.9515508078038692
+  - 0.5084098834571897
+  - 8.227891205544786
   fruitingChanceGene:
-  - 0.002
-  - 0.0005
+  - 0.00011938041711139073
+  - 0.00024476779598363676
   sproutingChanceGene:
-  - 0.002
-  - 0.0005
+  - 0.001259371345074103
+  - 0.00012077897759486673
   heightGene:
-  - 0.5597589015960693
-  - 0.2461890809237957
+  - 0.15479572992969395
+  - 0.025287335205896343
   healthGene:
-  - 59.75201040506363
-  - 15.00882562994957
+  - 20.875105655318517
+  - 5.841283360869818
