@@ -19,6 +19,11 @@ public class MaintoSelect : MonoBehaviour
 
     public void OnMainMenuButton()
     {
+        if (PopulationManager.Instance != null)
+        {
+            Destroy(PopulationManager.Instance.gameObject);
+        }
+        
         SceneManager.LoadScene("TitleScreen");
     }
 

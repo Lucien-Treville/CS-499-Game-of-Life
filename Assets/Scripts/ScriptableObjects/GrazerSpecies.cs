@@ -10,6 +10,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Grazer Species", menuName = "Simulation/Grazer Species")]
 public class GrazerSpecies : ScriptableObject
 {
+    public GameObject grazerPrefab; // reference to the prefab for this grazer species
     public string specieName;
     public double[] movementSpeedGene; // 
     public double[] reproductionChanceGene; // 

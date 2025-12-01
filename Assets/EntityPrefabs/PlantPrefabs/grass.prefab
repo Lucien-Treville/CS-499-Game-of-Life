@@ -10,8 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5855307280600847536}
   - component: {fileID: 125573746661030364}
+  - component: {fileID: 6261007680619885408}
+  - component: {fileID: -5925152261079453818}
   m_Layer: 7
-  m_Name: grass
+  m_Name: Grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,6 +50,42 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &6261007680619885408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6487974429602647562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68c819a0b29b43d4f8b10b684b2c786d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specieName: 
+  age: 0
+  health: 0
+  height: 0
+  instanceID: 0
+  speciesGeneData: {fileID: 11400000, guid: 96a10e8c469a553499e72c7cae412f6a, type: 2}
+  currentStage: 0
+  nourishmentValue: 0
+  fruitingChance: 0
+  sproutingChance: 0
+  hasFruit: 0
+--- !u!65 &-5925152261079453818
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6487974429602647562}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.6469761, y: 0.40815517, z: 1}
+  m_Center: {x: -0.01279287, y: 0.13407563, z: 0}
 --- !u!1 &9218580428647508647
 GameObject:
   m_ObjectHideFlags: 0

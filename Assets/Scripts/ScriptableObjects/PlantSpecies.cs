@@ -10,6 +10,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Plant Species", menuName = "Simulation/Plant Species")]
 public class PlantSpecies : ScriptableObject
 {
+    public GameObject plantPrefab; // reference to the prefab for this plant species
     public string specieName;
     public double[] nourishmentValueGene; // [mean, stddev]
     public double[] fruitingChanceGene;

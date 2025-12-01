@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d1c27cd00e197844a944f422b02038e, type: 3}
   m_Name: RabbitSO
   m_EditorClassIdentifier: 
+  grazerPrefab: {fileID: 131319039843492172, guid: 404d686f5f67d4747b22255e00350d79, type: 3}
   specieName: Rabbit
   movementSpeedGene:
   - 8

@@ -10,9 +10,13 @@
 
 using UnityEngine;
 using Dist = MathNet.Numerics.Distributions; // For normal distribution sampling
+using UnityEngine.AI;
+using System.Collections.Generic;
+
 
 public struct PlantGenes
 {
+    public GameObject plantPrefab;
     public double[] nourishmentValueGene;
     public double[] fruitingChanceGene; // (0-1], percent chance of producing fruit each update
     public double[] sproutingChanceGene; // (0-1], percent chance of sprouting a new sapling when fruit is present)
@@ -26,6 +30,7 @@ public struct PlantGenes
 public class Plant : LivingEntity
 {
 
+    MapLoader mapLoader;
     // enum of growth stages
     public enum GrowthStage { Sapling, Young, Fruiting }
 
@@ -35,6 +40,7 @@ public class Plant : LivingEntity
     public PlantGenes genes;
     public PlantGenes? parentGenes;
 
+
     // instance attributes
     public GrowthStage currentStage;
     // public double nourishmentValue; animals are nourishing too
@@ -42,17 +48,24 @@ public class Plant : LivingEntity
     public double sproutingChance;
     public bool hasFruit;
 
+    // apples for apple tree
+    private List<GameObject> apple = new List<GameObject>();
+
+
+
     protected override void Start()
     {
+        // want mapLoader reference for spawning saplings
+        mapLoader = GameObject.FindObjectOfType<MapLoader>();
         base.Start();
 
         if (parentGenes.HasValue)
-            {
+        {
             // Slightly mutate parent genes for child
             genes = PlantGenesMutation(parentGenes.Value);
-            }
+        }
         else
-            {
+        {
             // First generation: use ScriptableObject
             genes.nourishmentValueGene = speciesGeneData.nourishmentValueGene;
             genes.fruitingChanceGene = speciesGeneData.fruitingChanceGene;
@@ -60,7 +73,11 @@ public class Plant : LivingEntity
             genes.heightGene = speciesGeneData.heightGene;
             genes.healthGene = speciesGeneData.healthGene;
             genes.specieName = speciesGeneData.specieName;
-            }
+            genes.plantPrefab = speciesGeneData.plantPrefab;
+        }
+
+
+        // PrintPlantGenes(genes); // prints specie name and chances to LogWarning
 
         specieName = speciesGeneData.specieName;
         nourishmentValue = Dist.Normal.Sample(genes.nourishmentValueGene[0], genes.nourishmentValueGene[1]);
@@ -70,6 +87,23 @@ public class Plant : LivingEntity
         health = Dist.Normal.Sample(genes.healthGene[0], genes.healthGene[1]);
         currentStage = GrowthStage.Sapling;
         hasFruit = false;
+       
+        if (specieName == "Apple Tree")
+        {
+            // find apple with apple tag in prefab
+            Transform[] allChildren = GetComponentsInChildren<Transform>(true);
+
+            foreach (Transform child in allChildren)
+            {
+                if (child.CompareTag("Apple"))
+                {
+                    apple.Add( child.gameObject);
+                    child.gameObject.SetActive(false);
+                    
+                }
+            }
+        }
+
     }
 
     protected override void FixedUpdate()
@@ -89,8 +123,8 @@ public class Plant : LivingEntity
                 if (age > 15)
                 {
                     currentStage = GrowthStage.Young;
-                    height *= 1.5f; // random growth factor
-                    Debug.Log($"Plant, {specieName}, (ID: {instanceID}) has grown to the Young stage.");
+                    transform.localScale *= 1.5f; // random growth factor
+                    // Debug.Log($"Plant, {specieName}, (ID: {instanceID}) has grown to the Young stage.");
                 }
                 break;
             case GrowthStage.Young:
@@ -98,8 +132,8 @@ public class Plant : LivingEntity
                 if (age > 30)
                 {
                     currentStage = GrowthStage.Fruiting;
-                    height *= 1.5f;
-                    Debug.Log($"Plant, {specieName}, (ID: {instanceID}) is now in the Fruiting stage.");
+                    transform.localScale *= 1.5f;
+                    // Debug.Log($"Plant, {specieName}, (ID: {instanceID}) is now in the Fruiting stage.");
                 }
                 break;
             case GrowthStage.Fruiting:
@@ -109,18 +143,75 @@ public class Plant : LivingEntity
                     // Sprout a new sapling nearby
                     if (Random.Range(0f, 1f) < sproutingChance)
                     {
+                        // Debug.Log($"A new sapling has sprouted nearby from {specieName}, ID:{instanceID}!");
                         // Instantiate a new Plant GameObject
-                        Debug.Log($"A new sapling has sprouted nearby from {specieName}, ID:{instanceID}!");
+                        GameObject babyPrefab = genes.plantPrefab;
+                        bool foundSpot = false;
+                        Vector3 spawnPos = new Vector3(0, 0, 0);
+
+
+                        for (int i = 0; i < 10; i++) // try to find a non-overlapping spot up to 10 times
+                        {
+                            Vector2 randomCircle = Random.insideUnitCircle * 3;
+                            spawnPos = transform.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+                            spawnPos = mapLoader.GetValidSpawnPoint(spawnPos.x, spawnPos.z, babyPrefab, 2);
+
+                            NavMeshHit hit;
+                            // small (1.0) radius so it fails if in lake
+                            if (NavMesh.SamplePosition(spawnPos, out hit, 1.0f, NavMesh.AllAreas))
+                            {
+                                // Update candidatePos to the exact height of the terrain
+                                spawnPos.x = hit.position.x;
+                                spawnPos.z = hit.position.z;
+
+                                // 3. CHECK FOR PLANT OVERCROWDING
+                                // Now that we know it's land, check if it's crowded
+                                int mask = LayerMask.GetMask("Plant");
+                                if (!Physics.CheckSphere(spawnPos, 3, mask))
+                                {
+                                    foundSpot = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // for (int i = 0; i < 10; i++) // try to find a non-overlapping spot up to 10 times
+                        // {
+                        //     Vector2 randomCircle = Random.insideUnitCircle * 2;
+                        //     spawnPos = transform.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+                        //     spawnPos = mapLoader.GetValidSpawnPoint(spawnPos.x, spawnPos.z, babyPrefab, 2); 
+                        //     int mask = LayerMask.GetMask("Plant");
+                        //     if (!Physics.CheckSphere(spawnPos, 3, mask))
+                        //     {
+                        //         foundSpot = true;
+                        //         break;
+                        //     }
+                        // }
+                        if (foundSpot)
+                        {
+                            // spawn baby plant and give it parent genes
+                            GameObject babyObj = Instantiate(babyPrefab, spawnPos, Quaternion.identity);
+                            babyObj.GetComponent<Plant>().parentGenes = this.genes;
+                            // update population manager
+                            PopulationManager.Instance.UpdateCount(genes.specieName, 1);
+                        }
                     }
 
-                    // A method to instantiate a new Plant GameObject
                 }
                 else
                 {
                     if (Random.Range(0f, 1f) < fruitingChance)
                     {
                         hasFruit = true;
-                        Debug.Log($"Plant, {specieName}, (ID: {instanceID}) has produced fruit.");
+                        if (genes.specieName == "Apple Tree")
+                        {   
+                            
+                            foreach (var ap in apple)
+                            {
+                                ap.SetActive(true);
+                            }
+                        }
+                        // Debug.Log($"Plant, {specieName}, (ID: {instanceID}) has produced fruit.");
                     }
                 }
                 break;
@@ -139,19 +230,28 @@ public class Plant : LivingEntity
         PlantGenes mutatedGenes = parent;
 
         // Apply small random mutations to each gene
-        mutatedGenes.nourishmentValueGene[0] += Random.Range(-0.5f, 0.5f);
-        mutatedGenes.fruitingChanceGene[0] += Random.Range(-0.05f, 0.05f);
-        mutatedGenes.sproutingChanceGene[0] += Random.Range(-0.05f, 0.05f);
-        mutatedGenes.heightGene[0] += Random.Range(-0.5f, 0.5f);
-        mutatedGenes.healthGene[0] += Random.Range(-0.5f, 0.5f);
+        // and make sure all values are positive
+        mutatedGenes.nourishmentValueGene[0] *= (double)Random.Range(0.85f, 1.15f);
+        mutatedGenes.fruitingChanceGene[0] *= (double)Random.Range(0.85f, 1.15f);
+        mutatedGenes.sproutingChanceGene[0] *= (double)Random.Range(0.85f, 1.15f);
+        mutatedGenes.heightGene[0] *= (double)Random.Range(0.85f, 1.15f);
+        mutatedGenes.healthGene[0] *= (double)Random.Range(0.85f, 1.15f);
 
-        mutatedGenes.nourishmentValueGene[1] += Random.Range(-0.05f, 0.05f);
-        mutatedGenes.fruitingChanceGene[1] += Random.Range(-0.05f, 0.05f);
-        mutatedGenes.sproutingChanceGene[1] += Random.Range(-0.05f, 0.05f);
-        mutatedGenes.heightGene[1] += Random.Range(-0.05f, 0.05f);
-        mutatedGenes.healthGene[1] += Random.Range(-0.05f, 0.05f);
+        mutatedGenes.nourishmentValueGene[1] *= (double)Random.Range(0.85f, 1.15f);
+        mutatedGenes.fruitingChanceGene[1] *= (double)Random.Range(0.85f, 1.15f);
+        mutatedGenes.sproutingChanceGene[1] *= (double)Random.Range(0.85f, 1.15f);
+        mutatedGenes.heightGene[1] *= (double)Random.Range(0.85f, 1.15f);
+        mutatedGenes.healthGene[1] *= (double)Random.Range(0.85f, 1.15f);
+
+        mutatedGenes.plantPrefab = parent.plantPrefab;
 
         return mutatedGenes;
+    }
+    void PrintPlantGenes(PlantGenes genes)
+    {
+        Debug.LogWarning($"Specie: {genes.specieName}");
+        Debug.LogWarning($"Fruiting Chance: {genes.fruitingChanceGene[0]}, {genes.fruitingChanceGene[1]}");
+        Debug.LogWarning($"Sprouting Chance: {genes.sproutingChanceGene[0]}, {genes.sproutingChanceGene[1]}");
     }
 
 }

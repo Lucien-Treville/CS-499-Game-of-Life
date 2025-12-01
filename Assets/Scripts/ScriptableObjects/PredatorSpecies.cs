@@ -10,6 +10,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Predator Species", menuName = "Simulation/Predator Species")]
 public class PredatorSpecies : ScriptableObject
 {
+    public GameObject predatorPrefab; // reference to the prefab for this predator species
     public string specieName;
     public double[] movementSpeedGene; // 
     public double[] reproductionChanceGene; // 

@@ -1,9 +1,13 @@
 using UnityEngine;
-using System.Collections.Generic; // Required for Dictionaries
+using System.Collections.Generic; 
+using TMPro;
+using UnityEngine.UI;
 
 public class PopulationManager : MonoBehaviour
 {
     public static PopulationManager Instance;
+    public TextMeshProUGUI TerminationText;
+    public Canvas TerminationCanvas;
 
     // The Key is the species name (string), the Value is the stats object
     public Dictionary<string, SpeciesStats> populationData = new Dictionary<string, SpeciesStats>();
@@ -47,8 +51,69 @@ public class PopulationManager : MonoBehaviour
             {
                 sp.AddToHistory(Time.time - simStartTime);
             }
+            // check termination conditions
+            if (GetPlantCount() <= 0)
+            {
+                Debug.Log("All plants have been eliminated! Simulation ending.");
+                TerminationText.text = "All plants have been eliminated! Grazers are soon to starve, causing predators to starve as well. Simulation ending.";
+                TerminationCanvas.gameObject.SetActive(true);
+                Time.timeScale = 0f;
+                // Implement additional termination logic here (e.g., stop simulation, notify user)
+            }
+            // if (GetGrazerCount() <= 0)
+            // {
+            //     Debug.Log("All grazers have been eliminated! Simulation ending.");
+            //     TerminationText.text = "All grazers have been eliminated! Predators are soon to starve. Simulation ending.";
+            //     TerminationCanvas.gameObject.SetActive(true);
+            //     Time.timeScale = 0f;
+            //     // Implement additional termination logic here (e.g., stop simulation, notify user)
+            // }
         }
         // -------------------------------
+    }
+
+
+    // make getter methods for predator, grazer, and plant currentCount for termination conditions
+    public int GetPredatorCount()
+    {
+        List<string> predatorSpecies = new List<string> { "Wolf", "Tiger", "Snake" };
+        int totalPredators = 0;
+        foreach (string species in predatorSpecies)
+        {
+            if (populationData.ContainsKey(species))
+            {
+                totalPredators += populationData[species].currentCount;
+            }
+        }
+        return totalPredators;
+    }
+
+    public int GetGrazerCount()
+    {
+        List<string> grazerSpecies = new List<string> { "Sheep", "Rabbit", "Horse" };
+        int totalGrazers = 0;
+        foreach (string species in grazerSpecies)
+        {
+            if (populationData.ContainsKey(species))
+            {
+                totalGrazers += populationData[species].currentCount;
+            }
+        }
+        return totalGrazers;
+    }
+
+    public int GetPlantCount()
+    {
+        List<string> plantSpecies = new List<string> { "Berry Bush", "Apple Tree", "Flowers", "Grass" };
+        int totalPlants = 0;
+        foreach (string species in plantSpecies)
+        {
+            if (populationData.ContainsKey(species))
+            {
+                totalPlants += populationData[species].currentCount;
+            }
+        }
+        return totalPlants;
     }
 
     // 1. Initialize a specific species (Called by Spawner/PopulationCounter)
@@ -58,7 +123,7 @@ public class PopulationManager : MonoBehaviour
         {
             // If species exists, update count
             populationData[speciesName].currentCount += count;
-            populationData[speciesName].UpdateStats();
+            // populationData[speciesName].UpdateStats();
             Debug.Log($"Updated species: {speciesName} with count: {populationData[speciesName].currentCount}");
         }
         else
@@ -82,6 +147,12 @@ public class PopulationManager : MonoBehaviour
             populationData[speciesName].UpdateStats();
 
             Debug.Log($"Species: {speciesName} | Updated Count: {populationData[speciesName].currentCount}");
+
+            
+        }
+        else
+        {
+            Debug.LogError($"Tried to update population manager for {speciesName} but did not find matching key");
         }
     }
 }
@@ -99,8 +170,8 @@ public class SpeciesStats
     {
         name = speciesName;
         currentCount = startingCount;
-        maxRecorded = startingCount;
-        minRecorded = startingCount;
+        maxRecorded = 0;
+        minRecorded = 1000;
     }
 
     public void UpdateStats()

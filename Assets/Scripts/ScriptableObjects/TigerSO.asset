@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8291d286377224447a5ccdacf29e5059, type: 3}
   m_Name: TigerSO
   m_EditorClassIdentifier: 
+  predatorPrefab: {fileID: 667490550083428476, guid: 0a882d0de9a6170438b97800cfc089d0, type: 3}
   specieName: Tiger
   movementSpeedGene:
   - 7

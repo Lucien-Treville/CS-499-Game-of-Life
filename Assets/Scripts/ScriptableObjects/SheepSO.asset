@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d1c27cd00e197844a944f422b02038e, type: 3}
   m_Name: SheepSO
   m_EditorClassIdentifier: 
+  grazerPrefab: {fileID: 7759776975684516640, guid: 68b8e4aecf045ca43977335855d6c6c0, type: 3}
   specieName: Sheep
   movementSpeedGene:
   - 5
