@@ -73,7 +73,7 @@ public class LivingEntity : MonoBehaviour
 
 
         PopulationManager.Instance.UpdateCount(specieName, -1);
-       // Destroy(gameObject);
+       // Destroy(gameObject); // destruction is called from OnDeath
     }
 
     private void OnDeath()
@@ -102,7 +102,7 @@ public class LivingEntity : MonoBehaviour
             transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(90f, 0f, 0f));
         }
 
-
+        Invoke("RemoveCorpse", 10);
 
     }
 
