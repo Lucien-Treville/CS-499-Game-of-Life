@@ -12,19 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d3b5b370821704aba6e5a31031744d, type: 3}
   m_Name: GrassSO
   m_EditorClassIdentifier: 
+  plantPrefab: {fileID: 6487974429602647562, guid: 462fbca49e0a50e4e92a57c67da95b40, type: 3}
   specieName: Grass
   nourishmentValueGene:
-  - 2
-  - 1
+  - 1.6622089445590973
+  - 0.9691856484860182
   fruitingChanceGene:
-  - 0.02
   - 0.002
+  - 0.0005
   sproutingChanceGene:
-  - 0.002
-  - 0.0002
+  - 0.003
+  - 0.0005
   heightGene:
-  - 0.15
-  - 0.025
+  - 0.09580732285976412
+  - 0.25355507582426073
   healthGene:
-  - 10
-  - 2
+  - 8.127294853329659
+  - 1.9991630911827087

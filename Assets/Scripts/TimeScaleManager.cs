@@ -63,7 +63,8 @@ public class TimeScaleManager : MonoBehaviour
     {
         if (speedText != null)
         {
-            speedText.text = speed.ToString("F2") + "x";
+            if (speed == 10f) speedText.text = speed.ToString("F1") + 'x';
+            else speedText.text = speed.ToString("F2") + "x";
         }
     }
 }

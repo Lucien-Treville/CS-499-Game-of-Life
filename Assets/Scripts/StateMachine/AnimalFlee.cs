@@ -32,6 +32,9 @@ public class AnimalFlee : BaseState<AnimalStateMachine.AnimalState>
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
+        // if dead, DIE
+        if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
+
         // if fear < threshold = idle key
 
         if (_animal.fearLevel < _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Idle;

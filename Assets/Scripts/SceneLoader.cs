@@ -94,5 +94,12 @@ public class SceneLoader : MonoBehaviour
 
     }
 
+    public void UseDnDeditor()
+    {
+        MapLoader.jsonFileName = "DnDeditor";
+        DnDeditor.startInEditMode = true;
+        SceneManager.LoadScene("Grasslands");
+    }
+
 
 }

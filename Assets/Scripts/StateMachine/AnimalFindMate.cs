@@ -35,7 +35,10 @@ public class AnimalFindMate : BaseState<AnimalStateMachine.AnimalState>
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
- 
+
+        // if dead, DIE
+        if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
+
         // if fear, flee
 
         if (_animal.fearLevel > _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Flee;

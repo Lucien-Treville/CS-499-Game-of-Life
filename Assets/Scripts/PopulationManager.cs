@@ -1,12 +1,7 @@
-<<<<<<< HEAD
-﻿using UnityEngine;
-using System.Collections.Generic;
-=======
 using UnityEngine;
 using System.Collections.Generic; 
 using TMPro;
 using UnityEngine.UI;
->>>>>>> origin/main
 
 public class PopulationManager : MonoBehaviour
 {
@@ -61,22 +56,17 @@ public class PopulationManager : MonoBehaviour
                 Time.timeScale = 0f;
                 // Implement additional termination logic here (e.g., stop simulation, notify user)
             }
-            if (GetGrazerCount() <= 0)
-            {
-                Debug.Log("All grazers have been eliminated! Simulation ending.");
-                TerminationText.text = "All grazers have been eliminated! Predators are soon to starve. Simulation ending.";
-                TerminationCanvas.gameObject.SetActive(true);
-                Time.timeScale = 0f;
-                // Implement additional termination logic here (e.g., stop simulation, notify user)
-            }
+            // if (GetGrazerCount() <= 0)
+            // {
+            //     Debug.Log("All grazers have been eliminated! Simulation ending.");
+            //     TerminationText.text = "All grazers have been eliminated! Predators are soon to starve. Simulation ending.";
+            //     TerminationCanvas.gameObject.SetActive(true);
+            //     Time.timeScale = 0f;
+            //     // Implement additional termination logic here (e.g., stop simulation, notify user)
+            // }
         }
     }
 
-<<<<<<< HEAD
-    // ---------------------------------------------------------
-    // 1. Initialize a species (Spawner/PopulationCounter calls this)
-    // ---------------------------------------------------------
-=======
 
     // make getter methods for predator, grazer, and plant currentCount for termination conditions
     public int GetPredatorCount()
@@ -122,13 +112,12 @@ public class PopulationManager : MonoBehaviour
     }
 
     // 1. Initialize a specific species (Called by Spawner/PopulationCounter)
->>>>>>> origin/main
     public void InitializeSpecies(string speciesName, int count)
     {
         if (populationData.ContainsKey(speciesName))
         {
             populationData[speciesName].currentCount += count;
-            populationData[speciesName].UpdateStats();
+            // populationData[speciesName].UpdateStats();
 
             Debug.Log($"[POP-MANAGER] Updated species '{speciesName}', count now {populationData[speciesName].currentCount}");
         }
@@ -167,13 +156,13 @@ public class PopulationManager : MonoBehaviour
             populationData[speciesName].currentCount += amount;
             populationData[speciesName].UpdateStats();
 
-<<<<<<< HEAD
-            Debug.Log($"[POP-MANAGER] Species '{speciesName}' count changed by {amount} → now {populationData[speciesName].currentCount}");
-=======
             Debug.Log($"Species: {speciesName} | Updated Count: {populationData[speciesName].currentCount}");
 
             
->>>>>>> origin/main
+        }
+        else
+        {
+            Debug.LogError($"Tried to update population manager for {speciesName} but did not find matching key");
         }
     }
 }
@@ -191,8 +180,8 @@ public class SpeciesStats
     {
         name = speciesName;
         currentCount = startingCount;
-        maxRecorded = startingCount;
-        minRecorded = startingCount;
+        maxRecorded = 0;
+        minRecorded = 1000;
     }
 
     public void UpdateStats()

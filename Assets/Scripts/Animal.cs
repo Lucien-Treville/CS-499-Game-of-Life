@@ -15,6 +15,7 @@ using Dist = MathNet.Numerics.Distributions; // For normal distribution sampling
 
 public struct AnimalGenes
 {
+    public double[] nourishmentValueGene;
     public double[] movementSpeedGene;
     public double[] reproductionChanceGene;
     public double[] attackStrengthGene;
@@ -57,13 +58,15 @@ public class Animal : LivingEntity
     public double fleeThreshold; // determines flee threshold
     public double sleepThreshold; // determines when animal sleeps
 
-    private float visionRange; // how far the animal can see
-    private float visionAngle; // the angle the animal can see
-    public float visionInterval; // how often the animal checks it vision
+    public float visionRange; // how far the animal can see
+    public float visionAngle; // the angle the animal can see
+    public float visionInterval = 5f; // how often the animal checks it vision
     public List<LivingEntity> visibleEntities = new List<LivingEntity>(); // the list of the visible entities 
+    public List<GameObject> watersources = new List<GameObject>(); // list of visible water sources, instantiated at start
 
     public NavMeshAgent agent; // for navigation
     public LivingEntity currentTarget;
+    public GameObject waterTarget;
     public Transform currentTargetPos; // food/prey target
     public AnimalStateMachine _machine;
     public Animal mate = null;
@@ -79,6 +82,7 @@ public class Animal : LivingEntity
         _machine = gameObject.AddComponent<AnimalStateMachine>();
         _machine.setAnimal(this);
         StartCoroutine(VisionRoutine()); 
+        watersources = BuildWaterList();
 
         // specieName = speciesData.specieName;
         currentStage = GrowthStage.Child;
@@ -92,6 +96,7 @@ public class Animal : LivingEntity
 
     protected override void FixedUpdate()
     {
+        if (isDead) return;
         base.FixedUpdate();
         Grow();
         if (hungerLevel <= 0)
@@ -140,6 +145,12 @@ public class Animal : LivingEntity
     {
         AnimalGenes childGenes = new AnimalGenes();
         // for each gene field, average mean and stddev with slight mutation
+
+        childGenes.nourishmentValueGene = new double[]
+        {
+                (p1.nourishmentValueGene[0] + p2.nourishmentValueGene[0]) / 2 + Dist.Normal.Sample(0, 0.1),
+                (p1.nourishmentValueGene[1] + p2.nourishmentValueGene[1]) / 2 + Dist.Normal.Sample(0, 0.05)
+        };
 
         childGenes.movementSpeedGene = new double[]
         {
@@ -212,11 +223,45 @@ public class Animal : LivingEntity
         }
     }
 
+    // this is called at start to build a list of water sources in the map
+    // unlike living entities, this list is constant so that the animal "memorizes" water sources
+    public List<GameObject> BuildWaterList()
+        {
+        Collider[] hits = Physics.OverlapSphere(transform.position, 1000f, LayerMask.GetMask("Water"));
+        List<GameObject> waterSources = new List<GameObject>();
+        foreach (var hit in hits)
+        {
+            waterSources.Add(hit.gameObject);
+        }
+        return waterSources;
+    }
+
+    public void FindWaterSource() {            
+        if (watersources.Count == 0) return;
+        GameObject closestWater = watersources
+            .OrderBy(w => Vector3.Distance(transform.position, w.transform.position))
+            .FirstOrDefault();
+        if (closestWater != null)
+        {
+            SetTargetWaterSource(closestWater);
+        }
+    }
+
+    private void SetTargetWaterSource(GameObject water)
+    {
+        this.waterTarget = water;
+    }
+
+    public GameObject GetWaterTarget()
+    {
+        if(this.waterTarget != null) return this.waterTarget;
+        return null;
+    }
 
     // This builds a list of visible plants and animals by first creating a spherical collider, and then using raycasts to filter out occluded entites
     public List<LivingEntity> GetVisibleEntities()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, visionRange);
+        Collider[] hits = Physics.OverlapSphere(transform.position, visionRange, LayerMask.GetMask("LivingEntity"));
         List<LivingEntity> visible = new List<LivingEntity>();
 
         foreach (var hit in hits)
@@ -269,7 +314,7 @@ public class Animal : LivingEntity
     // looks for the closest predator to determine if fleeing is necessary
     public Animal DetectThreats()
     {
-        if (isPredator) return null;
+        // if (isPredator) return null;
 
         List<LivingEntity> visible = visibleEntities;
 
@@ -277,8 +322,9 @@ public class Animal : LivingEntity
 
         // Filter for predators only
         List<Animal> predators = visible
+            .Where(e => e != null)
             .OfType<Animal>()                         // only animals
-            .Where(a => a != this && a.isPredator)    // must be predator and not self
+            .Where(a => a != this && a.isPredator && a.specieName != this.specieName)    // must be predator and not self
             .ToList();
         if (predators.Count == 0) return null;
 
@@ -305,6 +351,7 @@ public class Animal : LivingEntity
 
         // 2) Filter by type or species
         List<Animal> potentialTargets = visible
+            .Where(e => e != null)
             .OfType<Animal>()
             .Where(e => e != this && e.specieName == this.specieName && e.isBreedable == true)  // filters for own species
             .ToList();
@@ -375,23 +422,57 @@ public class Animal : LivingEntity
     private LivingEntity FindClosestAnimal()
     {
         return visibleEntities
-            .Where(e => e != this && e is Animal && e.specieName != this.specieName)
-            .OrderBy(e => Vector3.Distance(transform.position, e.transform.position))
-           .FirstOrDefault();
+            .Where(e => e != null)                // filter out destroyed UnityEngine.Objects early
+            .OfType<Animal>()                     // cast to Animal safely
+            .Where(a => a != this && a.specieName != this.specieName)
+            .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
+            .FirstOrDefault();
+
+            
     }
 
     private LivingEntity FindClosestPlant()
     {
         return visibleEntities
-            .Where(e => e is Plant)
+            .Where(e => e != null)
+            .OfType<Plant>()
             .OrderBy(e => Vector3.Distance(transform.position, e.transform.position))
             .FirstOrDefault();
     }
 
+    public LivingEntity GetTargetEntity() 
+    {
+        if (this.currentTarget != null) return currentTarget;
+        return null;
+    }
+
+    // returns the transform of the current target
     public Transform GetTarget()
     {
-        return this.currentTarget.transform;
+        if (this.currentTarget != null) return this.currentTarget.transform;
+        if (this.waterTarget != null) return this.waterTarget.transform;
+        return null;
     }
+
+
+
+    public void ClearTarget()
+    {
+        this.currentTarget = null;
+        this.waterTarget = null;
+        this.currentTargetPos = null;
+    }
+
+    public float GetTargetDistance() 
+        {
+        Transform target = this.GetTarget();
+        if (target != null)
+        {
+            return Vector3.Distance(this.transform.position, target.position);
+
+        }
+        return -1f;
+    } 
 
     public void PursueTargetTransform(Transform t)
     {
@@ -432,7 +513,8 @@ public class Animal : LivingEntity
 
     public Transform GetThreat()
     {
-        return this.threat.transform;
+        if (this.threat != null) return this.threat.transform;
+        return null;
     }
 
     public void Flee(Transform threat)
@@ -455,16 +537,38 @@ public class Animal : LivingEntity
         agent.SetDestination(fleeTarget);
     }
 
-    public void SufferAttack(double damage)
+
+    public void AttackAnimal(LivingEntity animalTarget)
     {
-        this.health -= damage;
-
-        if (this.health <= 0)
-        {
-            Die();
-        }
-
+        double damage = this.attackStrength;
+        animalTarget.SufferAttack(damage);
     }
+
+    public void Eat(LivingEntity food)
+    {
+        if (food is Plant plant)
+        {
+            hungerLevel = Min(100.0, hungerLevel + plant.nourishmentValue);
+            thirstLevel = Min(100.0, thirstLevel + plant.nourishmentValue);
+            plant.RemoveCorpse(); // consume the plant
+            ClearTarget();
+        }
+        else if (food is Animal prey)
+        {
+            hungerLevel = Min(100.0, hungerLevel + prey.nourishmentValue);
+            thirstLevel = Min(100.0, thirstLevel + prey.nourishmentValue);
+            prey.RemoveCorpse(); // consume the prey
+            ClearTarget();
+
+        }
+    }
+
+    public void Drink()
+    {
+        thirstLevel = Min(100.0, thirstLevel + 1.0); // arbitrary value for now
+    }
+
+    
 
 
 }

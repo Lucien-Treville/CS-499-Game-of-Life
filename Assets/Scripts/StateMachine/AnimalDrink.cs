@@ -26,14 +26,19 @@ public class AnimalDrink : BaseState<AnimalStateMachine.AnimalState>
 
     public override void UpdateState()
     {
+        _animal.Drink();
+        _animal.UpdateFear();
 
     }
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
-        // if drink is gone, but still thirsty, go to findwater
+        // if dead, DIE
+        if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
 
-        if (_animal.thirstLevel < _animal.thirstThreshold) return AnimalStateMachine.AnimalState.FindWater;
+        // if fear, flee
+        if (_animal.fearLevel > _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Flee;
+
         // if not thirsty, go idle
         if (_animal.thirstLevel > _animal.thirstThreshold) return AnimalStateMachine.AnimalState.Idle;
         return StateKey;

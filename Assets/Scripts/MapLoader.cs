@@ -23,7 +23,7 @@ public class MapLoader : MonoBehaviour
     private float worldMinX, worldMaxX;
     private float worldMinZ, worldMaxZ;
     private float defaultY;
-    public float clusterRadius = 6f; // Minimum distance from water's edge
+    public float clusterRadius = 2f; // Minimum distance from water's edge
     public LayerMask groundLayer; // Set this to "Terrain" or "Default" (Exclude Player/Creatures!)
 
 
@@ -55,6 +55,10 @@ public class MapLoader : MonoBehaviour
 
     void Start()
     {
+        PopulationManager.Instance.simStartTime = Time.time;
+
+        if (jsonFileName == "DnDeditor") return; 
+
         // initialize jsonData structure every new simulation
         jsonData = new Dictionary<string, object>
         {
@@ -191,7 +195,7 @@ public class MapLoader : MonoBehaviour
 
     private void Spawner()
     {
-        PopulationManager.Instance.simStartTime = Time.time;
+        
 
         foreach (var categoryPair in jsonData)
         {
@@ -252,7 +256,7 @@ public class MapLoader : MonoBehaviour
                             break;
                     }
 
-                    Vector3 pos = GetValidSpawnPoint(((Vector3)spawnArr[1]).x, ((Vector3)spawnArr[1]).z, prefabToSpawn);
+                    Vector3 pos = GetValidSpawnPoint(((Vector3)spawnArr[1]).x, ((Vector3)spawnArr[1]).z, prefabToSpawn, 1);
                     
                     if (prefabToSpawn != null)
                     {
@@ -284,6 +288,10 @@ public class MapLoader : MonoBehaviour
 
             }
         }
+        foreach (var specie in PopulationManager.Instance.populationData.Keys)
+        {
+            PopulationManager.Instance.populationData[specie].UpdateStats();
+        }
     }
 
     private void CalculateNavMeshBounds()
@@ -312,25 +320,39 @@ public class MapLoader : MonoBehaviour
         worldMaxZ = bounds.max.z;
         defaultY = bounds.center.y; // Good starting height for raycasts
 
-        Debug.Log($"World Bounds Auto-Detected: X[{worldMinX} to {worldMaxX}], Z[{worldMinZ} to {worldMaxZ}]");
+        Debug.Log($"World Bounds Auto-Detected: X[{worldMinX} to {worldMaxX}], Z[{worldMinZ} to {worldMaxZ}], Y={defaultY}");
     }
 
 
-public Vector3 GetValidSpawnPoint(float jsonX, float jsonZ, GameObject creaturePrefab)
+public Vector3 GetValidSpawnPoint(float jsonX, float jsonZ, GameObject creaturePrefab, int spaghettiID)
 {
     // --- STEP 1: GET SAFE X/Z FROM NAVMESH ---
     // (This part works, so we keep it to handle Water avoidance)
-    
-    float percentX = Mathf.InverseLerp(jsonMin, jsonMax, jsonX);
-    float percentZ = Mathf.InverseLerp(jsonMin, jsonMax, jsonZ);
-    float realX = Mathf.Lerp(worldMinX, worldMaxX, percentX);
-    float realZ = Mathf.Lerp(worldMinZ, worldMaxZ, percentZ);
+    float percentX, percentZ, realX, realZ;
+    Vector3 targetPos = new Vector3(0,0,0);
+    switch (spaghettiID)    // I want this function for spawning children but need to skip the json section, please forgive this spaghetti
+    {
+        case 1:
+            percentX = Mathf.InverseLerp(jsonMin, jsonMax, jsonX);
+            percentZ = Mathf.InverseLerp(jsonMin, jsonMax, jsonZ);
+            realX = Mathf.Lerp(worldMinX, worldMaxX, percentX);
+            realZ = Mathf.Lerp(worldMinZ, worldMaxZ, percentZ);
+            targetPos = new Vector3(realX, defaultY, realZ);
+            break;
+        case 2:
+            targetPos = new Vector3(jsonX, 1, jsonZ);
+            break;
+        default:
+            Debug.LogError($"MapLoader.GetValidSpawnPoint does not have spaghetti ID {spaghettiID}");
+            break;
+    }
 
-    Vector3 targetPos = new Vector3(realX, defaultY, realZ);
+
+
     Vector3 finalPos = targetPos; // Default fallback
 
-    NavMeshHit hit;
-    if (NavMesh.SamplePosition(targetPos, out hit, 30.0f, NavMesh.AllAreas))
+    NavMeshHit hit; // make sure we don't spawn in lake
+    if (NavMesh.SamplePosition(targetPos, out hit, 10.0f, NavMesh.AllAreas)) // 30 felt big
     {
         Vector3 safePoint = hit.position;
 
@@ -373,8 +395,8 @@ public Vector3 GetValidSpawnPoint(float jsonX, float jsonZ, GameObject creatureP
 
     // --- STEP 3: APPLY PIVOT CORRECTION ---
     // Now we lift the creature so its feet sit on that exact point
-    float legHeight = GetLegHeight(creaturePrefab);
-    finalPos.y += legHeight;
+    // float legHeight = GetLegHeight(creaturePrefab);
+    // finalPos.y += legHeight;
 
     return finalPos;
 }
@@ -383,7 +405,7 @@ public Vector3 GetValidSpawnPoint(float jsonX, float jsonZ, GameObject creatureP
 // Accounts for the Prefab's scale to prevent sinking.
 private float GetLegHeight(GameObject prefab)
 {
-    Debug.Log("Actually entered GetLegHeight for prefab: " + prefab.name);
+    // Debug.Log("Actually entered GetLegHeight for prefab: " + prefab.name);
     if (prefab == null) return 0f;
 
     // 1. Get the root scale of the prefab

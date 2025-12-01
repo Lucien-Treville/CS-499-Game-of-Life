@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Placeable
   - Water
+  - Apple
   layers:
   - Default
   - TransparentFX
@@ -14,7 +15,8 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
+  - LivingEntity
+  - Plant
   - 
   - 
   - 

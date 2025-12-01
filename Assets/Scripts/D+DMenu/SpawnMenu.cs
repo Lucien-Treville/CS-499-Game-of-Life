@@ -13,7 +13,7 @@ public class SpawnMenu : MonoBehaviour
 
     void Awake()
     {
-        SelectObject(0);
+        // SelectObject(0); // forces the menu to have first item pre-selected. Means if you click Obstacles menu, boulders can be spawned without selecting boulder option. 
     }
 
     void Update()
@@ -27,7 +27,7 @@ public class SpawnMenu : MonoBehaviour
             RaycastHit hit;
 
             // Only hit colliders on the Ground layer
-            if (Physics.Raycast(ray, out hit, 300f, groundMask))
+            if (Physics.Raycast(ray, out hit, 400f, groundMask))
             {
                 Instantiate(activeObject, hit.point, Quaternion.identity);
                 // update population manager after instantiating creature
@@ -37,7 +37,7 @@ public class SpawnMenu : MonoBehaviour
 
 
 
-                Debug.Log("Spawned on: " + hit.collider.gameObject.name);
+                // Debug.Log("Spawned on: " + hit.collider.gameObject.name);
             }
         }
     }

@@ -7,7 +7,8 @@ public class AnimalFindFood : BaseState<AnimalStateMachine.AnimalState>
     private AnimalStateMachine _machine;
     private Animal _animal;
     private Transform target;
-    private string targetTag; 
+    private LivingEntity _target;
+    
 
     public AnimalFindFood(AnimalStateMachine machine, AnimalStateMachine.AnimalState key, Animal animal)
         : base(key)
@@ -31,21 +32,36 @@ public class AnimalFindFood : BaseState<AnimalStateMachine.AnimalState>
     public override void UpdateState()
     {
         _animal.Wander();
-        _animal.FindFood();
+        
         _animal.UpdateFear();
+        
+
+        
+        
+        _animal.FindFood();
+        target = _animal.GetTarget();
+        _target = _animal.GetTargetEntity();
+
+
 
     }
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
+        target = _animal.GetTarget();
+        _target = _animal.GetTargetEntity();
+
+        // if dead, DIE
+        if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
+
         // if food found, eat
         // if fear, flee
 
         if (_animal.fearLevel > _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Flee;
 
-        if (target != null && !_animal.isPredator) return AnimalStateMachine.AnimalState.Eat;
+        if (target != null && _target.isDead) return AnimalStateMachine.AnimalState.Eat;
 
-        if (target != null && _animal.isPredator) return AnimalStateMachine.AnimalState.Chase;
+        if (target != null) return AnimalStateMachine.AnimalState.Chase;
 
 
         

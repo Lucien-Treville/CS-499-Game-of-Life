@@ -29,17 +29,26 @@ public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
     {
         target = _animal.GetTarget();
 
-        _animal.PursueTargetTransform(target);
+        if (target != null) {_animal.PursueTargetTransform(target);}
 
     }
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
+        // if dead, DIE
+        if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
+
         // if in range, attack
         // if no prey in range, find food
-
+        target = _animal.GetTarget();
         if (target == null) return AnimalStateMachine.AnimalState.Idle;
-
-        return StateKey;
+        float distanceToTarget = _animal.GetTargetDistance();
+    
+        // If close enough to attack
+        if (distanceToTarget < 2f && distanceToTarget > -1f) // Adjust threshold as needed
+        {
+            return AnimalStateMachine.AnimalState.Attack;
+        }
+            return StateKey;
     }
 }

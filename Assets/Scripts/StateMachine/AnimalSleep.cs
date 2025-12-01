@@ -32,6 +32,9 @@ public class AnimalSleep : BaseState<AnimalStateMachine.AnimalState>
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
+        // if dead, DIE
+        if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
+
         // if sleepy = 100 or fear > 10 go to idle
         if (_animal.sleepLevel == 100) return AnimalStateMachine.AnimalState.Sleep;
 

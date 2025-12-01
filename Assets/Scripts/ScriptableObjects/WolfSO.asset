@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8291d286377224447a5ccdacf29e5059, type: 3}
   m_Name: WolfSO
   m_EditorClassIdentifier: 
+  predatorPrefab: {fileID: 6809041187645326175, guid: a758cd221cfeed642843e32daeacf6cd, type: 3}
   specieName: Wolf
   movementSpeedGene:
   - 4

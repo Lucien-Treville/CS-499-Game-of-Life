@@ -12,19 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d3b5b370821704aba6e5a31031744d, type: 3}
   m_Name: FlowersSO
   m_EditorClassIdentifier: 
+  plantPrefab: {fileID: 8343530470604283908, guid: 0b09f2ad081334e4ea1d3fe612c53f00, type: 3}
   specieName: Flowers
   nourishmentValueGene:
-  - 3
-  - 1
+  - 3.855724613677083
+  - 1.1219262641548085
   fruitingChanceGene:
-  - 0.0004
-  - 0.00005
+  - 0.0022774250507354736
+  - 0.00042844462394714357
   sproutingChanceGene:
-  - 0.0004
-  - 0.00005
+  - 0.001925739049911499
+  - 0.000541000783443451
   heightGene:
-  - 0.1
-  - 0.01
+  - 0.3273948311805725
+  - 0.017477807440917224
   healthGene:
-  - 10
-  - 3
+  - 10.549695899872155
+  - 2.8892127681893154
