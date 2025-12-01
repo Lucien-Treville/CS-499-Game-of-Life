@@ -11,6 +11,7 @@
 using UnityEngine;
 using Dist = MathNet.Numerics.Distributions; // For normal distribution sampling
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 
 public struct PlantGenes
@@ -47,7 +48,7 @@ public class Plant : LivingEntity
     public double sproutingChance;
     public bool hasFruit;
     // apple for apple tree
-    private GameObject apple;
+    private List<GameObject> apple = new List<GameObject>();
 
 
 
@@ -94,9 +95,9 @@ public class Plant : LivingEntity
             {
                 if (child.CompareTag("Apple"))
                 {
-                    apple = child.gameObject;
-                    apple.SetActive(false);
-                    break; // Stop looking once we find it
+                    apple.Add( child.gameObject);
+                    child.gameObject.SetActive(false);
+                    
                 }
             }
 
@@ -203,8 +204,13 @@ public class Plant : LivingEntity
                     {
                         hasFruit = true;
                         if (genes.specieName == "Apple Tree")
-                        {
-                            apple.SetActive(true);
+                        {   
+                            
+                            foreach (var ap in apple)
+                            {
+                                ap.SetActive(true);
+                            }
+                            // apple.SetActive(true);
                         }
                         // Debug.Log($"Plant, {specieName}, (ID: {instanceID}) has produced fruit.");
                     }
