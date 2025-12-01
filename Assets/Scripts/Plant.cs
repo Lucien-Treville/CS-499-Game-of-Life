@@ -47,7 +47,8 @@ public class Plant : LivingEntity
     public double fruitingChance;
     public double sproutingChance;
     public bool hasFruit;
-    // apple for apple tree
+
+    // apples for apple tree
     private List<GameObject> apple = new List<GameObject>();
 
 
@@ -86,6 +87,7 @@ public class Plant : LivingEntity
         health = Dist.Normal.Sample(genes.healthGene[0], genes.healthGene[1]);
         currentStage = GrowthStage.Sapling;
         hasFruit = false;
+       
         if (specieName == "Apple Tree")
         {
             // find apple with apple tag in prefab
@@ -100,9 +102,8 @@ public class Plant : LivingEntity
                     
                 }
             }
-
-            
         }
+
     }
 
     protected override void FixedUpdate()
@@ -196,7 +197,6 @@ public class Plant : LivingEntity
                         }
                     }
 
-                    // A method to instantiate a new Plant GameObject
                 }
                 else
                 {
@@ -210,7 +210,6 @@ public class Plant : LivingEntity
                             {
                                 ap.SetActive(true);
                             }
-                            // apple.SetActive(true);
                         }
                         // Debug.Log($"Plant, {specieName}, (ID: {instanceID}) has produced fruit.");
                     }

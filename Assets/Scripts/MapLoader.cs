@@ -288,6 +288,10 @@ public class MapLoader : MonoBehaviour
 
             }
         }
+        foreach (var specie in PopulationManager.Instance.populationData.Keys)
+        {
+            PopulationManager.Instance.populationData[specie].UpdateStats();
+        }
     }
 
     private void CalculateNavMeshBounds()
