@@ -140,7 +140,8 @@ public class Plant : LivingEntity
                             if (NavMesh.SamplePosition(spawnPos, out hit, 1.0f, NavMesh.AllAreas))
                             {
                                 // Update candidatePos to the exact height of the terrain
-                                spawnPos = hit.position;
+                                spawnPos.x = hit.position.x;
+                                spawnPos.z = hit.position.z;
 
                                 // 3. CHECK FOR PLANT OVERCROWDING
                                 // Now that we know it's land, check if it's crowded
