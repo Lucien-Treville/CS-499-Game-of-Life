@@ -2584,7 +2584,7 @@ Transform:
   m_GameObject: {fileID: 7759776975684516640}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
   - {fileID: 7759776976145278063}
   - {fileID: 7759776974164368848}
@@ -2652,7 +2652,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: -0.35
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!54 &2590562551135433721
@@ -2697,8 +2697,6 @@ MonoBehaviour:
   attackStrength: 0
   isPredator: 0
   isBreedable: 0
-  mate: {fileID: 0}
-  threat: {fileID: 0}
   hungerThreshold: 0
   thirstThreshold: 0
   fleeThreshold: 0
@@ -2709,6 +2707,8 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
+  mate: {fileID: 0}
+  threat: {fileID: 0}
   currentStage: 0
   speciesGeneData: {fileID: 11400000, guid: dd5f75c9eb6f487498fd6035fccdfd1d, type: 2}
 --- !u!65 &-4807218586395442877

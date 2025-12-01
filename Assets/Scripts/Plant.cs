@@ -10,6 +10,8 @@
 
 using UnityEngine;
 using Dist = MathNet.Numerics.Distributions; // For normal distribution sampling
+using UnityEngine.AI;
+
 
 public struct PlantGenes
 {
@@ -126,18 +128,43 @@ public class Plant : LivingEntity
                         bool foundSpot = false;
                         Vector3 spawnPos = new Vector3(0,0,0);
 
+
                         for (int i = 0; i < 10; i++) // try to find a non-overlapping spot up to 10 times
                         {
                             Vector2 randomCircle = Random.insideUnitCircle * 3;
                             spawnPos = transform.position + new Vector3(randomCircle.x, 0, randomCircle.y);
-                            spawnPos = mapLoader.GetValidSpawnPoint(spawnPos.x, spawnPos.z, babyPrefab); 
-                            int mask = LayerMask.GetMask("Plant");
-                            if (!Physics.CheckSphere(spawnPos, 3, mask))
+                            spawnPos = mapLoader.GetValidSpawnPoint(spawnPos.x, spawnPos.z, babyPrefab, 2); 
+
+                            NavMeshHit hit;
+                            // small (1.0) radius so it fails if in lake
+                            if (NavMesh.SamplePosition(spawnPos, out hit, 1.0f, NavMesh.AllAreas))
                             {
-                                foundSpot = true;
-                                break;
+                                // Update candidatePos to the exact height of the terrain
+                                spawnPos = hit.position;
+
+                                // 3. CHECK FOR PLANT OVERCROWDING
+                                // Now that we know it's land, check if it's crowded
+                                int mask = LayerMask.GetMask("Plant");
+                                if (!Physics.CheckSphere(spawnPos, 3, mask))
+                                {
+                                    foundSpot = true;
+                                    break;
+                                }
                             }
                         }
+
+                        // for (int i = 0; i < 10; i++) // try to find a non-overlapping spot up to 10 times
+                        // {
+                        //     Vector2 randomCircle = Random.insideUnitCircle * 2;
+                        //     spawnPos = transform.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+                        //     spawnPos = mapLoader.GetValidSpawnPoint(spawnPos.x, spawnPos.z, babyPrefab, 2); 
+                        //     int mask = LayerMask.GetMask("Plant");
+                        //     if (!Physics.CheckSphere(spawnPos, 3, mask))
+                        //     {
+                        //         foundSpot = true;
+                        //         break;
+                        //     }
+                        // }
                         if (foundSpot){
                             // spawn baby plant and give it parent genes
                             GameObject babyObj = Instantiate(babyPrefab, spawnPos, Quaternion.identity);

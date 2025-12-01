@@ -23,7 +23,7 @@ public class MapLoader : MonoBehaviour
     private float worldMinX, worldMaxX;
     private float worldMinZ, worldMaxZ;
     private float defaultY;
-    public float clusterRadius = 6f; // Minimum distance from water's edge
+    public float clusterRadius = 2f; // Minimum distance from water's edge
     public LayerMask groundLayer; // Set this to "Terrain" or "Default" (Exclude Player/Creatures!)
 
 
@@ -252,7 +252,7 @@ public class MapLoader : MonoBehaviour
                             break;
                     }
 
-                    Vector3 pos = GetValidSpawnPoint(((Vector3)spawnArr[1]).x, ((Vector3)spawnArr[1]).z, prefabToSpawn);
+                    Vector3 pos = GetValidSpawnPoint(((Vector3)spawnArr[1]).x, ((Vector3)spawnArr[1]).z, prefabToSpawn, 1);
                     
                     if (prefabToSpawn != null)
                     {
@@ -312,25 +312,39 @@ public class MapLoader : MonoBehaviour
         worldMaxZ = bounds.max.z;
         defaultY = bounds.center.y; // Good starting height for raycasts
 
-        Debug.Log($"World Bounds Auto-Detected: X[{worldMinX} to {worldMaxX}], Z[{worldMinZ} to {worldMaxZ}]");
+        Debug.Log($"World Bounds Auto-Detected: X[{worldMinX} to {worldMaxX}], Z[{worldMinZ} to {worldMaxZ}], Y={defaultY}");
     }
 
 
-public Vector3 GetValidSpawnPoint(float jsonX, float jsonZ, GameObject creaturePrefab)
+public Vector3 GetValidSpawnPoint(float jsonX, float jsonZ, GameObject creaturePrefab, int spaghettiID)
 {
     // --- STEP 1: GET SAFE X/Z FROM NAVMESH ---
     // (This part works, so we keep it to handle Water avoidance)
-    
-    float percentX = Mathf.InverseLerp(jsonMin, jsonMax, jsonX);
-    float percentZ = Mathf.InverseLerp(jsonMin, jsonMax, jsonZ);
-    float realX = Mathf.Lerp(worldMinX, worldMaxX, percentX);
-    float realZ = Mathf.Lerp(worldMinZ, worldMaxZ, percentZ);
+    float percentX, percentZ, realX, realZ;
+    Vector3 targetPos = new Vector3(0,0,0);
+    switch (spaghettiID)
+    {
+        case 1:
+            percentX = Mathf.InverseLerp(jsonMin, jsonMax, jsonX);
+            percentZ = Mathf.InverseLerp(jsonMin, jsonMax, jsonZ);
+            realX = Mathf.Lerp(worldMinX, worldMaxX, percentX);
+            realZ = Mathf.Lerp(worldMinZ, worldMaxZ, percentZ);
+            targetPos = new Vector3(realX, defaultY, realZ);
+            break;
+        case 2:
+            targetPos = new Vector3(jsonX, 1, jsonZ);
+            break;
+        default:
+            Debug.LogError($"MapLoader.GetValidSpawnPoint does not have spaghetti ID {spaghettiID}");
+            break;
+    }
 
-    Vector3 targetPos = new Vector3(realX, defaultY, realZ);
+
+
     Vector3 finalPos = targetPos; // Default fallback
 
-    NavMeshHit hit;
-    if (NavMesh.SamplePosition(targetPos, out hit, 30.0f, NavMesh.AllAreas))
+    NavMeshHit hit; // make sure we don't spawn in lake
+    if (NavMesh.SamplePosition(targetPos, out hit, 10.0f, NavMesh.AllAreas)) // 30 felt big
     {
         Vector3 safePoint = hit.position;
 
@@ -373,8 +387,8 @@ public Vector3 GetValidSpawnPoint(float jsonX, float jsonZ, GameObject creatureP
 
     // --- STEP 3: APPLY PIVOT CORRECTION ---
     // Now we lift the creature so its feet sit on that exact point
-    float legHeight = GetLegHeight(creaturePrefab);
-    finalPos.y += legHeight;
+    // float legHeight = GetLegHeight(creaturePrefab);
+    // finalPos.y += legHeight;
 
     return finalPos;
 }
