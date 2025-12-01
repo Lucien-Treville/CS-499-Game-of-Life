@@ -38,7 +38,7 @@ public class Plant : LivingEntity
     public PlantSpecies speciesGeneData; // reference to ScriptableObject defining species attributes
     public PlantGenes genes;
     public PlantGenes? parentGenes;
-    
+
 
     // instance attributes
     public GrowthStage currentStage;
@@ -46,6 +46,8 @@ public class Plant : LivingEntity
     public double fruitingChance;
     public double sproutingChance;
     public bool hasFruit;
+    // apple for apple tree
+    private GameObject apple;
 
 
 
@@ -56,12 +58,12 @@ public class Plant : LivingEntity
         base.Start();
 
         if (parentGenes.HasValue)
-            {
+        {
             // Slightly mutate parent genes for child
             genes = PlantGenesMutation(parentGenes.Value);
-            }
+        }
         else
-            {
+        {
             // First generation: use ScriptableObject
             genes.nourishmentValueGene = speciesGeneData.nourishmentValueGene;
             genes.fruitingChanceGene = speciesGeneData.fruitingChanceGene;
@@ -70,9 +72,9 @@ public class Plant : LivingEntity
             genes.healthGene = speciesGeneData.healthGene;
             genes.specieName = speciesGeneData.specieName;
             genes.plantPrefab = speciesGeneData.plantPrefab;
-            }
-        
-        
+        }
+
+
         // PrintPlantGenes(genes); // prints specie name and chances to LogWarning
 
         specieName = speciesGeneData.specieName;
@@ -83,6 +85,23 @@ public class Plant : LivingEntity
         health = Dist.Normal.Sample(genes.healthGene[0], genes.healthGene[1]);
         currentStage = GrowthStage.Sapling;
         hasFruit = false;
+        if (specieName == "Apple Tree")
+        {
+            // find apple with apple tag in prefab
+            Transform[] allChildren = GetComponentsInChildren<Transform>(true);
+
+            foreach (Transform child in allChildren)
+            {
+                if (child.CompareTag("Apple"))
+                {
+                    apple = child.gameObject;
+                    apple.SetActive(false);
+                    break; // Stop looking once we find it
+                }
+            }
+
+            
+        }
     }
 
     protected override void FixedUpdate()
@@ -126,14 +145,14 @@ public class Plant : LivingEntity
                         // Instantiate a new Plant GameObject
                         GameObject babyPrefab = genes.plantPrefab;
                         bool foundSpot = false;
-                        Vector3 spawnPos = new Vector3(0,0,0);
+                        Vector3 spawnPos = new Vector3(0, 0, 0);
 
 
                         for (int i = 0; i < 10; i++) // try to find a non-overlapping spot up to 10 times
                         {
                             Vector2 randomCircle = Random.insideUnitCircle * 3;
                             spawnPos = transform.position + new Vector3(randomCircle.x, 0, randomCircle.y);
-                            spawnPos = mapLoader.GetValidSpawnPoint(spawnPos.x, spawnPos.z, babyPrefab, 2); 
+                            spawnPos = mapLoader.GetValidSpawnPoint(spawnPos.x, spawnPos.z, babyPrefab, 2);
 
                             NavMeshHit hit;
                             // small (1.0) radius so it fails if in lake
@@ -166,7 +185,8 @@ public class Plant : LivingEntity
                         //         break;
                         //     }
                         // }
-                        if (foundSpot){
+                        if (foundSpot)
+                        {
                             // spawn baby plant and give it parent genes
                             GameObject babyObj = Instantiate(babyPrefab, spawnPos, Quaternion.identity);
                             babyObj.GetComponent<Plant>().parentGenes = this.genes;
@@ -182,6 +202,10 @@ public class Plant : LivingEntity
                     if (Random.Range(0f, 1f) < fruitingChance)
                     {
                         hasFruit = true;
+                        if (genes.specieName == "Apple Tree")
+                        {
+                            apple.SetActive(true);
+                        }
                         // Debug.Log($"Plant, {specieName}, (ID: {instanceID}) has produced fruit.");
                     }
                 }
@@ -218,11 +242,11 @@ public class Plant : LivingEntity
 
         return mutatedGenes;
     }
-void PrintPlantGenes(PlantGenes genes)
-{
-    Debug.LogWarning($"Specie: {genes.specieName}");
-    Debug.LogWarning($"Fruiting Chance: {genes.fruitingChanceGene[0]}, {genes.fruitingChanceGene[1]}");
-    Debug.LogWarning($"Sprouting Chance: {genes.sproutingChanceGene[0]}, {genes.sproutingChanceGene[1]}");
-}
+    void PrintPlantGenes(PlantGenes genes)
+    {
+        Debug.LogWarning($"Specie: {genes.specieName}");
+        Debug.LogWarning($"Fruiting Chance: {genes.fruitingChanceGene[0]}, {genes.fruitingChanceGene[1]}");
+        Debug.LogWarning($"Sprouting Chance: {genes.sproutingChanceGene[0]}, {genes.sproutingChanceGene[1]}");
+    }
 
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Placeable
   - Water
+  - Apple
   layers:
   - Default
   - TransparentFX
