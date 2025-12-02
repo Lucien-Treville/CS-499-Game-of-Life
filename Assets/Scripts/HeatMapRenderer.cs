@@ -7,8 +7,8 @@ public class HeatMapRenderer : MonoBehaviour
     public RawImage heatmapImage;
 
     [Header("Legend UI")]
-    public RectTransform legendContainer; // Panel for legend entries
-    public Font legendFont;               // Your UI font
+    public RectTransform legendContainer;
+    public Font legendFont;
 
     [Header("Settings")]
     public int textureSize = 1024;
@@ -17,34 +17,34 @@ public class HeatMapRenderer : MonoBehaviour
     private float minX, maxX, minZ, maxZ;
 
     // --------- PLANTS TO IGNORE ----------
-    private static readonly HashSet<string> plantSpecies = new HashSet<string>
-    {
-        "BerryBush","Flowers","flowers2","flowers-tall",
-        "AppleTree","tree","tree-pine","rock","rocks"
-    };
+    private static readonly HashSet<string> plantSpecies =
+        new HashSet<string>()
+        {
+            "BerryBush","Flowers","flowers2","flowers-tall",
+            "AppleTree","tree","tree-pine","rock","rocks"
+        };
 
     // --------- ANIMAL SPECIES COLORS ----------
-    // NOTE: keys MUST match the parsed species names (see ParseSpeciesName).
-    public static readonly Dictionary<string, Color> speciesColors = new Dictionary<string, Color>
-{
-    { "Rabbit",    new Color(1f, 0.9f, 0.2f) },     // Yellow
-    { "Wolf",      new Color(0.25f, 0.35f, 0.55f) }, // Dark Gray-Blue
-    { "Tiger",     new Color(1f, 0.55f, 0.0f) },     // Orange
-    { "Horse",     new Color(0.2f, 0.4f, 1f) },      // Blue
-    { "Snake",     new Color(0.6f, 0.2f, 0.8f) },    // Purple
-
-    // NEW CREATURES
-    { "Sheep",       new Color(0.6f, 0.4f, 0.2f) },     // Brown
-};
-
-
+    public static readonly Dictionary<string, Color> speciesColors =
+        new Dictionary<string, Color>()
+        {
+            { "Rabbit", new Color(1f, 0.9f, 0.2f) },
+            { "Wolf",   new Color(0.25f, 0.35f, 0.55f) },
+            { "Tiger",  new Color(1f, 0.55f, 0.0f) },
+            { "Horse",  new Color(0.2f, 0.4f, 1f) },
+            { "Snake",  new Color(0.6f, 0.2f, 0.8f) },
+            { "Sheep",  new Color(0.6f, 0.4f, 0.2f) }
+        };
 
     private const int SPREAD_RADIUS = 3;
 
-    // species that actually appeared in the data *and* had a defined color
-    private readonly HashSet<string> activeColoredSpecies = new HashSet<string>();
+    private readonly HashSet<string> activeColoredSpecies =
+        new HashSet<string>();
 
 
+    // =====================================================
+    // ENABLE
+    // =====================================================
     void OnEnable()
     {
         Debug.Log("🔥 HeatMapRenderer ENABLED");
@@ -52,65 +52,69 @@ public class HeatMapRenderer : MonoBehaviour
         GenerateLegendUI();
     }
 
-    // ==========================================================
-    // 🔥 HEATMAP GENERATION
-    // ==========================================================
+
+    // =====================================================
+    // HEATMAP GENERATION
+    // =====================================================
     void GenerateHeatMap()
     {
         Debug.Log("📌 PATH COUNT = " + MovementTracker.paths.Count);
-
         activeColoredSpecies.Clear();
 
         if (MovementTracker.paths.Count == 0)
         {
-            Debug.LogWarning("⚠️ No movement data found!");
+            Debug.LogWarning("⚠ No movement data found. Heatmap skipped.");
             return;
         }
 
         ComputeBounds();
 
+        // Background must be inside:
+        // Assets/Resources/MapImages/GrasslandsMap.png
         Texture2D bg = Resources.Load<Texture2D>("MapImages/GrasslandsMap");
+
         if (bg == null)
         {
             Debug.LogError("❌ GrasslandsMap.png NOT FOUND in Resources/MapImages/");
             return;
         }
 
-        tex = new Texture2D(textureSize, textureSize);
+        tex = new Texture2D(textureSize, textureSize, TextureFormat.RGBA32, false);
+
         Color[,] colorMap = new Color[textureSize, textureSize];
         float[,] weightMap = new float[textureSize, textureSize];
 
-        // ---------------- Build colored density ----------------
-        foreach (var kvp in MovementTracker.paths)
+        // ---------- Build density ----------
+        foreach (KeyValuePair<string, List<Vector3>> kvp in MovementTracker.paths)
         {
             string species = ParseSpeciesName(kvp.Key);
 
-            // skip plants entirely
             if (plantSpecies.Contains(species))
                 continue;
 
-            bool hasColor = speciesColors.TryGetValue(species, out Color speciesColor);
+            Color speciesColor;
+            bool hasColor = speciesColors.TryGetValue(species, out speciesColor);
+
             if (!hasColor)
             {
-                // This is where your rabbits were likely going white:
-                Debug.LogWarning($"⚠️ No color defined for species '{species}'. Using white on map and skipping from legend.");
+                Debug.LogWarning("⚠ No color for species: " + species);
                 speciesColor = Color.white;
             }
             else
-            {
-                // only species with a defined color go into legend
                 activeColoredSpecies.Add(species);
-            }
 
-            foreach (Vector3 pos in kvp.Value)
+            List<Vector3> path = kvp.Value;
+            for (int i = 0; i < path.Count; i++)
             {
+                Vector3 pos = path[i];
                 Vector2Int center = WorldToPixel(pos);
 
                 for (int y = center.y - SPREAD_RADIUS; y <= center.y + SPREAD_RADIUS; y++)
                 {
                     for (int x = center.x - SPREAD_RADIUS; x <= center.x + SPREAD_RADIUS; x++)
                     {
-                        if (!Inside(x, y)) continue;
+                        if (!Inside(x, y))
+                            continue;
 
                         float dx = x - center.x;
                         float dy = y - center.y;
@@ -126,13 +130,13 @@ public class HeatMapRenderer : MonoBehaviour
             }
         }
 
-        // ---------------- Draw final blended texture ----------------
+        // ---------- Final blend ----------
         for (int y = 0; y < textureSize; y++)
         {
             for (int x = 0; x < textureSize; x++)
             {
-                float u = (float)x / textureSize;
-                float v = (float)y / textureSize;
+                float u = (float)x / (float)textureSize;
+                float v = (float)y / (float)textureSize;
 
                 Color baseC = bg.GetPixelBilinear(u, v);
 
@@ -141,8 +145,8 @@ public class HeatMapRenderer : MonoBehaviour
                     Color blended = colorMap[x, y] / weightMap[x, y];
                     blended.a = 0.75f;
 
-                    Color final = Color.Lerp(baseC, blended, blended.a);
-                    tex.SetPixel(x, y, final);
+                    Color finalC = Color.Lerp(baseC, blended, blended.a);
+                    tex.SetPixel(x, y, finalC);
                 }
                 else
                 {
@@ -154,25 +158,24 @@ public class HeatMapRenderer : MonoBehaviour
         tex.Apply();
         heatmapImage.texture = tex;
 
-        Debug.Log("✅ Heatmap applied!");
+        Debug.Log("✅ Heatmap completed");
     }
 
-    // ==========================================================
-    // 🏷️ LEGEND UI CREATION
-    // ==========================================================
+
+    // =====================================================
+    // LEGEND UI
+    // =====================================================
     void GenerateLegendUI()
     {
         if (legendContainer == null)
         {
-            Debug.LogWarning("⚠️ No legendContainer assigned — skipping legend.");
+            Debug.LogWarning("⚠ No legend container");
             return;
         }
 
-        // Clear old entries
-        foreach (Transform child in legendContainer)
-            Destroy(child.gameObject);
+        foreach (Transform t in legendContainer)
+            Destroy(t.gameObject);
 
-        // Ensure parent has VerticalLayoutGroup
         VerticalLayoutGroup vlg = legendContainer.GetComponent<VerticalLayoutGroup>();
         if (vlg == null)
             vlg = legendContainer.gameObject.AddComponent<VerticalLayoutGroup>();
@@ -180,102 +183,95 @@ public class HeatMapRenderer : MonoBehaviour
         vlg.spacing = 10;
         vlg.childAlignment = TextAnchor.UpperLeft;
 
-        // Sort species for consistent order
-        List<string> speciesList = new List<string>(activeColoredSpecies);
-        speciesList.Sort();
+        List<string> list = new List<string>(activeColoredSpecies);
+        list.Sort();
 
-        foreach (string species in speciesList)
+        for (int i = 0; i < list.Count; i++)
         {
-            if (speciesColors.TryGetValue(species, out Color c))
+            string species = list[i];
+            Color c;
+
+            if (speciesColors.TryGetValue(species, out c))
                 CreateLegendEntry(species, c);
         }
     }
 
+
     void CreateLegendEntry(string species, Color color)
     {
         GameObject entry = new GameObject(species);
-        RectTransform rt = entry.AddComponent<RectTransform>();
         entry.transform.SetParent(legendContainer, false);
 
         HorizontalLayoutGroup hlg = entry.AddComponent<HorizontalLayoutGroup>();
-        hlg.childAlignment = TextAnchor.MiddleLeft;
         hlg.spacing = 12;
-        hlg.childControlWidth = false;
-        hlg.childControlHeight = false;
+        hlg.childAlignment = TextAnchor.MiddleLeft;
 
-        // Color box
-        GameObject colorBox = new GameObject("ColorBox");
-        colorBox.transform.SetParent(entry.transform, false);
+        // color box
+        GameObject box = new GameObject("ColorBox");
+        box.transform.SetParent(entry.transform, false);
 
-        Image boxImg = colorBox.AddComponent<Image>();
+        Image boxImg = box.AddComponent<Image>();
         boxImg.color = color;
+        boxImg.rectTransform.sizeDelta = new Vector2(30, 30);
 
-        RectTransform boxRT = boxImg.GetComponent<RectTransform>();
-        boxRT.sizeDelta = new Vector2(30, 30);
-
-        // Label
+        // label
         GameObject labelObj = new GameObject("Label");
         labelObj.transform.SetParent(entry.transform, false);
 
         Text label = labelObj.AddComponent<Text>();
         label.text = species;
         label.font = legendFont;
-        label.color = Color.black;
         label.fontSize = 26;
+        label.color = Color.black;
     }
 
-    // ==========================================================
-    // UTILITIES
-    // ==========================================================
 
-    // Parse the base species name from the MovementTracker key.
-    // Example IDs:
-    //   "Rabbit_0"                -> "Rabbit"
-    //   "Dog_001(Clone)_3"        -> "Dog"
-    //   "RabbitPrefab(Clone)_12"  -> "RabbitPrefab"
+    // =====================================================
+    // UTILITIES
+    // =====================================================
     string ParseSpeciesName(string id)
     {
-        // 1. Split by underscore: "Rabbit_3" → "Rabbit"
         string baseName = id.Split('_')[0];
-
-        // 2. Remove "(Clone)" → "Rabbit(Clone)" → "Rabbit"
         baseName = baseName.Replace("(Clone)", "");
-
-        // 3. Remove "Prefab" or "prefab"
         baseName = baseName.Replace("Prefab", "");
         baseName = baseName.Replace("prefab", "");
 
-        // 4. Remove numbers at end: "Rabbit001" → "Rabbit"
-        while (baseName.Length > 0 && char.IsDigit(baseName[baseName.Length - 1]))
+        while (baseName.Length > 0 &&
+               char.IsDigit(baseName[baseName.Length - 1]))
+        {
             baseName = baseName.Substring(0, baseName.Length - 1);
+        }
 
-        // 5. Trim whitespace just in case
-        baseName = baseName.Trim();
-
-        return baseName;
+        return baseName.Trim();
     }
-
 
     Vector2Int WorldToPixel(Vector3 pos)
     {
         float u = Mathf.InverseLerp(minX, maxX, pos.x);
         float v = Mathf.InverseLerp(minZ, maxZ, pos.z);
 
-        return new Vector2Int(
-            Mathf.RoundToInt(u * (textureSize - 1)),
-            Mathf.RoundToInt(v * (textureSize - 1))
-        );
+        int px = Mathf.RoundToInt(u * (textureSize - 1));
+        int py = Mathf.RoundToInt(v * (textureSize - 1));
+
+        return new Vector2Int(px, py);
     }
 
     void ComputeBounds()
     {
-        minX = minZ = float.PositiveInfinity;
-        maxX = maxZ = float.NegativeInfinity;
+        minX = float.PositiveInfinity;
+        maxX = float.NegativeInfinity;
 
-        foreach (var kvp in MovementTracker.paths)
+        minZ = float.PositiveInfinity;
+        maxZ = float.NegativeInfinity;
+
+        foreach (KeyValuePair<string, List<Vector3>> kvp in MovementTracker.paths)
         {
-            foreach (Vector3 p in kvp.Value)
+            List<Vector3> path = kvp.Value;
+
+            for (int i = 0; i < path.Count; i++)
             {
+                Vector3 p = path[i];
+
                 if (p.x < minX) minX = p.x;
                 if (p.x > maxX) maxX = p.x;
 
@@ -284,10 +280,19 @@ public class HeatMapRenderer : MonoBehaviour
             }
         }
 
-        if (Mathf.Approximately(minX, maxX)) { minX -= 1; maxX += 1; }
-        if (Mathf.Approximately(minZ, maxZ)) { minZ -= 1; maxZ += 1; }
+        if (Mathf.Approximately(minX, maxX))
+        {
+            minX -= 1;
+            maxX += 1;
+        }
 
-        Debug.Log($"📏 Bounds: X({minX}, {maxX}) Z({minZ}, {maxZ})");
+        if (Mathf.Approximately(minZ, maxZ))
+        {
+            minZ -= 1;
+            maxZ += 1;
+        }
+
+        Debug.Log("📏 Bounds X(" + minX + "," + maxX + ") Z(" + minZ + "," + maxZ + ")");
     }
 
     bool Inside(int x, int y)
