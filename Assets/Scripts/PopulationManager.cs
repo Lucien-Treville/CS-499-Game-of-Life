@@ -58,6 +58,8 @@ public class PopulationManager : MonoBehaviour
 
         if (timer >= logInterval)
         {
+            // if (DnDeditor.startInEditMode) return; 
+
             timer = 0f;
 
             // Log a backup snapshot each second
