@@ -50,6 +50,7 @@ public class Grazer : Animal
         attackStrength = Dist.Normal.Sample(genes.attackStrengthGene[0], genes.attackStrengthGene[1]);
         height = Dist.Normal.Sample(genes.heightGene[0], genes.heightGene[1]);
         health = Dist.Normal.Sample(genes.healthGene[0], genes.healthGene[1]);
+        nourishmentValue = Dist.Normal.Sample(genes.nourishmentValueGene[0], genes.nourishmentValueGene[1]);
 
         // NEW: initialize thresholds from genes (clamped to sensible ranges)
         hungerThreshold = System.Math.Max(1.0, System.Math.Min(99.0, Dist.Normal.Sample(genes.hungerThresholdGene[0], genes.hungerThresholdGene[1])));

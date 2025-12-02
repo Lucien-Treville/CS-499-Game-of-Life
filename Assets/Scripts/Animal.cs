@@ -156,8 +156,8 @@ public class Animal : LivingEntity
         
        
         // need to decrement hungerLevel over time
-        hungerLevel -= Time.fixedDeltaTime * 0.5; // Decrease hunger over time
-        thirstLevel -= Time.fixedDeltaTime * 0.5; // Decrease thirst over time (thirst depletes faster)
+        hungerLevel -= Time.fixedDeltaTime; // Decrease hunger over time
+        thirstLevel -= Time.fixedDeltaTime; // Decrease thirst over time (thirst depletes faster)
     }
 
     public override void Grow()
@@ -405,7 +405,7 @@ public class Animal : LivingEntity
 
 
         // closer distance means higher fear, 100 max
-        double fearValue = ((threat.attackStrength - this.attackStrength) / this.attackStrength) * 50.0;
+        double fearValue = ((threat.attackStrength - this.attackStrength) / this.attackStrength) * 100.0;
         fearValue = Max(0.0, Min(100.0, fearValue));
 
         fearLevel = fearValue;
