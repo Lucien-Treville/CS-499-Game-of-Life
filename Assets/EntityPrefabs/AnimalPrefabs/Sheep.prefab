@@ -2570,7 +2570,7 @@ GameObject:
   - component: {fileID: -4807218586395442877}
   - component: {fileID: 450779223414314703}
   - component: {fileID: -9082377684191914481}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sheep
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2693,6 +2693,7 @@ MonoBehaviour:
   instanceID: 0
   isDead: 0
   isCorpse: 0
+  currentState: 
   movementSpeed: 0
   hungerLevel: 0
   thirstLevel: 0
@@ -2702,16 +2703,20 @@ MonoBehaviour:
   attackStrength: 0
   isPredator: 0
   isBreedable: 0
+  isBreeding: 0
+  hasLaunchedOffspring: 0
   hungerThreshold: 0
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
   visionRange: 200
   visionAngle: 260
-  visionInterval: 10
+  visionInterval: 5
   visibleEntities: []
+  watersources: []
   agent: {fileID: 0}
   currentTarget: {fileID: 0}
+  waterTarget: {fileID: 0}
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
   mate: {fileID: 0}

@@ -15,6 +15,7 @@ public class AnimalDrink : BaseState<AnimalStateMachine.AnimalState>
     public override void EnterState()
     {
         Debug.Log("Entering Drink");
+        _animal.currentState = "Drink";
 
     }
 
@@ -37,10 +38,10 @@ public class AnimalDrink : BaseState<AnimalStateMachine.AnimalState>
         if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
 
         // if fear, flee
-        if (_animal.fearLevel > _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Flee;
+        if (_animal.isScared) return AnimalStateMachine.AnimalState.Flee;
 
         // if not thirsty, go idle
-        if (_animal.thirstLevel > _animal.thirstThreshold) return AnimalStateMachine.AnimalState.Idle;
+        if (!_animal.isThirsty) return AnimalStateMachine.AnimalState.Idle;
         return StateKey;
     }
 }

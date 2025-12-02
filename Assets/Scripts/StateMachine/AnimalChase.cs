@@ -16,6 +16,12 @@ public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
     public override void EnterState()
     {
         Debug.Log("Entering Chase");
+        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is chasing.");
+        _animal.currentState = "Chase";
+
+        if ( _animal.GetTarget() != null) target = _animal.GetTarget();
+        if (_animal.fearLevel != 0) target = _animal.threat.transform;
+
 
     }
 
@@ -29,7 +35,7 @@ public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
     {
         target = _animal.GetTarget();
 
-        if (target != null) {_animal.PursueTargetTransform(target);}
+        if (target != null) { _animal.PursueTargetTransform(target); }
 
     }
 
@@ -43,12 +49,12 @@ public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
         target = _animal.GetTarget();
         if (target == null) return AnimalStateMachine.AnimalState.Idle;
         float distanceToTarget = _animal.GetTargetDistance();
-    
+
         // If close enough to attack
         if (distanceToTarget < 2f && distanceToTarget > -1f) // Adjust threshold as needed
         {
             return AnimalStateMachine.AnimalState.Attack;
         }
-            return StateKey;
+        return StateKey;
     }
 }

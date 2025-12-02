@@ -14,17 +14,20 @@ public class AnimalFlee : BaseState<AnimalStateMachine.AnimalState>
     }
     public override void EnterState()
     {
+        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is fleeing.");
+        _animal.currentState = "Flee";
 
     }
 
     public override void ExitState()
     {
+        Debug.Log("Exiting Flee");
 
     }
 
     public override void UpdateState()
     {
-        _animal.UpdateFear();
+       // _animal.UpdateFear();
         Transform threat = _animal.GetThreat();
         _animal.Flee(threat);
 
@@ -37,7 +40,7 @@ public class AnimalFlee : BaseState<AnimalStateMachine.AnimalState>
 
         // if fear < threshold = idle key
 
-        if (_animal.fearLevel < _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Idle;
+        if (!_animal.isScared || _animal.threat == null) return AnimalStateMachine.AnimalState.Idle;
         // else
         return StateKey;
     }

@@ -17,6 +17,8 @@ public class AnimalDead : BaseState<AnimalStateMachine.AnimalState>
     {
         Debug.Log("Entering Dead");
         _animal.ClearTarget();
+        _animal.ClearMate();
+        _animal.currentState = "Dead";
     }
 
     public override void ExitState()

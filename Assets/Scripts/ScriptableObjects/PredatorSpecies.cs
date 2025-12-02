@@ -10,11 +10,17 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Predator Species", menuName = "Simulation/Predator Species")]
 public class PredatorSpecies : ScriptableObject
 {
-    public GameObject predatorPrefab; // reference to the prefab for this predator species
+    public GameObject animalPrefab; // reference to the prefab for this predator species
     public string specieName;
     public double[] movementSpeedGene; // 
     public double[] reproductionChanceGene; // 
     public double[] attackStrengthGene; // 
     public double[] heightGene; // 
     public double[] healthGene; // 
+    public double[] hungerThresholdGene;
+    public double[] thirstThresholdGene; // determines stage of thirst in which animal will look for drink
+    public double[] fleeThresholdGene; // determines flee threshold
+    public double[] sleepThresholdGene;
+    public double[] nourishmentValueGene;
+
 }

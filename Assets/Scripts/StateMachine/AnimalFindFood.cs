@@ -19,8 +19,10 @@ public class AnimalFindFood : BaseState<AnimalStateMachine.AnimalState>
     public override void EnterState()
     {
         Debug.Log("Entering FindFood");
+        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is finding food.");
+        _animal.currentState = "FindFood";
 
-      
+
     }
 
     public override void ExitState()
@@ -33,7 +35,7 @@ public class AnimalFindFood : BaseState<AnimalStateMachine.AnimalState>
     {
         _animal.Wander();
         
-        _animal.UpdateFear();
+       // _animal.UpdateFear();
         
 
         
@@ -57,7 +59,7 @@ public class AnimalFindFood : BaseState<AnimalStateMachine.AnimalState>
         // if food found, eat
         // if fear, flee
 
-        if (_animal.fearLevel > _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Flee;
+        if (_animal.isScared) return AnimalStateMachine.AnimalState.Flee;
 
         if (target != null && _target.isDead) return AnimalStateMachine.AnimalState.Eat;
 

@@ -87,7 +87,7 @@ public class Plant : LivingEntity
         health = Dist.Normal.Sample(genes.healthGene[0], genes.healthGene[1]);
         currentStage = GrowthStage.Sapling;
         hasFruit = false;
-       
+
         if (specieName == "Apple Tree")
         {
             // find apple with apple tag in prefab
@@ -97,9 +97,9 @@ public class Plant : LivingEntity
             {
                 if (child.CompareTag("Apple"))
                 {
-                    apple.Add( child.gameObject);
+                    apple.Add(child.gameObject);
                     child.gameObject.SetActive(false);
-                    
+
                 }
             }
         }
@@ -166,7 +166,7 @@ public class Plant : LivingEntity
 
                                 // 3. CHECK FOR PLANT OVERCROWDING
                                 // Now that we know it's land, check if it's crowded
-                                int mask = LayerMask.GetMask("Plant");
+                                int mask = LayerMask.GetMask("LivingEntity");
                                 if (!Physics.CheckSphere(spawnPos, 3, mask))
                                 {
                                     foundSpot = true;
@@ -204,8 +204,8 @@ public class Plant : LivingEntity
                     {
                         hasFruit = true;
                         if (genes.specieName == "Apple Tree")
-                        {   
-                            
+                        {
+
                             foreach (var ap in apple)
                             {
                                 ap.SetActive(true);

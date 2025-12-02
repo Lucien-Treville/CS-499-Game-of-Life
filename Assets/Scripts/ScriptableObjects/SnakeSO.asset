@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8291d286377224447a5ccdacf29e5059, type: 3}
   m_Name: SnakeSO
   m_EditorClassIdentifier: 
-  predatorPrefab: {fileID: 6802353888705948949, guid: 065915487fecfe7409b0134a21a45c69, type: 3}
+  animalPrefab: {fileID: 6802353888705948949, guid: 065915487fecfe7409b0134a21a45c69, type: 3}
   specieName: Snake
   movementSpeedGene:
   - 7
@@ -29,3 +29,18 @@ MonoBehaviour:
   healthGene:
   - 25
   - 5
+  hungerThresholdGene:
+  - 30
+  - 2
+  thirstThresholdGene:
+  - 30
+  - 2
+  fleeThresholdGene:
+  - 50
+  - 5
+  sleepThresholdGene:
+  - 0
+  - 0
+  nourishmentValueGene:
+  - 35
+  - 3

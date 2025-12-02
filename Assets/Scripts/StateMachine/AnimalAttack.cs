@@ -17,7 +17,9 @@ public class AnimalAttack : BaseState<AnimalStateMachine.AnimalState>
     public override void EnterState()
     {
         Debug.Log("Entering Attack");
-
+        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is attacking.");
+        _target = _animal.GetTargetEntity();
+        target = _animal.GetTarget();
     }
 
     public override void ExitState()
@@ -29,6 +31,8 @@ public class AnimalAttack : BaseState<AnimalStateMachine.AnimalState>
     public override void UpdateState()
     {
         _target = _animal.GetTargetEntity();
+        target = _animal.GetTarget();
+
 
         _animal.AttackAnimal(_target);
     }
@@ -36,17 +40,26 @@ public class AnimalAttack : BaseState<AnimalStateMachine.AnimalState>
     public override AnimalStateMachine.AnimalState GetNextState()
     {
 
-        // if dead, DIE
-        if(_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
-
-        // if no target in range, go to chase
         _target = _animal.GetTargetEntity();
         target = _animal.GetTarget();
+
+        // if dead, DIE
+        if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
+
+        // if no target in range, go to chase
+
+        if (_target == null || target == null) return AnimalStateMachine.AnimalState.Idle;
+
         float distanceToTarget = _animal.GetTargetDistance();
 
+        // do NOT transition to Eat — clear the target and return to Idle.
+        if (_target is Animal targetAnimal && targetAnimal.isDead && !_animal.isPredator)
+        {
+            return AnimalStateMachine.AnimalState.Idle;
+        }
         if (_target.isCorpse && distanceToTarget < 2f && distanceToTarget != -1f) return AnimalStateMachine.AnimalState.Eat;
 
-        if (_target == null | target == null) return AnimalStateMachine.AnimalState.Idle;
+
 
         if (distanceToTarget > 2f && distanceToTarget != -1f) // Adjust threshold as needed
         {

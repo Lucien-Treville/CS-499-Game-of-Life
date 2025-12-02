@@ -6,6 +6,7 @@ public class AnimalFindMate : BaseState<AnimalStateMachine.AnimalState>
 {
     private AnimalStateMachine _machine;
     private Animal _animal;
+    private Animal _mate;
     public AnimalFindMate(AnimalStateMachine machine, AnimalStateMachine.AnimalState key, Animal animal)
         : base(key)
     {
@@ -15,6 +16,9 @@ public class AnimalFindMate : BaseState<AnimalStateMachine.AnimalState>
     public override void EnterState()
     {
         Debug.Log("Entering FindMate");
+        _mate = null;
+        _animal.currentState = "FindMate";
+
 
     }
 
@@ -22,33 +26,42 @@ public class AnimalFindMate : BaseState<AnimalStateMachine.AnimalState>
     {
         Debug.Log("Exiting FindMate");
 
+
     }
 
     public override void UpdateState()
     {
-        _animal.Wander();
-        _animal.UpdateFear();
-        Animal mate = _animal.FindBreedTarget();
-        
+
+      //  _animal.UpdateFear();
+        _mate = _animal.FindBreedTarget();
+        if (_mate == null) { _animal.Wander(); }
+        if (_mate != null)
+        {
+            _animal.MoveTo(_mate.transform.position);
+        }
 
     }
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
+        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) [FindMateCheck] hunger={_animal.hungerLevel:F1} thr={_animal.hungerThreshold:F1}");
 
         // if dead, DIE
         if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
 
         // if fear, flee
 
-        if (_animal.fearLevel > _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Flee;
+        if (_animal.isScared) return AnimalStateMachine.AnimalState.Flee;
+
+        if (_animal.isHungry) return AnimalStateMachine.AnimalState.FindFood;
+
+        if (_animal.isThirsty) return AnimalStateMachine.AnimalState.FindWater;
 
         // if mate found, breed
-        if (_animal.mate != null) return AnimalStateMachine.AnimalState.Breed; 
+        if (_animal.mate != null) return AnimalStateMachine.AnimalState.Breed;
 
         // if hungry or thirsty, idle
-        if (_animal.thirstLevel < _animal.thirstThreshold) return AnimalStateMachine.AnimalState.Idle;
-        if (_animal.hungerLevel < _animal.hungerThreshold) return AnimalStateMachine.AnimalState.Idle;
+        if (!_animal.isBreedable) return AnimalStateMachine.AnimalState.Idle;
 
 
         return StateKey;

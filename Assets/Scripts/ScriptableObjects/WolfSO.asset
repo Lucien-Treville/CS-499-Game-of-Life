@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8291d286377224447a5ccdacf29e5059, type: 3}
   m_Name: WolfSO
   m_EditorClassIdentifier: 
-  predatorPrefab: {fileID: 6809041187645326175, guid: a758cd221cfeed642843e32daeacf6cd, type: 3}
+  animalPrefab: {fileID: 6809041187645326175, guid: a758cd221cfeed642843e32daeacf6cd, type: 3}
   specieName: Wolf
   movementSpeedGene:
   - 4
@@ -29,3 +29,18 @@ MonoBehaviour:
   healthGene:
   - 80
   - 5
+  hungerThresholdGene:
+  - 40
+  - 3
+  thirstThresholdGene:
+  - 40
+  - 2
+  fleeThresholdGene:
+  - 60
+  - 2
+  sleepThresholdGene:
+  - 0
+  - 0
+  nourishmentValueGene:
+  - 40
+  - 1

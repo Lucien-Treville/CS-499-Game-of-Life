@@ -19,6 +19,7 @@ public class AnimalFindWater : BaseState<AnimalStateMachine.AnimalState>
         _animal.ClearTarget();
         _animal.FindWaterSource();
         target = _animal.GetTarget();
+        _animal.currentState = "FindWater";
 
     }
 
@@ -31,7 +32,7 @@ public class AnimalFindWater : BaseState<AnimalStateMachine.AnimalState>
     public override void UpdateState()
     {
         if (target != null) {_animal.PursueTargetTransform(target);}
-        _animal.UpdateFear();
+       // _animal.UpdateFear();
 
     }
 
@@ -47,11 +48,11 @@ public class AnimalFindWater : BaseState<AnimalStateMachine.AnimalState>
             return AnimalStateMachine.AnimalState.Drink;
         }
 
-        if (target == null | _animal.thirstLevel > _animal.thirstThreshold) return AnimalStateMachine.AnimalState.Idle;
+        if (target == null || !_animal.isThirsty) return AnimalStateMachine.AnimalState.Idle;
 
         // if fear, flee
 
-        if (_animal.fearLevel > _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Flee;
+        if (_animal.isScared) return AnimalStateMachine.AnimalState.Flee;
         return StateKey;
     }
 }

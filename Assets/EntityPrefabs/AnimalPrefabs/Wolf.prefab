@@ -791,7 +791,7 @@ GameObject:
   - component: {fileID: 6935843309250375240}
   - component: {fileID: 4668688408497960491}
   - component: {fileID: -6672995755028427424}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wolf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -911,6 +911,7 @@ MonoBehaviour:
   instanceID: 0
   isDead: 0
   isCorpse: 0
+  currentState: 
   movementSpeed: 5
   hungerLevel: 20
   thirstLevel: 0
@@ -920,16 +921,20 @@ MonoBehaviour:
   attackStrength: 0
   isPredator: 1
   isBreedable: 0
+  isBreeding: 0
+  hasLaunchedOffspring: 0
   hungerThreshold: 80
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
   visionRange: 300
   visionAngle: 160
-  visionInterval: 10
+  visionInterval: 5
   visibleEntities: []
+  watersources: []
   agent: {fileID: 0}
   currentTarget: {fileID: 0}
+  waterTarget: {fileID: 0}
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
   mate: {fileID: 0}

@@ -12,7 +12,7 @@ public class LivingEntity : MonoBehaviour
     // Common Attributes
     public string specieName;
     public double age;
-    public double health; 
+    public double health;
     public double height; // in meters
     public double nourishmentValue;
     public int instanceID; // unique ID assigned by Unity
@@ -69,11 +69,11 @@ public class LivingEntity : MonoBehaviour
             nav.enabled = false;
         }
 
-        isCorpse = true; 
+        isCorpse = true;
 
 
         PopulationManager.Instance.UpdateCount(specieName, -1);
-       // Destroy(gameObject); // destruction is called from OnDeath
+        // Destroy(gameObject);
     }
 
     private void OnDeath()
@@ -102,7 +102,7 @@ public class LivingEntity : MonoBehaviour
             transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(90f, 0f, 0f));
         }
 
-        Invoke("RemoveCorpse", 10);
+
 
     }
 
@@ -126,6 +126,11 @@ public class LivingEntity : MonoBehaviour
 
     }
 
+    void OnDestroy()
+    {
+        // Log stack trace so we can see who called Destroy
+        Debug.LogWarning($"OnDestroy(): {specieName} (ID:{instanceID}, name:{name}) destroyed. StackTrace:\n{new System.Diagnostics.StackTrace()}");
+    }
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -136,6 +141,6 @@ public class LivingEntity : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

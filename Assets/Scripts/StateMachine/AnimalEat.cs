@@ -16,6 +16,9 @@ public class AnimalEat : BaseState<AnimalStateMachine.AnimalState>
     public override void EnterState()
     {
         Debug.Log("Entering Eat");
+        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is eating.");
+        _animal.currentState = "Eat";
+
 
     }
 
@@ -38,12 +41,15 @@ public class AnimalEat : BaseState<AnimalStateMachine.AnimalState>
         // if dead, DIE
         if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
 
+        if (_animal.isScared) return AnimalStateMachine.AnimalState.Flee;
+
+
         // if food is gone, but still hungry, findfood
 
-        if (_animal.hungerLevel <= _animal.hungerThreshold && _target == null) return AnimalStateMachine.AnimalState.FindFood;
+        if (_animal.isHungry && _target == null) return AnimalStateMachine.AnimalState.FindFood;
         // if not hungry, idle
 
-        if (_animal.hungerLevel > _animal.hungerThreshold) return AnimalStateMachine.AnimalState.Idle;
+        if (!_animal.isHungry) return AnimalStateMachine.AnimalState.Idle;
 
         return StateKey;
     }

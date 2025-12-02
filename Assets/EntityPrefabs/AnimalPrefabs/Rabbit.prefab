@@ -569,7 +569,7 @@ GameObject:
   - component: {fileID: 2552954925779893251}
   - component: {fileID: -7020863494787325897}
   - component: {fileID: -2477318261211190352}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Rabbit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -672,6 +672,7 @@ MonoBehaviour:
   instanceID: 0
   isDead: 0
   isCorpse: 0
+  currentState: 
   movementSpeed: 6
   hungerLevel: 0
   thirstLevel: 0
@@ -681,13 +682,15 @@ MonoBehaviour:
   attackStrength: 0
   isPredator: 0
   isBreedable: 0
+  isBreeding: 0
+  hasLaunchedOffspring: 0
   hungerThreshold: 80
   thirstThreshold: 40
   fleeThreshold: 0
   sleepThreshold: 0
   visionRange: 200
   visionAngle: 240
-  visionInterval: 10
+  visionInterval: 5
   visibleEntities: []
   watersources: []
   agent: {fileID: 0}

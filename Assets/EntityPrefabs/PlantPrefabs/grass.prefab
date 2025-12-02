@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6261007680619885408}
   - component: {fileID: -5925152261079453818}
   m_Layer: 7
-  m_Name: Grass
+  m_Name: grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +41,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6487974429602647562}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 0.5, y: 0.5, z: 0.5}
@@ -66,10 +66,12 @@ MonoBehaviour:
   age: 0
   health: 0
   height: 0
+  nourishmentValue: 0
   instanceID: 0
+  isDead: 0
+  isCorpse: 0
   speciesGeneData: {fileID: 11400000, guid: 96a10e8c469a553499e72c7cae412f6a, type: 2}
   currentStage: 0
-  nourishmentValue: 0
   fruitingChance: 0
   sproutingChance: 0
   hasFruit: 0

@@ -16,7 +16,10 @@ public class AnimalIdle : BaseState<AnimalStateMachine.AnimalState>
     public override void EnterState()
     {
         Debug.Log("Entering Idle");
+        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is idle.");
         _animal.ClearTarget();
+        _animal.ClearMate();
+        _animal.currentState = "Idle";
     }
 
     public override void ExitState()
@@ -28,31 +31,38 @@ public class AnimalIdle : BaseState<AnimalStateMachine.AnimalState>
     {
         // random roam or flocking pathfinding
         _animal.Wander();
-        _animal.UpdateFear();
+       // _animal.UpdateFear();
     }
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
+        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) [IdleCheck] hunger={_animal.hungerLevel:F1} thr={_animal.hungerThreshold:F1}");
+
         // if dead, DIE
         if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;
 
         // if sleepy > threshold && fear = 0 sleep key
 
         // if fear > 40 flee key
-        if (_animal.sleepLevel < _animal.sleepThreshold) return AnimalStateMachine.AnimalState.Sleep;
+        // if (_animal.sleepLevel < _animal.sleepThreshold) return AnimalStateMachine.AnimalState.Sleep;
 
         // if fear > 40 flee key
-        if (_animal.fearLevel > _animal.fleeThreshold) return AnimalStateMachine.AnimalState.Flee;
+       if (_animal.isScared) return AnimalStateMachine.AnimalState.Flee;
 
-        // if breed findmate key
+        if (_animal.isAggro) return AnimalStateMachine.AnimalState.Chase;
 
+
+        // if hunger < 40 findfood key
+        if (_animal.isHungry) return AnimalStateMachine.AnimalState.FindFood;
 
         // if thirst < 40 findwater key
 
-        if (_animal.thirstLevel < _animal.thirstThreshold) return AnimalStateMachine.AnimalState.FindWater;
+        if (_animal.isThirsty) return AnimalStateMachine.AnimalState.FindWater;
 
-        // if hunger < 40 findfood key
-        if (_animal.hungerLevel < _animal.hungerThreshold) return AnimalStateMachine.AnimalState.FindFood;
+        
+
+        // if breed findmate key
+        if (_animal.isBreedable) return AnimalStateMachine.AnimalState.FindMate;
 
         return StateKey;
     }

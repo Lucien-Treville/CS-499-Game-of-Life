@@ -534,7 +534,7 @@ GameObject:
   - component: {fileID: -8552031770256655360}
   - component: {fileID: 543421183187592586}
   - component: {fileID: 5448678169079750568}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Snake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -639,6 +639,7 @@ MonoBehaviour:
   instanceID: 0
   isDead: 0
   isCorpse: 0
+  currentState: 
   movementSpeed: 3
   hungerLevel: 0
   thirstLevel: 0
@@ -648,16 +649,20 @@ MonoBehaviour:
   attackStrength: 70
   isPredator: 1
   isBreedable: 0
+  isBreeding: 0
+  hasLaunchedOffspring: 0
   hungerThreshold: 60
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
   visionRange: 6
   visionAngle: 120
-  visionInterval: 10
+  visionInterval: 5
   visibleEntities: []
+  watersources: []
   agent: {fileID: 0}
   currentTarget: {fileID: 0}
+  waterTarget: {fileID: 0}
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
   mate: {fileID: 0}
