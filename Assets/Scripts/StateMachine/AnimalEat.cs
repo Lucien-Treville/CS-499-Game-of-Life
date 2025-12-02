@@ -46,10 +46,10 @@ public class AnimalEat : BaseState<AnimalStateMachine.AnimalState>
 
         // if food is gone, but still hungry, findfood
 
-        if (_animal.isHungry && _target == null) return AnimalStateMachine.AnimalState.FindFood;
+        if (_animal.hungerLevel < 80 && _target == null) return AnimalStateMachine.AnimalState.FindFood;
         // if not hungry, idle
 
-        if (!_animal.isHungry) return AnimalStateMachine.AnimalState.Idle;
+        if (_animal.hungerLevel >= 80) return AnimalStateMachine.AnimalState.Idle;
 
         return StateKey;
     }

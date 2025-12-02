@@ -834,7 +834,7 @@ MonoBehaviour:
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
-  visionRange: 150
+  visionRange: 50
   visionAngle: 260
   visionInterval: 5
   visibleEntities: []
@@ -855,6 +855,9 @@ MonoBehaviour:
     m_Bits: 0
   defaultVisionRange: 25
   defaultVisionAngle: 140
+  attackRange: 2
+  attackCooldown: 1
+  eatCooldown: 1
   speciesGeneData: {fileID: 11400000, guid: 23aed29d82d67914e8711ac28da39435, type: 2}
 --- !u!64 &3793294230342720868
 MeshCollider:

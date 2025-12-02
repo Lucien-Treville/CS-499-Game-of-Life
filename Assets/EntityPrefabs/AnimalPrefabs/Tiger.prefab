@@ -177,8 +177,11 @@ MonoBehaviour:
   waterMask:
     serializedVersion: 2
     m_Bits: 0
-  defaultVisionRange: 25
+  defaultVisionRange: 80
   defaultVisionAngle: 140
+  attackRange: 2
+  attackCooldown: 1
+  eatCooldown: 1
   speciesGeneData: {fileID: 11400000, guid: cb27cb02f7b6ec842a11897b3a0a3131, type: 2}
 --- !u!64 &1012005775632174969
 MeshCollider:
