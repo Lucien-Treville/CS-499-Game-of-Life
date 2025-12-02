@@ -4,9 +4,12 @@ using System.IO;
 using TMPro;
 using UnityEngine.UI;
 
+#if UNITY_EDITOR
+using UnityEditor;     // Only included when in Editor
+#endif
+
 public class SceneLoader : MonoBehaviour
 {
-
     public TextMeshProUGUI WarningText;
     public Image WarningBox;
 
@@ -19,7 +22,6 @@ public class SceneLoader : MonoBehaviour
         WarningBox.gameObject.SetActive(false);
     }
 
-
     public void LoadGrasslandsDemo()
     {
         MapLoader.jsonFileName = "demo.json";
@@ -28,15 +30,16 @@ public class SceneLoader : MonoBehaviour
 
     public void DownloadTemplate()
     {
-
         string outputFileName = "SpawnSettings.JSON";
 
-        // Path to JSON template in StreamingAssets (StreamingAssets is accessible at runtime, unlike Resources)
         string sourcePath = Path.Combine(Application.streamingAssetsPath, outputFileName);
         Debug.Log("Source path: " + sourcePath);
 
-        // Path to Downloads folder
-        string downloadsFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile), "Downloads");
+        string downloadsFolder = Path.Combine(
+            System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile),
+            "Downloads"
+        );
+
         string destinationPath = Path.Combine(downloadsFolder, outputFileName);
         Debug.Log("Destination path: " + destinationPath);
 
@@ -44,14 +47,9 @@ public class SceneLoader : MonoBehaviour
         {
             try
             {
-                // copy the file to Downloads folder
                 File.Copy(sourcePath, destinationPath, true);
-                // file copies to original creation and modification timestamps, so update them to now
                 File.SetCreationTime(destinationPath, System.DateTime.Now);
                 File.SetLastWriteTime(destinationPath, System.DateTime.Now);
-
-                // Debug.Log($":) Template copied to {destinationPath}");
-                // Debug.Log("File exists at destination: " + File.Exists(destinationPath));
             }
             catch (System.Exception ex)
             {
@@ -62,22 +60,25 @@ public class SceneLoader : MonoBehaviour
         {
             Debug.LogWarning("⚠ Template file not found at " + sourcePath);
         }
-
     }
 
     public void UploadCustomTemplate()
-    {   
+    {
         WarningBox.gameObject.SetActive(false);
-        // open users file explorer to select a JSON file
-        
-        string path = UnityEditor.EditorUtility.OpenFilePanel("Select Custom Template JSON", "", "json");
-        if (path.Length == 0)
+
+#if UNITY_EDITOR
+        // --- EDITOR MODE: Use OpenFilePanel normally ---
+        string path = EditorUtility.OpenFilePanel("Select Custom Template JSON", "", "json");
+
+        if (string.IsNullOrEmpty(path))
         {
             Debug.Log("No file selected.");
             return;
         }
+
         MapLoader.jsonFilePath = path;
         MapLoader.jsonFileName = "userFile";
+
         try
         {
             MapLoader.ReadJSON(path);
@@ -89,9 +90,18 @@ public class SceneLoader : MonoBehaviour
             WarningBox.gameObject.SetActive(true);
             return;
         }
+
         Debug.Log("Selected file: " + path);
         SceneManager.LoadScene("Grasslands");
 
+#else
+        // --- BUILD MODE: File picker is NOT allowed ---
+        Debug.LogWarning("Upload Custom Template only works inside the Unity Editor.");
+
+        WarningText.text = "⚠ Custom file upload only works in the Unity Editor.\n" +
+                           "Build versions cannot open your file explorer.";
+        WarningBox.gameObject.SetActive(true);
+#endif
     }
 
     public void UseDnDeditor()
@@ -100,6 +110,4 @@ public class SceneLoader : MonoBehaviour
         DnDeditor.startInEditMode = true;
         SceneManager.LoadScene("Grasslands");
     }
-
-
 }

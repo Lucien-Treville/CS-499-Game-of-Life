@@ -18,7 +18,7 @@ MonoBehaviour:
   - 8
   - 3
   reproductionChanceGene:
-  - 0.3
+  - 0.2
   - 0.1
   attackStrengthGene:
   - 5
