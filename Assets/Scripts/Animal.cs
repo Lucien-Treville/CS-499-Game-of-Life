@@ -708,7 +708,7 @@ public class Animal : LivingEntity
 
     void GrowCreature()
     {
-        float scaleFactor = 1.5f;
+        float scaleFactor = 1.3f;
 
         // 1. Calculate how much "taller" we are about to get
         // We assume the pivot is in the center, so we look at the collider's half-height (extents)
