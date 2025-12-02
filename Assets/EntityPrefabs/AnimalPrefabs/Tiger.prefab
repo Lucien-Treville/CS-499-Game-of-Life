@@ -98,7 +98,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: -0.31
+  m_BaseOffset: -0.07
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!54 &1047145668264166051
@@ -149,6 +149,11 @@ MonoBehaviour:
   isBreedable: 0
   isBreeding: 0
   hasLaunchedOffspring: 0
+  isHungry: 0
+  isThirsty: 0
+  isSleepy: 0
+  isScared: 0
+  isAggro: 0
   hungerThreshold: 80
   thirstThreshold: 0
   fleeThreshold: 0
@@ -166,6 +171,14 @@ MonoBehaviour:
   mate: {fileID: 0}
   threat: {fileID: 0}
   currentStage: 0
+  livingEntityMask:
+    serializedVersion: 2
+    m_Bits: 0
+  waterMask:
+    serializedVersion: 2
+    m_Bits: 0
+  defaultVisionRange: 25
+  defaultVisionAngle: 140
   speciesGeneData: {fileID: 11400000, guid: cb27cb02f7b6ec842a11897b3a0a3131, type: 2}
 --- !u!64 &1012005775632174969
 MeshCollider:

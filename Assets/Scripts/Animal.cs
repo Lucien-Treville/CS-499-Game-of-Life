@@ -171,7 +171,8 @@ public class Animal : LivingEntity
                 {
                     currentStage = GrowthStage.Teen;
                     // increase scale to represent growth
-                    transform.localScale *= 1.5f;
+                    // transform.localScale *= 1.5f;
+                    GrowCreature();
                     Debug.Log($"Animal, {specieName}, (ID: {instanceID}) has grown to the Teen stage.");
                 }
                 break;
@@ -180,7 +181,8 @@ public class Animal : LivingEntity
                 if (this.age > 30)
                 {
                     currentStage = GrowthStage.Adult;
-                    transform.localScale *= 1.5f;
+                    // transform.localScale *= 1.5f;
+                    GrowCreature();
                     Debug.Log($"Animal, {specieName}, (ID: {instanceID}) is now in the Adult stage.");
                 }
                 break;
@@ -690,6 +692,30 @@ public class Animal : LivingEntity
             PopulationManager.Instance.UpdateCount(this.specieName, 1);
 
         Debug.Log($"Breed: spawned {child.specieName} (ID:{child.instanceID}, name:{childGO.name}) at {spawnPos}");
+    }
+
+    void GrowCreature()
+    {
+        float scaleFactor = 1.5f;
+
+        // 1. Calculate how much "taller" we are about to get
+        // We assume the pivot is in the center, so we look at the collider's half-height (extents)
+        float currentHalfHeight = 0f;
+        Collider col = GetComponent<Collider>();
+        if (col != null) currentHalfHeight = col.bounds.extents.y;
+
+        // 2. Apply the Scale
+        transform.localScale *= scaleFactor;
+
+        // 3. Compensate Position (Lift it up)
+        // The scaling pushed the feet down by (newHeight - oldHeight) / 2
+        // So we add that difference back to the position.
+        
+        // Calculate the difference in the half-heights
+        float verticalShift = (currentHalfHeight * scaleFactor) - currentHalfHeight;
+        
+        // Apply the lift
+        transform.position += new Vector3(0, verticalShift+2, 0);
     }
 
     public void ClearMate()
