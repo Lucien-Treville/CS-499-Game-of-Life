@@ -16,7 +16,7 @@ public class AnimalAttack : BaseState<AnimalStateMachine.AnimalState>
     }
     public override void EnterState()
     {
-        Debug.Log("Entering Attack");
+        // Debug.Log("Entering Attack");
         Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is attacking.");
         _target = _animal.GetTargetEntity();
         target = _animal.GetTarget();
@@ -52,7 +52,7 @@ public class AnimalAttack : BaseState<AnimalStateMachine.AnimalState>
 
         float distanceToTarget = _animal.GetTargetDistance();
 
-        // do NOT transition to Eat — clear the target and return to Idle.
+        // do NOT transition to Eat ï¿½ clear the target and return to Idle.
         if (_target is Animal targetAnimal && targetAnimal.isDead && !_animal.isPredator)
         {
             return AnimalStateMachine.AnimalState.Idle;

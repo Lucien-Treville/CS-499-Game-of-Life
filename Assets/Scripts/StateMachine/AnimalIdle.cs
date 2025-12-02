@@ -15,8 +15,8 @@ public class AnimalIdle : BaseState<AnimalStateMachine.AnimalState>
 
     public override void EnterState()
     {
-        Debug.Log("Entering Idle");
-        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is idle.");
+        // Debug.Log("Entering Idle");
+        // Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is idle.");
         _animal.ClearTarget();
         _animal.ClearMate();
         _animal.currentState = "Idle";
@@ -36,7 +36,7 @@ public class AnimalIdle : BaseState<AnimalStateMachine.AnimalState>
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
-        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) [IdleCheck] hunger={_animal.hungerLevel:F1} thr={_animal.hungerThreshold:F1}");
+        // Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) [IdleCheck] hunger={_animal.hungerLevel:F1} thr={_animal.hungerThreshold:F1}");
 
         // if dead, DIE
         if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;

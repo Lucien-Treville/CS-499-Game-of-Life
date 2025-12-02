@@ -487,6 +487,7 @@ public class Animal : LivingEntity
         // if (animal.mate == null || animal == this) return;
         if (!this.isBreedable || !animal.isBreedable) return;
         if (this.mate != null || animal.mate != null) return;
+        if (this.currentStage != GrowthStage.Adult || animal.currentStage != GrowthStage.Adult) return;
         this.SetMate(animal); animal.SetMate(this);
 
 
