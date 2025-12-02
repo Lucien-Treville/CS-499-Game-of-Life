@@ -83,24 +83,21 @@ public class LivingEntity : MonoBehaviour
         if (animator != null)
             animator.enabled = false;
 
-        Rigidbody rb = GetComponent<Rigidbody>();
-        bool addedRb = false;
-        if (rb == null)
+        // Freeze any rigidbodies (on root or child ragdoll bones) so the corpse stays put.
+        var rbs = GetComponentsInChildren<Rigidbody>();
+        foreach (var rb in rbs)
         {
-            rb = gameObject.AddComponent<Rigidbody>();
-            rb.mass = 1f;
-            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-            addedRb = true;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
         }
 
-        rb.isKinematic = false;
-        rb.constraints = RigidbodyConstraints.None;
-
-        if (addedRb)
-        {
+        
+        
             // rotate 90 degrees on Z so the model visibly lies on its side
             transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(90f, 0f, 0f));
-        }
+       
 
 
 
