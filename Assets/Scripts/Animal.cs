@@ -97,6 +97,13 @@ public class Animal : LivingEntity
     public float defaultVisionRange = 25f;
     public float defaultVisionAngle = 140f;
 
+    // Add with other instance attributes
+    public float attackRange = 2.0f;      // meters to be able to hit
+    public float attackCooldown = 1.0f;   // seconds between hits (sim-time)
+    private float _nextAttackTime = 0f;   // next time (Time.time) this animal may hit
+    public float eatCooldown = 1.0f;         // seconds between bites (game time)
+    private float _nextEatTime = 0f;
+
     protected override void Start()
     {
         base.Start(); // assigns instanceID
@@ -106,6 +113,7 @@ public class Animal : LivingEntity
         agent = GetComponent<NavMeshAgent>(); // for pathfinding
         _machine = gameObject.AddComponent<AnimalStateMachine>();
         _machine.setAnimal(this);
+        
 
         // Defaults
         if (visionRange <= 0f) visionRange = defaultVisionRange;
@@ -129,8 +137,8 @@ public class Animal : LivingEntity
 
         // specieName = speciesData.specieName;
         currentStage = GrowthStage.Child;
-        hungerLevel = 50; // start mostly nourished
-        thirstLevel = 50; //
+        hungerLevel = 70; // start mostly nourished
+        thirstLevel = 70; //
 
 
         // initialize a default state
@@ -156,8 +164,8 @@ public class Animal : LivingEntity
         
        
         // need to decrement hungerLevel over time
-        hungerLevel -= Time.fixedDeltaTime; // Decrease hunger over time
-        thirstLevel -= Time.fixedDeltaTime; // Decrease thirst over time (thirst depletes faster)
+        hungerLevel -= Time.fixedDeltaTime *0.5; // Decrease hunger over time
+        thirstLevel -= Time.fixedDeltaTime *0.5; // Decrease thirst over time (thirst depletes faster)
     }
 
     public override void Grow()
@@ -171,7 +179,10 @@ public class Animal : LivingEntity
                 {
                     currentStage = GrowthStage.Teen;
                     // increase scale to represent growth
-                    transform.localScale *= 1.5f;
+                    // transform.localScale *= 1.5f;
+                    GrowCreature();
+                    // transform.localScale *= 1.15f;
+                    nourishmentValue *= 1.5;
                     Debug.Log($"Animal, {specieName}, (ID: {instanceID}) has grown to the Teen stage.");
                 }
                 break;
@@ -180,12 +191,15 @@ public class Animal : LivingEntity
                 if (this.age > 30)
                 {
                     currentStage = GrowthStage.Adult;
-                    transform.localScale *= 1.5f;
+                    // transform.localScale *= 1.5f;
+                    GrowCreature();
+                    // transform.localScale *= 1.15f;
+                    nourishmentValue *= 1.5;
                     Debug.Log($"Animal, {specieName}, (ID: {instanceID}) is now in the Adult stage.");
                 }
                 break;
             case GrowthStage.Adult:
-
+                isBreedable = false;
                 if (hungerLevel > 80.0 || thirstLevel > 80.0 || !isBreedable)
                 {
                     double chance = reproductionChance;
@@ -692,6 +706,30 @@ public class Animal : LivingEntity
         Debug.Log($"Breed: spawned {child.specieName} (ID:{child.instanceID}, name:{childGO.name}) at {spawnPos}");
     }
 
+    void GrowCreature()
+    {
+        float scaleFactor = 1.5f;
+
+        // 1. Calculate how much "taller" we are about to get
+        // We assume the pivot is in the center, so we look at the collider's half-height (extents)
+        float currentHalfHeight = 0f;
+        Collider col = GetComponent<Collider>();
+        if (col != null) currentHalfHeight = col.bounds.extents.y;
+
+        // 2. Apply the Scale
+        transform.localScale *= scaleFactor;
+
+        // 3. Compensate Position (Lift it up)
+        // The scaling pushed the feet down by (newHeight - oldHeight) / 2
+        // So we add that difference back to the position.
+        
+        // Calculate the difference in the half-heights
+        float verticalShift = (currentHalfHeight * scaleFactor) - currentHalfHeight;
+        
+        // Apply the lift
+        transform.position += new Vector3(0, verticalShift+2, 0);
+    }
+
     public void ClearMate()
     {
         this.mate = null;
@@ -793,6 +831,13 @@ public class Animal : LivingEntity
         return -1f;
     }
 
+   
+
+  
+
+   
+   
+
     public void PursueTargetTransform(Transform t)
     {
         if (agent != null)
@@ -813,6 +858,7 @@ public class Animal : LivingEntity
 
         return transform.position; // fallback
     }
+
 
     // Usage
     public void Wander()
@@ -856,27 +902,47 @@ public class Animal : LivingEntity
         agent.SetDestination(fleeTarget);
     }
 
-
     public void AttackAnimal(LivingEntity animalTarget)
     {
-        double damage = this.attackStrength;
-        animalTarget.SufferAttack(damage);
+        if (animalTarget == null) return;
+        if ((UnityEngine.Object)animalTarget == null) return; // Unity destroyed check
+        if (animalTarget.isDead || animalTarget.isCorpse) return;
+
+        // Use Time.time → cooldown scales with simulation speed (Time.timeScale).
+        // If you want cooldown to ignore your speed slider, switch to Time.unscaledTime below.
+        float now = Time.time;
+        if (now < _nextAttackTime) return;
+
+        // Must be within melee range
+        float dist = Vector3.Distance(transform.position, animalTarget.transform.position);
+        if (dist > attackRange) return;
+
+        // Land the hit and schedule next allowed attack
+        animalTarget.SufferAttack(this.attackStrength);
+        _nextAttackTime = now + attackCooldown;
     }
 
     public void Eat(LivingEntity food)
     {
+        if (food == null) return;
+        float now = Time.time;
+        if (now < _nextEatTime) return;
+
         if (food is Plant plant)
         {
-            hungerLevel = Min(100.0, hungerLevel + plant.nourishmentValue);
-            thirstLevel = Min(100.0, thirstLevel + plant.nourishmentValue);
-            plant.RemoveCorpse(); // consume the plant
+            
+            hungerLevel = Min(100.0, hungerLevel + (plant.nourishmentValue * 0.5));
+            thirstLevel = Min(100.0, thirstLevel + (plant.nourishmentValue * 0.5)) * 0.2;
+            plant.nourishmentValue -= plant.nourishmentValue * 0.5;
+            if (plant.nourishmentValue <= 0) plant.RemoveCorpse(); // consume the plant
             ClearTarget();
         }
         else if (food is Animal prey)
         {
-            hungerLevel = Min(100.0, hungerLevel + prey.nourishmentValue);
-            thirstLevel = Min(100.0, thirstLevel + prey.nourishmentValue);
-            prey.RemoveCorpse(); // consume the prey
+            hungerLevel = Min(100.0, hungerLevel + (prey.nourishmentValue * 0.1));
+            thirstLevel = Min(100.0, thirstLevel + (prey.nourishmentValue * 0.1)) * 0.2;
+            prey.nourishmentValue -= prey.nourishmentValue * 0.1;
+            if (prey.nourishmentValue <= 0) prey.RemoveCorpse(); // consume the prey
             ClearTarget();
 
         }

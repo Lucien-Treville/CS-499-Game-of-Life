@@ -585,7 +585,7 @@ Transform:
   m_GameObject: {fileID: 131319039843492172}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_Children:
   - {fileID: 133312680733363930}
   - {fileID: 132883965861718046}
@@ -633,7 +633,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: -0.75
+  m_BaseOffset: -0.18
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!54 &1095417119727044859
@@ -684,11 +684,16 @@ MonoBehaviour:
   isBreedable: 0
   isBreeding: 0
   hasLaunchedOffspring: 0
+  isHungry: 0
+  isThirsty: 0
+  isSleepy: 0
+  isScared: 0
+  isAggro: 0
   hungerThreshold: 80
   thirstThreshold: 40
   fleeThreshold: 0
   sleepThreshold: 0
-  visionRange: 200
+  visionRange: 50
   visionAngle: 240
   visionInterval: 5
   visibleEntities: []
@@ -701,6 +706,17 @@ MonoBehaviour:
   mate: {fileID: 0}
   threat: {fileID: 0}
   currentStage: 0
+  livingEntityMask:
+    serializedVersion: 2
+    m_Bits: 0
+  waterMask:
+    serializedVersion: 2
+    m_Bits: 0
+  defaultVisionRange: 25
+  defaultVisionAngle: 140
+  attackRange: 2
+  attackCooldown: 1
+  eatCooldown: 1
   speciesGeneData: {fileID: 11400000, guid: 7c9e6737b9f76c245b9fdc1a29078b18, type: 2}
 --- !u!64 &2552954925779893251
 MeshCollider:

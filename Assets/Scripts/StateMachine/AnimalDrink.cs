@@ -41,7 +41,7 @@ public class AnimalDrink : BaseState<AnimalStateMachine.AnimalState>
         if (_animal.isScared) return AnimalStateMachine.AnimalState.Flee;
 
         // if not thirsty, go idle
-        if (!_animal.isThirsty) return AnimalStateMachine.AnimalState.Idle;
+        if (_animal.thirstLevel >= 80) return AnimalStateMachine.AnimalState.Idle;
         return StateKey;
     }
 }

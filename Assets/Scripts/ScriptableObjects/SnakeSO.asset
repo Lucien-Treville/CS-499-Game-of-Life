@@ -18,8 +18,8 @@ MonoBehaviour:
   - 7
   - 1
   reproductionChanceGene:
-  - 0.2
-  - 0.05
+  - 0.1
+  - 0.025
   attackStrengthGene:
   - 6
   - 1.5
@@ -42,5 +42,5 @@ MonoBehaviour:
   - 0
   - 0
   nourishmentValueGene:
-  - 35
+  - 8.75
   - 3
