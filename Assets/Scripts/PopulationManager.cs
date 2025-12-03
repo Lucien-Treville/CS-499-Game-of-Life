@@ -20,11 +20,21 @@ public class PopulationManager : MonoBehaviour
     // ============================================================
     //  UNIFIED COLOR DICTIONARY (Graph + Heatmap)
     // ============================================================
+    public static readonly Dictionary<string, Color> speciesColors =
+        new Dictionary<string, Color>()
+        {
+            { "Rabbit", new Color(1f, 0.9f, 0.2f) },
+            { "Wolf",   new Color(0.25f, 0.35f, 0.55f) },
+            { "Tiger",  new Color(1f, 0.55f, 0.0f) },
+            { "Horse",  new Color(0.2f, 0.4f, 1f) },
+            { "Snake",  new Color(0.6f, 0.2f, 0.8f) },
+            { "Sheep",  new Color(0.6f, 0.4f, 0.2f) }
+        };
     public static readonly Dictionary<string, Color> SpeciesColors =
         new Dictionary<string, Color>()
     {
         { "Rabbit",     new Color(1f, 0.9f, 0.2f) },   // Yellow
-        { "Wolf",       new Color(0.8f, 0.0f, 0.0f) }, // Dark red
+        { "Wolf",       new Color(0.25f, 0.35f, 0.55f)}, // Dark red
         { "Tiger",      new Color(1f, 0.5f, 0.1f) },   // Orange
         { "Horse",      new Color(0.2f, 0.4f, 1f) },   // Blue
         { "Snake",      new Color(0.6f, 0.2f, 0.8f) }, // Purple
