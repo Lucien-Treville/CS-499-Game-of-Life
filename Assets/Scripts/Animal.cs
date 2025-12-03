@@ -454,6 +454,32 @@ public class Animal : LivingEntity
 
     }
 
+    //public Transform GetThreat()
+    //{
+    //     if (this.threat != null) return this.threat.transform;
+    //     return null;
+    //}
+
+    public void Flee(Transform threat)
+    {
+        if (agent == null || threat == null) return;
+
+        // 1. Direction away from the threat
+        Vector3 fleeDir = (transform.position - threat.position).normalized;
+
+        // 2. Create a temporary target far in that direction
+        Vector3 fleeTarget = transform.position + fleeDir * 10f; // large number to just move away
+
+        // 3. Project target onto NavMesh
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(fleeTarget, out hit, 100f, NavMesh.AllAreas))
+            fleeTarget = hit.position;
+
+        // 4. Set NavMeshAgent destination
+        agent.speed = (float)movementSpeed;
+        agent.SetDestination(fleeTarget);
+    }
+
     public Animal FindBreedTarget()
     {
 
@@ -855,7 +881,7 @@ public class Animal : LivingEntity
         agent.SetDestination(t.position);
     }
 
-private float wanderTimer = 0f;
+    private float wanderTimer = 0f;
     private float wanderInterval = .25f; // Retarget every 1 seconds max
 
     public void Wander()
@@ -914,32 +940,6 @@ private float wanderTimer = 0f;
         if (agent == null) return;
         agent.speed = (float)movementSpeed;
         agent.SetDestination(targetPos);
-    }
-
-    public Transform GetThreat()
-    {
-        if (this.threat != null) return this.threat.transform;
-        return null;
-    }
-
-    public void Flee(Transform threat)
-    {
-        if (agent == null || threat == null) return;
-
-        // 1. Direction away from the threat
-        Vector3 fleeDir = (transform.position - threat.position).normalized;
-
-        // 2. Create a temporary target far in that direction
-        Vector3 fleeTarget = transform.position + fleeDir * 10f; // large number to just move away
-
-        // 3. Project target onto NavMesh
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(fleeTarget, out hit, 100f, NavMesh.AllAreas))
-            fleeTarget = hit.position;
-
-        // 4. Set NavMeshAgent destination
-        agent.speed = (float)movementSpeed;
-        agent.SetDestination(fleeTarget);
     }
 
     public void AttackAnimal(LivingEntity animalTarget)
