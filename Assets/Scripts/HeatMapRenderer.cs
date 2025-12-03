@@ -180,7 +180,7 @@ public class HeatMapRenderer : MonoBehaviour
         if (vlg == null)
             vlg = legendContainer.gameObject.AddComponent<VerticalLayoutGroup>();
 
-        vlg.spacing = 10;
+        vlg.spacing = 2;
         vlg.childAlignment = TextAnchor.UpperLeft;
 
         List<string> list = new List<string>(activeColoredSpecies);
