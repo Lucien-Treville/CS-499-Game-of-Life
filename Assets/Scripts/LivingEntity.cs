@@ -73,6 +73,7 @@ public class LivingEntity : MonoBehaviour
 
 
         PopulationManager.Instance.UpdateCount(specieName, -1);
+        Invoke("Destroy",15);
         // Destroy(gameObject);
     }
 

@@ -30,11 +30,11 @@ MonoBehaviour:
   - 25
   - 5
   hungerThresholdGene:
-  - 30
-  - 2
+  - 75
+  - 5
   thirstThresholdGene:
-  - 30
-  - 2
+  - 75
+  - 5
   fleeThresholdGene:
   - 50
   - 5

@@ -850,6 +850,8 @@ public class Animal : LivingEntity
 
     public void PursueTargetTransform(Transform t)
     {
+        if (Vector3.Distance(t.position, transform.position) < 1) return;
+
         if (agent != null)
             agent.speed = (float)movementSpeed;
         agent.SetDestination(t.position);
@@ -946,7 +948,7 @@ private float wanderTimer = 0f;
     {
         if (animalTarget == null) return;
         if ((UnityEngine.Object)animalTarget == null) return; // Unity destroyed check
-        if (animalTarget.isDead || animalTarget.isCorpse) return;
+        // if (animalTarget.isDead || animalTarget.isCorpse) return;
 
         // Use Time.time → cooldown scales with simulation speed (Time.timeScale).
         // If you want cooldown to ignore your speed slider, switch to Time.unscaledTime below.
