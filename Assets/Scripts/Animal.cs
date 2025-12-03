@@ -723,6 +723,12 @@ public class Animal : LivingEntity
         // The scaling pushed the feet down by (newHeight - oldHeight) / 2
         // So we add that difference back to the position.
         
+        NavMeshAgent agent = GetComponent<NavMeshAgent>();
+        if (agent != null)
+        {
+            agent.baseOffset += 0.05f;
+        }
+
         // Calculate the difference in the half-heights
         float verticalShift = (currentHalfHeight * scaleFactor) - currentHalfHeight;
         
@@ -833,11 +839,6 @@ public class Animal : LivingEntity
 
    
 
-  
-
-   
-   
-
     public void PursueTargetTransform(Transform t)
     {
         if (agent != null)
@@ -845,36 +846,91 @@ public class Animal : LivingEntity
         agent.SetDestination(t.position);
     }
 
-    public Vector3 GetWanderTarget()
-    {
-        Vector3 randomDirection = Random.insideUnitSphere * 10f;
-        randomDirection += transform.position;
+private float wanderTimer = 0f;
+    private float wanderInterval = 1f; // Retarget every 1 seconds max
 
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomDirection, out hit, 10f, NavMesh.AllAreas))
-        {
-            return hit.position;
-        }
-
-        return transform.position; // fallback
-    }
-
-
-    // Usage
     public void Wander()
     {
+        // 1. SAFETY CHECKS
+        // If the path is still calculating, DO NOT INTERFERE.
+        if (agent.pathPending) return;
+
+        // If we are already moving and haven't arrived, keep moving.
+        if (agent.remainingDistance > agent.stoppingDistance) return;
+
+        // 2. TIMER CHECK
+        // Even if we stopped, wait a moment before picking a new spot.
+        // This stops the "jittery attention span" behavior.
+        wanderTimer += Time.deltaTime;
+        if (wanderTimer < wanderInterval) return;
+
+        // Reset timer and go
+        wanderTimer = 0f;
         Vector3 wanderTarget = GetWanderTarget();
         MoveTo(wanderTarget);
     }
 
+    public Vector3 GetWanderTarget()
+    {
+        // 3. FLATTEN RANDOMNESS
+        // Use 2D circle to ensure we look flat along the ground, not up/down.
+        Vector2 randomCircle = Random.insideUnitCircle * 5f;
+        Vector3 randomDirection = transform.position + new Vector3(randomCircle.x, 0, randomCircle.y);
 
-    // MoveTo accepting a Vector3 instead of Transform
+        NavMeshHit hit;
+        
+        // 4. STRICT SAMPLING
+        // Look for a valid point within 2 units of our random guess.
+        // If the random point is off the map, this returns FALSE and we stay put.
+        if (NavMesh.SamplePosition(randomDirection, out hit, 2.0f, NavMesh.AllAreas))
+        {
+            return hit.position;
+        }
+
+        // Fallback: If we couldn't find a spot, stand still. 
+        // DO NOT return Vector3.zero!
+        return transform.position;
+    }
+
     public void MoveTo(Vector3 targetPos)
     {
-        if (agent == null) return;
+        if (agent == null || !agent.isOnNavMesh) return;
+        
         agent.speed = (float)movementSpeed;
         agent.SetDestination(targetPos);
     }
+    // public Vector3 GetWanderTarget()
+    // {
+    //     Vector3 randomDirection = Random.insideUnitSphere * 5f;
+    //     randomDirection += transform.position;
+
+    //     NavMeshHit hit;
+    //     if (NavMesh.SamplePosition(randomDirection, out hit, 10f, NavMesh.AllAreas))
+    //     {
+    //         return hit.position;
+    //     }
+
+    //     return transform.position; // fallback
+    // }
+
+
+    // // Usage
+    // public void Wander()
+    // {
+    //     Vector3 wanderTarget = GetWanderTarget();
+    //     MoveTo(wanderTarget);
+
+    //     // tried to replace this with a rigidbody steering approach. bad idea, leaving this here for future reminder not to. nav agent fights rigidbody steering for pathing every fram, causing jitters
+    // }
+
+
+    // // MoveTo accepting a Vector3 instead of Transform
+    // public void MoveTo(Vector3 targetPos)
+    // {
+    //     if (agent == null) return;
+    //     agent.speed = (float)movementSpeed;
+    //     agent.SetDestination(targetPos);
+    // }
 
     public Transform GetThreat()
     {
@@ -931,9 +987,10 @@ public class Animal : LivingEntity
         if (food is Plant plant)
         {
             
-            hungerLevel = Min(100.0, hungerLevel + (plant.nourishmentValue * 0.5));
-            thirstLevel = Min(100.0, thirstLevel + (plant.nourishmentValue * 0.5)) * 0.2;
-            plant.nourishmentValue -= plant.nourishmentValue * 0.5;
+            hungerLevel = Min(100.0, hungerLevel + plant.nourishmentValue);
+            plant.Eaten(); // decrement plant health
+            thirstLevel = Min(100.0, thirstLevel + (plant.nourishmentValue * 0.2)); // get a little hydration from food
+            // plant.nourishmentValue -= plant.nourishmentValue * 0.5; // this will never reach 0? literally Zeno's paradox
             if (plant.nourishmentValue <= 0) plant.RemoveCorpse(); // consume the plant
             ClearTarget();
         }

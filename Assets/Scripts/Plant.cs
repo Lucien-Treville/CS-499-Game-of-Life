@@ -220,8 +220,11 @@ public class Plant : LivingEntity
 
     public void Eaten()
     {
-        Debug.Log($"Plant, {specieName}, (ID: {instanceID}) has been eaten and is now dead.");
-        Die();
+        this.health -= nourishmentValue;
+        if (health <= 0)
+        {
+            Die();
+        }
     }
 
 
