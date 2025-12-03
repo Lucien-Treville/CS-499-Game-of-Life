@@ -847,17 +847,19 @@ public class Animal : LivingEntity
     }
 
 private float wanderTimer = 0f;
-    private float wanderInterval = 1f; // Retarget every 1 seconds max
+    private float wanderInterval = .25f; // Retarget every 1 seconds max
 
     public void Wander()
     {
         // 1. SAFETY CHECKS
         // If the path is still calculating, DO NOT INTERFERE.
         if (agent.pathPending) return;
-
-        // If we are already moving and haven't arrived, keep moving.
-        if (agent.remainingDistance > agent.stoppingDistance) return;
-
+        Vector3 wanderTarget = new Vector3(0,0,0);
+        if (agent.remainingDistance < 2.0f) 
+        {
+            wanderTarget = GetWanderTarget();
+            MoveTo(wanderTarget);
+        }
         // 2. TIMER CHECK
         // Even if we stopped, wait a moment before picking a new spot.
         // This stops the "jittery attention span" behavior.
@@ -866,7 +868,7 @@ private float wanderTimer = 0f;
 
         // Reset timer and go
         wanderTimer = 0f;
-        Vector3 wanderTarget = GetWanderTarget();
+        wanderTarget = GetWanderTarget();
         MoveTo(wanderTarget);
     }
 
@@ -882,7 +884,7 @@ private float wanderTimer = 0f;
         // 4. STRICT SAMPLING
         // Look for a valid point within 2 units of our random guess.
         // If the random point is off the map, this returns FALSE and we stay put.
-        if (NavMesh.SamplePosition(randomDirection, out hit, 2.0f, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(randomDirection, out hit, 5.0f, NavMesh.AllAreas))
         {
             return hit.position;
         }

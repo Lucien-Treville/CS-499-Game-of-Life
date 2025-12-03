@@ -57,11 +57,12 @@ public class AnimalFindMate : BaseState<AnimalStateMachine.AnimalState>
 
         if (_animal.isThirsty) return AnimalStateMachine.AnimalState.FindWater;
 
+        // if hungry or thirsty, idle
+        if (!_animal.isBreedable) return AnimalStateMachine.AnimalState.Idle;
+        
         // if mate found, breed
         if (_animal.mate != null) return AnimalStateMachine.AnimalState.Breed;
 
-        // if hungry or thirsty, idle
-        if (!_animal.isBreedable) return AnimalStateMachine.AnimalState.Idle;
 
 
         return StateKey;

@@ -96,7 +96,26 @@ public class LivingEntity : MonoBehaviour
         
         
             // rotate 90 degrees on Z so the model visibly lies on its side
-            transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(90f, 0f, 0f));
+        transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0f, 0f, 90f));
+            
+                // make corpse a nav mesh obstacle
+        UnityEngine.AI.NavMeshObstacle obstacle = gameObject.AddComponent<UnityEngine.AI.NavMeshObstacle>();
+        
+        // 3. CONFIGURE IT
+        obstacle.shape = UnityEngine.AI.NavMeshObstacleShape.Box; // or Capsule
+        
+        // Match size to your collider if needed
+        BoxCollider col = GetComponent<BoxCollider>();
+        if (col != null) 
+        {
+            obstacle.center = col.center;
+            obstacle.size = col.size;
+        }
+
+        // 4. ENABLE CARVING (The Magic Step) 🔪
+        // This tells the NavMesh "There is a hole here now."
+        obstacle.carving = true;
+        obstacle.carveOnlyStationary = true; // Optimization: It won't move anymore
        
 
 

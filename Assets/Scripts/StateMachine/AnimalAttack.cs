@@ -17,14 +17,14 @@ public class AnimalAttack : BaseState<AnimalStateMachine.AnimalState>
     public override void EnterState()
     {
         // Debug.Log("Entering Attack");
-        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is attacking.");
+        // Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is attacking.");
         _target = _animal.GetTargetEntity();
         target = _animal.GetTarget();
     }
 
     public override void ExitState()
     {
-        Debug.Log("Exiting Attack");
+        // Debug.Log("Exiting Attack");
 
     }
 
