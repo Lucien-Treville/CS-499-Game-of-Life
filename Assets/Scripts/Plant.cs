@@ -194,16 +194,7 @@ public class Plant : LivingEntity
     /// </summary>
     public void Eaten()
     {
-<<<<<<< HEAD
         if (isDead) return;
-=======
-        this.health -= nourishmentValue;
-        if (health <= 0)
-        {
-            Die();
-        }
-    }
->>>>>>> 6b5eb0e5ea159e5a3dd1a0a2b717dc2b5acb68ba
 
         Debug.Log($"Plant, {specieName}, (ID: {instanceID}) has been eaten and is now dead.");
         Die();  // marks isDead/isCorpse and updates PopulationManager
