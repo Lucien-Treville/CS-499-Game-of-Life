@@ -1,4 +1,4 @@
-﻿// Fi// File last updated: 09/11/2025
+// Fi// File last updated: 09/11/2025
 // Author: Lucien Treville
 // File Created: 09/11/2025
 // Description: This file contains the class implementation for Animals, inheriting from LivingEntity.
@@ -723,12 +723,6 @@ public class Animal : LivingEntity
         // The scaling pushed the feet down by (newHeight - oldHeight) / 2
         // So we add that difference back to the position.
         
-        NavMeshAgent agent = GetComponent<NavMeshAgent>();
-        if (agent != null)
-        {
-            agent.baseOffset += 0.05f;
-        }
-
         // Calculate the difference in the half-heights
         float verticalShift = (currentHalfHeight * scaleFactor) - currentHalfHeight;
         
@@ -782,32 +776,42 @@ public class Animal : LivingEntity
     }
 
     private LivingEntity FindClosestPlant()
-    {
-        return visibleEntities
-            .Where(e => e != null)
-            .OfType<Plant>()
-            .OrderBy(e => Vector3.Distance(transform.position, e.transform.position))
-            .FirstOrDefault();
-    }
+{
+    return visibleEntities
+        .Where(e => e != null)
+        .OfType<Plant>()
+        .Where(p => !p.isCorpse)   // ignore fully consumed/dead plants
+        .OrderBy(e => Vector3.Distance(transform.position, e.transform.position))
+        .FirstOrDefault();
+}
+
 
     public LivingEntity GetTargetEntity()
+{
+    // No target at all
+    if (currentTarget == null)
+        return null;
+
+    // Unity destroyed check (UnityEngine.Object overload)
+    if ((UnityEngine.Object)currentTarget == null)
     {
-        // Defensive: clear and return null if the currentTarget reference is gone, dead, or a corpse
-        if (currentTarget == null) return null;
-
-        // Unity destroyed check (UnityEngine.Object overload). Cast to Object to detect native destruction.
-        if ((UnityEngine.Object)currentTarget == null)
-        {
-            currentTarget = null;
-            currentTargetPos = null;
-            return null;
-        }
-
-        // If target died or became a corpse, consider it no longer a valid active target
-
-
-        return currentTarget;
+        currentTarget = null;
+        currentTargetPos = null;
+        return null;
     }
+
+    // If the target became a corpse and is no longer edible/interesting,
+    // clear it so the state machine can move on.
+    if (currentTarget.isCorpse)
+    {
+        currentTarget = null;
+        currentTargetPos = null;
+        return null;
+    }
+
+    return currentTarget;
+}
+
 
     // returns the transform of the current target
     public Transform GetTarget()
@@ -837,6 +841,11 @@ public class Animal : LivingEntity
         return -1f;
     }
 
+   
+
+  
+
+   
    
 
     public void PursueTargetTransform(Transform t)
@@ -874,10 +883,8 @@ private float wanderTimer = 0f;
 
     public Vector3 GetWanderTarget()
     {
-        // 3. FLATTEN RANDOMNESS
-        // Use 2D circle to ensure we look flat along the ground, not up/down.
-        Vector2 randomCircle = Random.insideUnitCircle * 5f;
-        Vector3 randomDirection = transform.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+        Vector3 randomDirection = Random.insideUnitSphere * 10f;
+        randomDirection += transform.position;
 
         NavMeshHit hit;
         
@@ -889,50 +896,25 @@ private float wanderTimer = 0f;
             return hit.position;
         }
 
-        // Fallback: If we couldn't find a spot, stand still. 
-        // DO NOT return Vector3.zero!
-        return transform.position;
+        return transform.position; // fallback
     }
 
+
+    // Usage
+    public void Wander()
+    {
+        Vector3 wanderTarget = GetWanderTarget();
+        MoveTo(wanderTarget);
+    }
+
+
+    // MoveTo accepting a Vector3 instead of Transform
     public void MoveTo(Vector3 targetPos)
     {
-        if (agent == null || !agent.isOnNavMesh) return;
-        
+        if (agent == null) return;
         agent.speed = (float)movementSpeed;
         agent.SetDestination(targetPos);
     }
-    // public Vector3 GetWanderTarget()
-    // {
-    //     Vector3 randomDirection = Random.insideUnitSphere * 5f;
-    //     randomDirection += transform.position;
-
-    //     NavMeshHit hit;
-    //     if (NavMesh.SamplePosition(randomDirection, out hit, 10f, NavMesh.AllAreas))
-    //     {
-    //         return hit.position;
-    //     }
-
-    //     return transform.position; // fallback
-    // }
-
-
-    // // Usage
-    // public void Wander()
-    // {
-    //     Vector3 wanderTarget = GetWanderTarget();
-    //     MoveTo(wanderTarget);
-
-    //     // tried to replace this with a rigidbody steering approach. bad idea, leaving this here for future reminder not to. nav agent fights rigidbody steering for pathing every fram, causing jitters
-    // }
-
-
-    // // MoveTo accepting a Vector3 instead of Transform
-    // public void MoveTo(Vector3 targetPos)
-    // {
-    //     if (agent == null) return;
-    //     agent.speed = (float)movementSpeed;
-    //     agent.SetDestination(targetPos);
-    // }
 
     public Transform GetThreat()
     {
@@ -981,37 +963,88 @@ private float wanderTimer = 0f;
     }
 
     public void Eat(LivingEntity food)
+{
+    if (food == null) return;
+
+    float now = Time.time;
+    if (now < _nextEatTime) return;   // respect bite cooldown
+
+    // If it's already a corpse with no nourishment left, drop it.
+    if (food.isCorpse && food.nourishmentValue <= 0.0)
     {
-        if (food == null) return;
-        float now = Time.time;
-        if (now < _nextEatTime) return;
+        ClearTarget();
+        return;
+    }
 
-        if (food is Plant plant)
+    double gainedNourishment = 0.0;
+
+    if (food is Plant plant)
+    {
+        if (plant.nourishmentValue <= 0.0)
         {
-            
-            hungerLevel = Min(100.0, hungerLevel + plant.nourishmentValue);
-            plant.Eaten(); // decrement plant health
-            thirstLevel = Min(100.0, thirstLevel + (plant.nourishmentValue * 0.2)); // get a little hydration from food
-            // plant.nourishmentValue -= plant.nourishmentValue * 0.5; // this will never reach 0? literally Zeno's paradox
-            if (plant.nourishmentValue <= 0) plant.RemoveCorpse(); // consume the plant
+            // Nothing left to eat
             ClearTarget();
+            return;
         }
-        else if (food is Animal prey)
-        {
-            hungerLevel = Min(100.0, hungerLevel + (prey.nourishmentValue * 0.1));
-            thirstLevel = Min(100.0, thirstLevel + (prey.nourishmentValue * 0.1)) * 0.2;
-            prey.nourishmentValue -= prey.nourishmentValue * 0.1;
-            if (prey.nourishmentValue <= 0) prey.RemoveCorpse(); // consume the prey
-            ClearTarget();
 
+        // Take a 50% "bite" of the remaining nourishment
+        double bite = plant.nourishmentValue * 0.5;
+
+        gainedNourishment = bite;
+
+        // Reduce plant nourishment
+        plant.nourishmentValue -= bite;
+
+        // Apply gains to this animal
+        hungerLevel = System.Math.Min(100.0, hungerLevel + gainedNourishment);
+        // small thirst benefit from eating plants
+        thirstLevel = System.Math.Min(100.0, thirstLevel + gainedNourishment * 0.2);
+
+        // If plant is fully consumed, mark it as eaten and remove it
+        if (plant.nourishmentValue <= 0.0)
+        {
+            plant.Eaten();         // sets isDead/isCorpse & updates populations
+            plant.RemoveCorpse();  // actually destroys the GameObject
+            ClearTarget();         // stop targeting this plant
+        }
+    }
+    else if (food is Animal prey)
+    {
+        if (prey.nourishmentValue <= 0.0)
+        {
+            // Nothing left to eat
+            ClearTarget();
+            return;
+        }
+
+        // Smaller bite fraction for prey to avoid instant consumption
+        double bite = prey.nourishmentValue * 0.1;
+
+        gainedNourishment = bite;
+
+        prey.nourishmentValue -= bite;
+
+        hungerLevel = System.Math.Min(100.0, hungerLevel + gainedNourishment);
+        thirstLevel = System.Math.Min(100.0, thirstLevel + gainedNourishment * 0.2);
+
+        // If this is a corpse and we've fully stripped its nourishment, remove it
+        if (prey.isCorpse && prey.nourishmentValue <= 0.0)
+        {
+            prey.RemoveCorpse();
+            ClearTarget();
         }
     }
 
+    // Schedule next bite
+    _nextEatTime = now + eatCooldown;
+}
+
     public void Drink()
     {
-        thirstLevel = Min(100.0, thirstLevel + 15.0); // arbitrary value for now
-        Debug.Log("Successful Drink");
+        // Increase thirst level (0–100), like hunger
+        thirstLevel = System.Math.Min(100.0, thirstLevel + 15.0);
 
+        Debug.Log($"Animal, {specieName} (ID:{instanceID}) drank water. Thirst now {thirstLevel:0.0}");
     }
 
 
