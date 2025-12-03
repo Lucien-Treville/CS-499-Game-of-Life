@@ -901,11 +901,11 @@ private float wanderTimer = 0f;
 
 
     // Usage
-    public void Wander()
-    {
-        Vector3 wanderTarget = GetWanderTarget();
-        MoveTo(wanderTarget);
-    }
+    // public void Wander()
+    // {
+    //     Vector3 wanderTarget = GetWanderTarget();
+    //     MoveTo(wanderTarget);
+    // }
 
 
     // MoveTo accepting a Vector3 instead of Transform
