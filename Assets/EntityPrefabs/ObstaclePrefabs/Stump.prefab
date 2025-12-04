@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9042335131347989094}
   - component: {fileID: 6528007986094851756}
   - component: {fileID: 907022353730163102}
+  - component: {fileID: 7331178671617185437}
   m_Layer: 0
   m_Name: Stump
   m_TagString: Obstacle
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 4726766253039380345}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 3, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -98,3 +99,16 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: -0.023000002, y: 0.46600002, z: 0.016}
   m_TimeToStationary: 0.5
+--- !u!65 &7331178671617185437
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4726766253039380345}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.38892257, y: 0.9318147, z: 0.40184778}
+  m_Center: {x: -0.023379557, y: 0.46572047, z: 0.01644463}

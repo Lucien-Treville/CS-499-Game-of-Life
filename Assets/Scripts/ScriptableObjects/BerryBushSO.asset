@@ -15,8 +15,8 @@ MonoBehaviour:
   plantPrefab: {fileID: 8444703759852574697, guid: a101fe6b13efba2408fa98a580236349, type: 3}
   specieName: Berry Bush
   nourishmentValueGene:
-  - 30
-  - 5
+  - 40
+  - 10
   fruitingChanceGene:
   - 0.00011938041711139073
   - 0.00024476779598363676
@@ -27,5 +27,5 @@ MonoBehaviour:
   - 0.15479572992969395
   - 0.025287335205896343
   healthGene:
-  - 20.875105655318517
-  - 5.841283360869818
+  - 20
+  - 4

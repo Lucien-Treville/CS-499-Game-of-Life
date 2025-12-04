@@ -64,10 +64,19 @@ public class CameraController : MonoBehaviour
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0.0f)
         {
-            cam.fieldOfView -= scroll * zoomSpeed * Time.unscaledDeltaTime;
-            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minZoom, maxZoom);
+            if (cam.orthographic)
+            {
+                cam.orthographicSize -= scroll * zoomSpeed * Time.unscaledDeltaTime;
+                cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, minZoom, maxZoom);
+            }
+            else
+            {
+                cam.fieldOfView -= scroll * zoomSpeed * Time.unscaledDeltaTime;
+                cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minZoom, maxZoom);
+            }
         }
     }
+
 
     void HandleRotation()
     {

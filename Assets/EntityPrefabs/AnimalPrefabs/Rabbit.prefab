@@ -569,6 +569,7 @@ GameObject:
   - component: {fileID: 2552954925779893251}
   - component: {fileID: -7020863494787325897}
   - component: {fileID: -2477318261211190352}
+  - component: {fileID: 2197135961695242645}
   m_Layer: 7
   m_Name: Rabbit
   m_TagString: Untagged
@@ -670,6 +671,7 @@ MonoBehaviour:
   height: 0
   nourishmentValue: 0
   instanceID: 0
+  corpseHealth: 0
   isDead: 0
   isCorpse: 0
   currentState: 
@@ -678,12 +680,15 @@ MonoBehaviour:
   thirstLevel: 0
   sleepLevel: 0
   fearLevel: 0
-  reproductionChance: 0
   attackStrength: 0
   isPredator: 0
   isBreedable: 0
   isBreeding: 0
   hasLaunchedOffspring: 0
+  litterSize: 0
+  litterCounter: 0
+  breedCooldown: 20
+  timeSinceLastBreed: 0
   isHungry: 0
   isThirsty: 0
   isSleepy: 0
@@ -693,9 +698,9 @@ MonoBehaviour:
   thirstThreshold: 40
   fleeThreshold: 0
   sleepThreshold: 0
-  visionRange: 50
-  visionAngle: 240
-  visionInterval: 5
+  visionRange: 100
+  visionAngle: 320
+  visionInterval: 3
   visibleEntities: []
   watersources: []
   agent: {fileID: 0}
@@ -704,7 +709,7 @@ MonoBehaviour:
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
   mate: {fileID: 0}
-  threat: {fileID: 0}
+  threat: {x: 0, y: 0, z: 0}
   currentStage: 0
   livingEntityMask:
     serializedVersion: 2
@@ -727,7 +732,7 @@ MeshCollider:
   m_GameObject: {fileID: 131319039843492172}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
@@ -757,6 +762,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speciesName: 
+--- !u!65 &2197135961695242645
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 131319039843492172}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.2284662, z: 1.4351877}
+  m_Center: {x: 0, y: 0.6402741, z: 0.21759391}
 --- !u!1 &131389729738583124
 GameObject:
   m_ObjectHideFlags: 0

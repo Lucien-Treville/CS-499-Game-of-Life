@@ -13,7 +13,8 @@ public class PredatorSpecies : ScriptableObject
     public GameObject animalPrefab; // reference to the prefab for this predator species
     public string specieName;
     public double[] movementSpeedGene; // 
-    public double[] reproductionChanceGene; // 
+    public double[] breedTimerGene; // 
+    public double[] litterSizeGene; // 
     public double[] attackStrengthGene; // 
     public double[] heightGene; // 
     public double[] healthGene; // 

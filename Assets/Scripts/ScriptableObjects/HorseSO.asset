@@ -15,11 +15,14 @@ MonoBehaviour:
   animalPrefab: {fileID: 3675120535733322185, guid: 6dd6b349f33c277418eb31893a02eaf8, type: 3}
   specieName: Horse
   movementSpeedGene:
-  - 5
+  - 8
   - 2
-  reproductionChanceGene:
-  - 0.15
-  - 0.05
+  breedTimerGene:
+  - 20
+  - 1
+  litterSizeGene:
+  - 1
+  - 0.2
   attackStrengthGene:
   - 15
   - 2

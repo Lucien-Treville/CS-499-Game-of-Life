@@ -13,7 +13,8 @@ public class GrazerSpecies : ScriptableObject
     public GameObject animalPrefab; // reference to the prefab for this grazer species
     public string specieName;
     public double[] movementSpeedGene; // 
-    public double[] reproductionChanceGene; // 
+    public double[] breedTimerGene; // 
+    public double[] litterSizeGene; //
     public double[] attackStrengthGene; // 
     public double[] heightGene; // 
     public double[] healthGene; // 

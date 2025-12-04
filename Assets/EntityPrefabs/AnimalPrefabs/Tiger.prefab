@@ -33,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 667490550083428476}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_Children:
   - {fileID: 8429495942558893703}
   - {fileID: 543773391976873975}
@@ -49,7 +49,7 @@ CharacterController:
   m_GameObject: {fileID: 667490550083428476}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Height: 1.44
   m_Radius: 1.13
@@ -89,7 +89,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -135,6 +135,7 @@ MonoBehaviour:
   height: 0
   nourishmentValue: 0
   instanceID: 0
+  corpseHealth: 0
   isDead: 0
   isCorpse: 0
   currentState: 
@@ -143,12 +144,15 @@ MonoBehaviour:
   thirstLevel: 0
   sleepLevel: 0
   fearLevel: 0
-  reproductionChance: 0
   attackStrength: 30
   isPredator: 1
   isBreedable: 0
   isBreeding: 0
   hasLaunchedOffspring: 0
+  litterSize: 0
+  litterCounter: 0
+  breedCooldown: 20
+  timeSinceLastBreed: 0
   isHungry: 0
   isThirsty: 0
   isSleepy: 0
@@ -158,9 +162,9 @@ MonoBehaviour:
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
-  visionRange: 200
-  visionAngle: 120
-  visionInterval: 5
+  visionRange: 50
+  visionAngle: 160
+  visionInterval: 2
   visibleEntities: []
   watersources: []
   agent: {fileID: 0}
@@ -169,7 +173,7 @@ MonoBehaviour:
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
   mate: {fileID: 0}
-  threat: {fileID: 0}
+  threat: {x: 0, y: 0, z: 0}
   currentStage: 0
   livingEntityMask:
     serializedVersion: 2

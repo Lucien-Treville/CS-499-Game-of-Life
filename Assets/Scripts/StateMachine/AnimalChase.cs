@@ -20,7 +20,7 @@ public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
         _animal.currentState = "Chase";
 
         if ( _animal.GetTarget() != null) target = _animal.GetTarget();
-        if (_animal.fearLevel != 0) target = _animal.threat.transform;
+        //if (_animal.fearLevel != 0) target = _animal.threat.transform;
 
 
     }
@@ -50,8 +50,14 @@ public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
         if (target == null) return AnimalStateMachine.AnimalState.Idle;
         float distanceToTarget = _animal.GetTargetDistance();
 
+        if (distanceToTarget > _animal.visionRange)
+        {
+            _animal.ClearTarget();
+            return AnimalStateMachine.AnimalState.FindFood;
+        }
+
         // If close enough to attack
-        if (distanceToTarget < 2f && distanceToTarget > -1f) // Adjust threshold as needed
+        if (distanceToTarget < 5f && distanceToTarget > -1f) // Adjust threshold as needed
         {
             return AnimalStateMachine.AnimalState.Attack;
         }

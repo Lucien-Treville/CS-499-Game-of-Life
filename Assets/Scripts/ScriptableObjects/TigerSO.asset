@@ -15,13 +15,16 @@ MonoBehaviour:
   animalPrefab: {fileID: 667490550083428476, guid: 0a882d0de9a6170438b97800cfc089d0, type: 3}
   specieName: Tiger
   movementSpeedGene:
-  - 7
+  - 6
   - 2
-  reproductionChanceGene:
-  - 0.1
-  - 0.025
-  attackStrengthGene:
+  breedTimerGene:
   - 20
+  - 1
+  litterSizeGene:
+  - 3
+  - 0.5
+  attackStrengthGene:
+  - 50
   - 3
   heightGene:
   - 1

@@ -27,9 +27,10 @@ public class AnimalFlee : BaseState<AnimalStateMachine.AnimalState>
 
     public override void UpdateState()
     {
-       // _animal.UpdateFear();
-        Transform threat = _animal.GetThreat();
+        _animal.UpdateFear();
+        Vector3 threat = _animal.GetThreat();
         _animal.Flee(threat);
+
 
     }
 
@@ -40,7 +41,7 @@ public class AnimalFlee : BaseState<AnimalStateMachine.AnimalState>
 
         // if fear < threshold = idle key
 
-        if (!_animal.isScared || _animal.threat == null) return AnimalStateMachine.AnimalState.Idle;
+        if (!_animal.isScared) return AnimalStateMachine.AnimalState.Idle;
         // else
         return StateKey;
     }

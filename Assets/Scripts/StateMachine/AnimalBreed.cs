@@ -27,6 +27,10 @@ public class AnimalBreed : BaseState<AnimalStateMachine.AnimalState>
         _animal.ClearMate();
         _animal.isBreedable = false;
         _mate.isBreedable = false;
+        _mate.ClearMate();
+        _animal.timeSinceLastBreed = 0f;
+        _mate.timeSinceLastBreed = 0f;
+        _animal.litterCounter = 0;
 
 
     }

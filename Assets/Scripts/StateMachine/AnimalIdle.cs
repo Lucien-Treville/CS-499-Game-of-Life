@@ -18,13 +18,13 @@ public class AnimalIdle : BaseState<AnimalStateMachine.AnimalState>
         // Debug.Log("Entering Idle");
         // Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is idle.");
         _animal.ClearTarget();
-        _animal.ClearMate();
+     //   _animal.ClearMate();
         _animal.currentState = "Idle";
     }
 
     public override void ExitState()
     {
-        Debug.Log("Exiting Idle");
+        //Debug.Log("Exiting Idle");
     }
 
     public override void UpdateState()
@@ -47,7 +47,7 @@ public class AnimalIdle : BaseState<AnimalStateMachine.AnimalState>
         // if (_animal.sleepLevel < _animal.sleepThreshold) return AnimalStateMachine.AnimalState.Sleep;
 
         // if fear > 40 flee key
-       if (_animal.isScared) return AnimalStateMachine.AnimalState.Flee;
+        if (_animal.isScared) return AnimalStateMachine.AnimalState.Flee;
 
         if (_animal.isAggro) return AnimalStateMachine.AnimalState.Chase;
 

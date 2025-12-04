@@ -15,8 +15,8 @@ MonoBehaviour:
   plantPrefab: {fileID: 6487974429602647562, guid: 462fbca49e0a50e4e92a57c67da95b40, type: 3}
   specieName: Grass
   nourishmentValueGene:
-  - 5.761030493286662
-  - 0.8275820532234818
+  - 20
+  - 5
   fruitingChanceGene:
   - 0.0018618058426774374
   - 0.0004547664532521904
@@ -27,5 +27,5 @@ MonoBehaviour:
   - 0.07300124633783929
   - 0.22424339655541395
   healthGene:
-  - 6.15030687053699
-  - 1.5271353010904167
+  - 10
+  - 2

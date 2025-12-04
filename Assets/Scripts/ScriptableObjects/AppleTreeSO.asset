@@ -15,8 +15,8 @@ MonoBehaviour:
   plantPrefab: {fileID: 1711503246089632638, guid: f31575b60216cae4b8ad885782bd713e, type: 3}
   specieName: Apple Tree
   nourishmentValueGene:
-  - 19.789082706836787
-  - 6.443939792661468
+  - 60
+  - 10
   fruitingChanceGene:
   - 0.002125919251070716
   - 0.0004747384724123707
@@ -27,5 +27,5 @@ MonoBehaviour:
   - 1.0979257178190247
   - 0.22534136310166453
   healthGene:
-  - 118.4994059948595
-  - 26.322236485346842
+  - 75
+  - 25

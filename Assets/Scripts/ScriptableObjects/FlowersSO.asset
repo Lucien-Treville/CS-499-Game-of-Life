@@ -15,8 +15,8 @@ MonoBehaviour:
   plantPrefab: {fileID: 8343530470604283908, guid: 0b09f2ad081334e4ea1d3fe612c53f00, type: 3}
   specieName: Flowers
   nourishmentValueGene:
+  - 20
   - 5
-  - 2
   fruitingChanceGene:
   - 0.0022774250507354736
   - 0.00042844462394714357
@@ -27,5 +27,5 @@ MonoBehaviour:
   - 0.3273948311805725
   - 0.017477807440917224
   healthGene:
-  - 10.549695899872155
-  - 2.8892127681893154
+  - 10
+  - 2

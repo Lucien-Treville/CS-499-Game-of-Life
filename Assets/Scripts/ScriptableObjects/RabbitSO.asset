@@ -15,11 +15,14 @@ MonoBehaviour:
   animalPrefab: {fileID: 131319039843492172, guid: 404d686f5f67d4747b22255e00350d79, type: 3}
   specieName: Rabbit
   movementSpeedGene:
-  - 8
+  - 7
   - 3
-  reproductionChanceGene:
-  - 0.15
-  - 0.1
+  breedTimerGene:
+  - 20
+  - 1
+  litterSizeGene:
+  - 6
+  - 1
   attackStrengthGene:
   - 5
   - 2
