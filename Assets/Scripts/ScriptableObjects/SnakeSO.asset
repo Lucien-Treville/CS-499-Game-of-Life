@@ -15,7 +15,7 @@ MonoBehaviour:
   animalPrefab: {fileID: 6802353888705948949, guid: 065915487fecfe7409b0134a21a45c69, type: 3}
   specieName: Snake
   movementSpeedGene:
-  - 7
+  - 3
   - 1
   breedTimerGene:
   - 50
@@ -24,7 +24,7 @@ MonoBehaviour:
   - 12
   - 2
   attackStrengthGene:
-  - 6
+  - 35
   - 1.5
   heightGene:
   - 0.1

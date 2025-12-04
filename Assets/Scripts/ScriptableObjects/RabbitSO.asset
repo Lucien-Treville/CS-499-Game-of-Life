@@ -15,7 +15,7 @@ MonoBehaviour:
   animalPrefab: {fileID: 131319039843492172, guid: 404d686f5f67d4747b22255e00350d79, type: 3}
   specieName: Rabbit
   movementSpeedGene:
-  - 8
+  - 7
   - 3
   breedTimerGene:
   - 20

@@ -15,7 +15,7 @@ MonoBehaviour:
   animalPrefab: {fileID: 667490550083428476, guid: 0a882d0de9a6170438b97800cfc089d0, type: 3}
   specieName: Tiger
   movementSpeedGene:
-  - 7
+  - 6
   - 2
   breedTimerGene:
   - 20

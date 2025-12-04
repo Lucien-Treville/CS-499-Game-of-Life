@@ -51,7 +51,7 @@ public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
         float distanceToTarget = _animal.GetTargetDistance();
 
         // If close enough to attack
-        if (distanceToTarget < 2f && distanceToTarget > -1f) // Adjust threshold as needed
+        if (distanceToTarget < 5f && distanceToTarget > -1f) // Adjust threshold as needed
         {
             return AnimalStateMachine.AnimalState.Attack;
         }

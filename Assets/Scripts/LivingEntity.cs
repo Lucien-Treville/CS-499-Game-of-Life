@@ -73,8 +73,10 @@ public class LivingEntity : MonoBehaviour
         isCorpse = true;
 
 
-        PopulationManager.Instance.UpdateCount(specieName, -1);
-        Invoke("Destroy",15);
+        if (PopulationManager.Instance != null)
+            PopulationManager.Instance.UpdateCount(specieName, -1);
+
+        Invoke(nameof(RemoveCorpse), 15f);
         // Destroy(gameObject);
     }
 
@@ -99,27 +101,59 @@ public class LivingEntity : MonoBehaviour
         
             // rotate 90 degrees on Z so the model visibly lies on its side
         transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0f, 0f, 90f));
-            
-                // make corpse a nav mesh obstacle
-        UnityEngine.AI.NavMeshObstacle obstacle = gameObject.AddComponent<UnityEngine.AI.NavMeshObstacle>();
-        
-        // 3. CONFIGURE IT
-        obstacle.shape = UnityEngine.AI.NavMeshObstacleShape.Box; // or Capsule
-        
-        // Match size to your collider if needed
-        BoxCollider col = GetComponent<BoxCollider>();
-        if (col != null) 
+
+        try
         {
-            obstacle.center = col.center;
-            obstacle.size = col.size;
+            var obstacle = GetComponent<UnityEngine.AI.NavMeshObstacle>();
+            if (obstacle == null)
+                obstacle = gameObject.AddComponent<UnityEngine.AI.NavMeshObstacle>();
+
+            if (obstacle != null)
+            {
+                // Try to match obstacle to available collider
+                var box = GetComponent<BoxCollider>();
+                var capsule = GetComponent<CapsuleCollider>();
+                var anyCol = GetComponent<Collider>();
+
+                if (box != null)
+                {
+                    obstacle.shape = UnityEngine.AI.NavMeshObstacleShape.Box;
+                    obstacle.center = box.center;
+                    obstacle.size = box.size;
+                }
+                else if (capsule != null)
+                {
+                    obstacle.shape = UnityEngine.AI.NavMeshObstacleShape.Capsule;
+                    obstacle.center = capsule.center;
+                    obstacle.radius = capsule.radius;
+                    obstacle.height = capsule.height;
+                }
+                else if (anyCol != null)
+                {
+                    // Fallback: approximate from bounds
+                    var b = anyCol.bounds;
+                    obstacle.shape = UnityEngine.AI.NavMeshObstacleShape.Box;
+                    // Convert world center to local space
+                    obstacle.center = transform.InverseTransformPoint(b.center);
+                    obstacle.size = b.size;
+                }
+                else
+                {
+                    // Last resort: reasonable default
+                    obstacle.shape = UnityEngine.AI.NavMeshObstacleShape.Box;
+                    obstacle.center = Vector3.zero;
+                    obstacle.size = new Vector3(1f, 0.5f, 1f);
+                }
+
+                obstacle.carving = true;
+                obstacle.carveOnlyStationary = true;
+            }
+
         }
-
-        // 4. ENABLE CARVING (The Magic Step) 🔪
-        // This tells the NavMesh "There is a hole here now."
-        obstacle.carving = true;
-        obstacle.carveOnlyStationary = true; // Optimization: It won't move anymore
-       
-
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"OnDeath obstacle setup failed for {specieName} (ID:{instanceID}): {ex.Message}");
+        }
 
 
     }
