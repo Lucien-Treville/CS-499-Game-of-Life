@@ -47,7 +47,7 @@ public class AnimalIdle : BaseState<AnimalStateMachine.AnimalState>
         // if (_animal.sleepLevel < _animal.sleepThreshold) return AnimalStateMachine.AnimalState.Sleep;
 
         // if fear > 40 flee key
-       if (_animal.isScared) return AnimalStateMachine.AnimalState.Flee;
+        if (_animal.isScared) return AnimalStateMachine.AnimalState.Flee;
 
         if (_animal.isAggro) return AnimalStateMachine.AnimalState.Chase;
 

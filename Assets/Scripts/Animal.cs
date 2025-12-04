@@ -86,7 +86,7 @@ public class Animal : LivingEntity
     public Transform currentTargetPos; // food/prey target
     public AnimalStateMachine _machine;
     public Animal mate = null;
-    public Animal threat = null; // flee "target"
+    public Vector3 threat; // flee "target"
 
     public GrowthStage currentStage;
     // public AnimalState currentState; // not implemented yet, but public variable for other entities to read
@@ -153,8 +153,8 @@ public class Animal : LivingEntity
         Grow();
         if (hungerLevel < hungerThreshold) isHungry = true; else isHungry = false;
         if (thirstLevel < thirstThreshold) isThirsty = true; else isThirsty = false;
-        if (fearLevel >= fleeThreshold) isScared = true; else isScared = false;
-        if (fearLevel > 0 && fearLevel < fleeThreshold) isAggro = true; else isAggro = false;
+        if (fearLevel > 0 && !isPredator) isScared = true; else isScared = false;
+        //if (fearLevel > 0 && fearLevel < fleeThreshold) isAggro = true; else isAggro = false;
         // sleep bool
 
         if (hungerLevel <= 0 || thirstLevel <= 0)
@@ -411,64 +411,69 @@ public class Animal : LivingEntity
 
     public void UpdateFear()
     {
+        Vector3? threat = DetectThreats();
 
-        threat = DetectThreats();
+        if (!threat.HasValue)
+        {
+            fearLevel = 0;
+            isScared = false;
+            return;
+        }
 
-        if (threat == null) { fearLevel = 0;  return; }
-        
+        double distance = Vector3.Distance(this.transform.position, threat.Value);
 
-
-        // closer distance means higher fear, 100 max
-        double fearValue = ((threat.attackStrength - this.attackStrength) / this.attackStrength) * 100.0;
-        fearValue = Max(0.0, Min(100.0, fearValue));
-
-        fearLevel = fearValue;
-
-        if (fearLevel < fleeThreshold) SetTargetEntity(threat);
-
+        // closer distance = higher fear, max 100
+        fearLevel = 100.0 - Mathf.Clamp((float)distance, 0f, 100f);
     }
+
 
     // looks for the closest predator to determine if fleeing is necessary
-    public Animal DetectThreats()
+    public Vector3? DetectThreats()
     {
-        // if (isPredator) return null;
-
         List<LivingEntity> visible = visibleEntities;
+        if (visible == null || visible.Count == 0)
+            return null;
 
-        if (visible.Count == 0) return null;
-
-        // Filter for predators only
         List<Animal> predators = visible
             .Where(e => e != null)
-            .OfType<Animal>()                         // only animals
-            .Where(a => a != this && a.isPredator && a.specieName != this.specieName && a.currentTarget == this)    // must be predator and not self
+            .OfType<Animal>()
+            .Where(a => a != this && a.isPredator)
             .ToList();
-        if (predators.Count == 0) return null;
 
-        // Return the closest predator
-        Animal closestPredator = predators
-            .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
-            .First();
+        if (predators.Count == 0)
+            return null;
 
-        return closestPredator;
+        var nearest = predators
+            .Where(a => Vector3.SqrMagnitude(a.transform.position - transform.position) < (fleeThreshold/2) * (fleeThreshold/2))
+            .ToList();
 
+        if (nearest.Count == 0)
+            return null;
+
+        Vector3 sum = Vector3.zero;
+        foreach (var p in nearest)
+            sum += p.transform.position;
+
+        return sum / nearest.Count;
     }
 
-    //public Transform GetThreat()
-    //{
-    //     if (this.threat != null) return this.threat.transform;
-    //     return null;
-    //}
 
-    public void Flee(Transform threat)
+
+    public Vector3 GetThreat()
     {
-        if (agent == null || threat == null) return;
+         if (this.threat != null) return this.threat;
+         return Vector3.zero;
+    }
+
+    public void Flee(Vector3 threat)
+    {
+        if (agent == null) return;
 
         // 1. Direction away from the threat
-        Vector3 fleeDir = (transform.position - threat.position).normalized;
+        Vector3 fleeDir = (transform.position - threat).normalized;
 
         // 2. Create a temporary target far in that direction
-        Vector3 fleeTarget = transform.position + fleeDir * 10f; // large number to just move away
+        Vector3 fleeTarget = transform.position + fleeDir * 1.1f; // large number to just move away
 
         // 3. Project target onto NavMesh
         NavMeshHit hit;
@@ -794,7 +799,7 @@ public class Animal : LivingEntity
         return visibleEntities
             .Where(e => e != null)                // filter out destroyed UnityEngine.Objects early
             .OfType<Animal>()                     // cast to Animal safely
-            .Where(a => a != this && a.specieName != this.specieName)
+            .Where(a => a != this && a.specieName != this.specieName && !a.isPredator)
             .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
             .FirstOrDefault();
 

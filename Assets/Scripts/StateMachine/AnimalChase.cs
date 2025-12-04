@@ -20,7 +20,7 @@ public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
         _animal.currentState = "Chase";
 
         if ( _animal.GetTarget() != null) target = _animal.GetTarget();
-        if (_animal.fearLevel != 0) target = _animal.threat.transform;
+        //if (_animal.fearLevel != 0) target = _animal.threat.transform;
 
 
     }
