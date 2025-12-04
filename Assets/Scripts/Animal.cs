@@ -160,8 +160,8 @@ public class Animal : LivingEntity
         Grow();
         if (hungerLevel < hungerThreshold) isHungry = true; else isHungry = false;
         if (thirstLevel < thirstThreshold) isThirsty = true; else isThirsty = false;
-        if (fearLevel > 0 && !isPredator) isScared = true; else isScared = false;
-        //if (fearLevel > 0 && fearLevel < fleeThreshold) isAggro = true; else isAggro = false;
+        if (fearLevel > fleeThreshold) isScared = true; else isScared = false;
+        if (fearLevel > 0 && fearLevel < fleeThreshold && isPredator) isAggro = true; else isAggro = false;
         // sleep bool
 
         if (hungerLevel <= 0 || thirstLevel <= 0)
@@ -424,6 +424,29 @@ public class Animal : LivingEntity
 
     public void UpdateFear()
     {
+
+        if (isPredator)
+        {
+           Animal rival = DetectRivalPredators();
+            if (rival != null)
+            {
+                double fearValue = ((rival.attackStrength) / this.health) * 100.0;                // closer distance = higher fear, max 100
+                fearValue = Max(0.0, Min(100.0, fearValue)); 
+                fearLevel = fearValue;
+                if (fearLevel < fleeThreshold) { SetTargetEntity(rival); Debug.Log($"Animal, {specieName}, (ID: {instanceID}) detected rival predator {rival.specieName} (ID: {rival.instanceID}) with fear level {fearLevel}");
+                           }
+                if (fearLevel >= fleeThreshold) this.threat = rival.transform.position;
+                return;
+            }
+            else
+            {
+                fearLevel = 0;
+                isScared = false;
+                isAggro = false;
+                return;
+            }
+        }
+
         Vector3? threat = DetectThreats();
 
         if (!threat.HasValue)
@@ -437,6 +460,29 @@ public class Animal : LivingEntity
 
         // closer distance = higher fear, max 100
         fearLevel = 100.0 - Mathf.Clamp((float)distance, 0f, 100f);
+    }
+
+    // fear method for predators
+    public Animal DetectRivalPredators()
+    {
+
+        if (!isPredator) return null;
+
+        List<LivingEntity> visible = visibleEntities;
+
+        List<Animal> rivals = visible
+            .Where(e => e != null)
+            .OfType<Animal>()
+            .Where(a => a != this && a.isPredator && a.specieName != this.specieName && a.currentTarget == this)
+            .ToList();
+        if (rivals.Count == 0) return null;
+
+        Animal closestPredator = rivals
+            .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
+            .First();
+
+        return closestPredator;
+
     }
 
 
@@ -858,7 +904,7 @@ public void Flee(Vector3 threat)
         return visibleEntities
             .Where(e => e != null)                // filter out destroyed UnityEngine.Objects early
             .OfType<Animal>()                     // cast to Animal safely
-            .Where(a => a != this && a.specieName != this.specieName && !a.isPredator)
+            .Where(a => a != this && a.specieName != this.specieName )
             .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
             .FirstOrDefault();
 

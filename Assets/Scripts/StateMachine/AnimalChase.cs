@@ -16,7 +16,8 @@ public class AnimalChase : BaseState<AnimalStateMachine.AnimalState>
     public override void EnterState()
     {
         Debug.Log("Entering Chase");
-        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is chasing.");
+        
+        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is chasing {_animal.currentTarget.specieName}.");
         _animal.currentState = "Chase";
 
         if ( _animal.GetTarget() != null) target = _animal.GetTarget();

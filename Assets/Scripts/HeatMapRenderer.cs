@@ -142,9 +142,19 @@ public class HeatMapRenderer : MonoBehaviour
 
                 if (weightMap[x, y] > 0)
                 {
+                    // Average the contributing species color
                     Color blended = colorMap[x, y] / weightMap[x, y];
+
+                    // Darken proportionally to overlap count (more paths → darker)
+                    // Tune 'darkenScale' to your dataset; higher value darkens faster.
+                    float darkenScale = 0.08f; // e.g., 12 hits → ~50% toward black
+                    float darkness = Mathf.Clamp01(weightMap[x, y] * darkenScale);
+                    blended = Color.Lerp(blended, Color.black, darkness);
+
+                    // Keep a consistent overlay strength
                     blended.a = 0.75f;
 
+                    // Compose over background
                     Color finalC = Color.Lerp(baseC, blended, blended.a);
                     tex.SetPixel(x, y, finalC);
                 }

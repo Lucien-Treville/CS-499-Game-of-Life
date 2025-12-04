@@ -27,9 +27,11 @@ public class AnimalFlee : BaseState<AnimalStateMachine.AnimalState>
 
     public override void UpdateState()
     {
-        _animal.UpdateFear();
         Vector3 threat = _animal.GetThreat();
         _animal.Flee(threat);
+       // _animal.UpdateFear();
+
+       
 
 
     }
