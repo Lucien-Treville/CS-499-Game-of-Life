@@ -477,26 +477,67 @@ public class Animal : LivingEntity
          if (this.threat != null) return this.threat;
          return Vector3.zero;
     }
+public void Flee(Vector3 threat)
+{
+    if (agent == null) return;
 
-    public void Flee(Vector3 threat)
+    // 1. Calculate default direction away from the threat
+    Vector3 currentPos = transform.position;
+    Vector3 fleeDir = (currentPos - threat).normalized;
+
+    // 2. DEFINE BOUNDS & CENTER
+    // Hardcoded based on your map: X[-22 to 75], Z[-83 to 14]
+    float minX = -22f; float maxX = 75f;
+    float minZ = -83f; float maxZ = 14f;
+    Vector3 mapCenter = new Vector3(26.5f, currentPos.y, -34.5f); // Approx center
+
+    // 3. PREDICT & CORRECT
+    // Look ahead 5 units. If that point is off-map, we are cornering ourselves.
+    Vector3 predictedPos = currentPos + (fleeDir * 5f);
+
+    if (predictedPos.x < minX || predictedPos.x > maxX || predictedPos.z < minZ || predictedPos.z > maxZ)
     {
-        if (agent == null) return;
+        // WALL AVOIDANCE STRATEGY 🛡️
+        // Calculate a vector pointing to the safety of the map center
+        Vector3 toCenter = (mapCenter - currentPos).normalized;
 
-        // 1. Direction away from the threat
-        Vector3 fleeDir = (transform.position - threat).normalized;
-
-        // 2. Create a temporary target far in that direction
-        Vector3 fleeTarget = transform.position + fleeDir * 1.1f; // large number to just move away
-
-        // 3. Project target onto NavMesh
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(fleeTarget, out hit, 100f, NavMesh.AllAreas))
-            fleeTarget = hit.position;
-
-        // 4. Set NavMeshAgent destination
-        agent.speed = (float)movementSpeed;
-        agent.SetDestination(fleeTarget);
+        // Blend the two directions:
+        // "Run away from threat" + "Run towards center"
+        // This creates a curved path that strafes along the wall rather than ramming it
+        fleeDir = (fleeDir + toCenter).normalized;
     }
+
+    // 4. Set the final target
+    // We use a shorter distance (5f) so they update their steering frequently
+    Vector3 fleeTarget = currentPos + fleeDir * 5f; 
+
+    // 5. Project onto NavMesh and Go
+    NavMeshHit hit;
+    if (NavMesh.SamplePosition(fleeTarget, out hit, 5f, NavMesh.AllAreas))
+    {
+        agent.speed = (float)movementSpeed * 1.5f; // Optional: Sprint speed!
+        agent.SetDestination(hit.position);
+    }
+}
+    // public void Flee(Vector3 threat)
+    // {
+    //     if (agent == null) return;
+
+    //     // 1. Direction away from the threat
+    //     Vector3 fleeDir = (transform.position - threat).normalized;
+
+    //     // 2. Create a temporary target far in that direction
+    //     Vector3 fleeTarget = transform.position + fleeDir * 1.1f; // large number to just move away
+
+    //     // 3. Project target onto NavMesh
+    //     NavMeshHit hit;
+    //     if (NavMesh.SamplePosition(fleeTarget, out hit, 100f, NavMesh.AllAreas))
+    //         fleeTarget = hit.position;
+
+    //     // 4. Set NavMeshAgent destination
+    //     agent.speed = (float)movementSpeed;
+    //     agent.SetDestination(fleeTarget);
+    // }
 
     public Animal FindBreedTarget()
     {

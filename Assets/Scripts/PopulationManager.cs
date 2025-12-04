@@ -152,6 +152,8 @@ public class PopulationManager : MonoBehaviour
     // ============================================================
     public void InitializeSpecies(string speciesName, int count)
     {
+
+        
         if (populationData.ContainsKey(speciesName))
         {
             populationData[speciesName].currentCount += count;
