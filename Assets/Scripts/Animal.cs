@@ -171,7 +171,12 @@ public class Animal : LivingEntity
         
        
         // need to decrement hungerLevel over time
-        hungerLevel -= Time.fixedDeltaTime *0.5; // Decrease hunger over time
+        if (isPredator) {
+            hungerLevel -= Time.fixedDeltaTime *0.75;
+        }
+        else {
+            hungerLevel -= Time.fixedDeltaTime *0.5; // Decrease hunger over time
+        }
         thirstLevel -= Time.fixedDeltaTime *0.5; // Decrease thirst over time (thirst depletes faster)
     }
 

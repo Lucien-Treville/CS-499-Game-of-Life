@@ -709,7 +709,7 @@ Transform:
   m_GameObject: {fileID: 3675120535733322185}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_Children:
   - {fileID: 8706590899832845699}
   - {fileID: 627675254353680333}
@@ -725,7 +725,7 @@ CharacterController:
   m_GameObject: {fileID: 3675120535733322185}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Height: 1.44
   m_Radius: 1.13
@@ -811,6 +811,7 @@ MonoBehaviour:
   height: 0
   nourishmentValue: 0
   instanceID: 0
+  corpseHealth: 0
   isDead: 0
   isCorpse: 0
   currentState: 
@@ -837,7 +838,7 @@ MonoBehaviour:
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
-  visionRange: 80
+  visionRange: 100
   visionAngle: 320
   visionInterval: 3
   visibleEntities: []
@@ -848,7 +849,7 @@ MonoBehaviour:
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
   mate: {fileID: 0}
-  threat: {fileID: 0}
+  threat: {x: 0, y: 0, z: 0}
   currentStage: 0
   livingEntityMask:
     serializedVersion: 2

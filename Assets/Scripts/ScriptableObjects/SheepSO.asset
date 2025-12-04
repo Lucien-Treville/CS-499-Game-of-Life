@@ -15,7 +15,7 @@ MonoBehaviour:
   animalPrefab: {fileID: 7759776975684516640, guid: 68b8e4aecf045ca43977335855d6c6c0, type: 3}
   specieName: Sheep
   movementSpeedGene:
-  - 5
+  - 6
   - 1
   breedTimerGene:
   - 20

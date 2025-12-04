@@ -15,7 +15,7 @@ MonoBehaviour:
   animalPrefab: {fileID: 3675120535733322185, guid: 6dd6b349f33c277418eb31893a02eaf8, type: 3}
   specieName: Horse
   movementSpeedGene:
-  - 6
+  - 8
   - 2
   breedTimerGene:
   - 20

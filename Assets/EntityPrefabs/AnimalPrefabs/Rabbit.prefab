@@ -698,7 +698,7 @@ MonoBehaviour:
   thirstThreshold: 40
   fleeThreshold: 0
   sleepThreshold: 0
-  visionRange: 80
+  visionRange: 100
   visionAngle: 320
   visionInterval: 3
   visibleEntities: []
