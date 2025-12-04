@@ -637,6 +637,7 @@ MonoBehaviour:
   height: 0
   nourishmentValue: 0
   instanceID: 0
+  corpseHealth: 0
   isDead: 0
   isCorpse: 0
   currentState: 
@@ -663,7 +664,7 @@ MonoBehaviour:
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
-  visionRange: 6
+  visionRange: 100
   visionAngle: 150
   visionInterval: 2
   visibleEntities: []
@@ -674,7 +675,7 @@ MonoBehaviour:
   currentTargetPos: {fileID: 0}
   _machine: {fileID: 0}
   mate: {fileID: 0}
-  threat: {fileID: 0}
+  threat: {x: 0, y: 0, z: 0}
   currentStage: 0
   livingEntityMask:
     serializedVersion: 2
