@@ -18,7 +18,7 @@ public class AnimalIdle : BaseState<AnimalStateMachine.AnimalState>
         // Debug.Log("Entering Idle");
         // Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) is idle.");
         _animal.ClearTarget();
-        _animal.ClearMate();
+     //   _animal.ClearMate();
         _animal.currentState = "Idle";
     }
 

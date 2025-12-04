@@ -3,6 +3,7 @@
 // File Created: 09/16/2025
 // Description: This file contains the class implementation for Grazers, inheriting from Animal.
 
+using System;
 using UnityEngine;
 using UnityEngineInternal;
 using Dist = MathNet.Numerics.Distributions; // For normal distribution sampling
@@ -32,7 +33,8 @@ public class Grazer : Animal
             genes.heightGene = speciesGeneData.heightGene;
             genes.healthGene = speciesGeneData.healthGene;
             genes.movementSpeedGene = speciesGeneData.movementSpeedGene;
-            genes.reproductionChanceGene = speciesGeneData.reproductionChanceGene;
+            genes.breedTimerGene = speciesGeneData.breedTimerGene;
+            genes.litterSizeGene = speciesGeneData.litterSizeGene;
             genes.specieName = speciesGeneData.specieName;
             genes.hungerThresholdGene = speciesGeneData.hungerThresholdGene;
             genes.thirstThresholdGene = speciesGeneData.thirstThresholdGene;
@@ -46,7 +48,9 @@ public class Grazer : Animal
 
         specieName = genes.specieName;
         movementSpeed = Dist.Normal.Sample(genes.movementSpeedGene[0], genes.movementSpeedGene[1]);
-        reproductionChance = Dist.Normal.Sample(genes.reproductionChanceGene[0], genes.reproductionChanceGene[1]);
+        double breedTimerDBL = Dist.Normal.Sample(genes.breedTimerGene[0], genes.breedTimerGene[1]);
+        breedCooldown = (float)breedTimerDBL;
+        litterSize = (int)System.Math.Round(Dist.Normal.Sample(genes.litterSizeGene[0], genes.litterSizeGene[1]));
         attackStrength = Dist.Normal.Sample(genes.attackStrengthGene[0], genes.attackStrengthGene[1]);
         height = Dist.Normal.Sample(genes.heightGene[0], genes.heightGene[1]);
         health = Dist.Normal.Sample(genes.healthGene[0], genes.healthGene[1]);
@@ -55,8 +59,8 @@ public class Grazer : Animal
         // NEW: initialize thresholds from genes (clamped to sensible ranges)
         hungerThreshold = System.Math.Max(1.0, System.Math.Min(99.0, Dist.Normal.Sample(genes.hungerThresholdGene[0], genes.hungerThresholdGene[1])));
         thirstThreshold = System.Math.Max(1.0, System.Math.Min(99.0, Dist.Normal.Sample(genes.thirstThresholdGene[0], genes.thirstThresholdGene[1])));
-        fleeThreshold   = System.Math.Max(0.0, System.Math.Min(100.0, Dist.Normal.Sample(genes.fleeThresholdGene[0], genes.fleeThresholdGene[1])));
-        sleepThreshold  = System.Math.Max(0.0, System.Math.Min(100.0, Dist.Normal.Sample(genes.sleepThresholdGene[0], genes.sleepThresholdGene[1])));
+        fleeThreshold = System.Math.Max(0.0, System.Math.Min(100.0, Dist.Normal.Sample(genes.fleeThresholdGene[0], genes.fleeThresholdGene[1])));
+        sleepThreshold = System.Math.Max(0.0, System.Math.Min(100.0, Dist.Normal.Sample(genes.sleepThresholdGene[0], genes.sleepThresholdGene[1])));
     }
 
     protected override void FixedUpdate()

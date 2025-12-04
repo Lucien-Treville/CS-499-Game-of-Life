@@ -645,12 +645,15 @@ MonoBehaviour:
   thirstLevel: 0
   sleepLevel: 0
   fearLevel: 0
-  reproductionChance: 0
   attackStrength: 70
   isPredator: 1
   isBreedable: 0
   isBreeding: 0
   hasLaunchedOffspring: 0
+  litterSize: 0
+  litterCounter: 0
+  breedCooldown: 20
+  timeSinceLastBreed: 0
   isHungry: 0
   isThirsty: 0
   isSleepy: 0
@@ -661,8 +664,8 @@ MonoBehaviour:
   fleeThreshold: 0
   sleepThreshold: 0
   visionRange: 6
-  visionAngle: 120
-  visionInterval: 5
+  visionAngle: 150
+  visionInterval: 2
   visibleEntities: []
   watersources: []
   agent: {fileID: 0}
@@ -679,8 +682,8 @@ MonoBehaviour:
   waterMask:
     serializedVersion: 2
     m_Bits: 0
-  defaultVisionRange: 70
-  defaultVisionAngle: 140
+  defaultVisionRange: 90
+  defaultVisionAngle: 260
   attackRange: 2
   attackCooldown: 1
   eatCooldown: 1

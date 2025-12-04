@@ -57,11 +57,11 @@ public class AnimalAttack : BaseState<AnimalStateMachine.AnimalState>
         {
             return AnimalStateMachine.AnimalState.Idle;
         }
-        if (_target.isCorpse && distanceToTarget < 2f && distanceToTarget != -1f) return AnimalStateMachine.AnimalState.Eat;
+        if (_target.isCorpse && distanceToTarget < 5f && distanceToTarget != -1f) return AnimalStateMachine.AnimalState.Eat;
 
 
 
-        if (distanceToTarget > 2f && distanceToTarget != -1f) // Adjust threshold as needed
+        if (distanceToTarget > 5f && distanceToTarget != -1f) // Adjust threshold as needed
         {
             return AnimalStateMachine.AnimalState.Chase;
         }

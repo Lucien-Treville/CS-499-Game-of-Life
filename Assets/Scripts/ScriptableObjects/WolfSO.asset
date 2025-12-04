@@ -17,9 +17,12 @@ MonoBehaviour:
   movementSpeedGene:
   - 4
   - 1
-  reproductionChanceGene:
-  - 0.1
-  - 0.025
+  breedTimerGene:
+  - 20
+  - 1
+  litterSizeGene:
+  - 4
+  - 0.5
   attackStrengthGene:
   - 10
   - 5

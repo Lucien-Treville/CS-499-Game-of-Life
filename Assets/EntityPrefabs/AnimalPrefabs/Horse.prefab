@@ -819,12 +819,15 @@ MonoBehaviour:
   thirstLevel: 0
   sleepLevel: 0
   fearLevel: 0
-  reproductionChance: 0
   attackStrength: 0
   isPredator: 0
   isBreedable: 0
   isBreeding: 0
   hasLaunchedOffspring: 0
+  litterSize: 0
+  litterCounter: 0
+  breedCooldown: 20
+  timeSinceLastBreed: 0
   isHungry: 0
   isThirsty: 0
   isSleepy: 0
@@ -834,9 +837,9 @@ MonoBehaviour:
   thirstThreshold: 0
   fleeThreshold: 0
   sleepThreshold: 0
-  visionRange: 50
-  visionAngle: 260
-  visionInterval: 5
+  visionRange: 80
+  visionAngle: 320
+  visionInterval: 3
   visibleEntities: []
   watersources: []
   agent: {fileID: 0}
