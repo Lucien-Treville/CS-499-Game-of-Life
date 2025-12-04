@@ -53,21 +53,12 @@ public class AnimalAttack : BaseState<AnimalStateMachine.AnimalState>
         float distanceToTarget = _animal.GetTargetDistance();
 
         // do NOT transition to Eat � clear the target and return to Idle.
-        if (_target is Animal targetAnimal && targetAnimal.isDead && !_animal.isPredator)
-        {
-            return AnimalStateMachine.AnimalState.Idle;
-        }
-        if (_target.isCorpse && distanceToTarget < 5f && distanceToTarget != -1f) return AnimalStateMachine.AnimalState.Eat;
+        if (_target.isCorpse && distanceToTarget < 2f && distanceToTarget != -1f) return AnimalStateMachine.AnimalState.Eat;
 
-
-
-        if (distanceToTarget > 5f && distanceToTarget != -1f) // Adjust threshold as needed
+        if (distanceToTarget > 2f && distanceToTarget != -1f) // Adjust threshold as needed
         {
             return AnimalStateMachine.AnimalState.Chase;
         }
-
-
-
         return StateKey;
     }
 }

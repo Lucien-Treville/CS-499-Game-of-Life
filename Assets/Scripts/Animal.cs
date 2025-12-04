@@ -19,8 +19,7 @@ public struct AnimalGenes
 
     public double[] nourishmentValueGene;
     public double[] movementSpeedGene;
-    public double[] breedTimerGene;
-    public double[] litterSizeGene;
+    public double[] reproductionChanceGene;
     public double[] attackStrengthGene;
     public double[] heightGene;
     public double[] healthGene;
@@ -56,18 +55,13 @@ public class Animal : LivingEntity
     public double thirstLevel; // 0-100 scale (0 = dying of thirst, 100 = quenched)
     public double sleepLevel; // 0-100 scale (0 = sleep deprived, 100 = rested)
     public double fearLevel; //0-100 scale (0 = safe, 100 = terrified) 
-    // public double reproductionChance; // 0-1 scale
+    public double reproductionChance; // 0-1 scale
     public double attackStrength;
     public bool isPredator; // true if predator
 
     public bool isBreedable = false; // true if looking to breed
     public bool isBreeding = false; // true if currently in breeding process
     public bool hasLaunchedOffspring = false;    // true after this animal initiated offspring spawn recently
-    public int litterSize; // determine size of litter when breeding
-    public int litterCounter = 0;
-    public float breedCooldown = 20f; // seconds between breedable periods
-    public float timeSinceLastBreed = 0f;
-
     public bool isHungry = false;
     public bool isThirsty = false;
     public bool isSleepy = false;
@@ -79,8 +73,6 @@ public class Animal : LivingEntity
     public double thirstThreshold; // determines stage of thirst in which animal will look for drink
     public double fleeThreshold; // determines flee threshold
     public double sleepThreshold; // determines when animal sleeps
-    
-    
 
     public float visionRange; // how far the animal can see
     public float visionAngle; // the angle the animal can see
@@ -94,7 +86,7 @@ public class Animal : LivingEntity
     public Transform currentTargetPos; // food/prey target
     public AnimalStateMachine _machine;
     public Animal mate = null;
-    public Animal threat = null; // flee "target"
+    public Vector3 threat; // flee "target"
 
     public GrowthStage currentStage;
     // public AnimalState currentState; // not implemented yet, but public variable for other entities to read
@@ -147,7 +139,7 @@ public class Animal : LivingEntity
         currentStage = GrowthStage.Child;
         hungerLevel = 70; // start mostly nourished
         thirstLevel = 70; //
-
+        corpseHealth = nourishmentValue;
 
         // initialize a default state
         // setstate(new RoamingState());
@@ -161,8 +153,8 @@ public class Animal : LivingEntity
         Grow();
         if (hungerLevel < hungerThreshold) isHungry = true; else isHungry = false;
         if (thirstLevel < thirstThreshold) isThirsty = true; else isThirsty = false;
-        if (fearLevel >= fleeThreshold) isScared = true; else isScared = false;
-        if (fearLevel > 0 && fearLevel < fleeThreshold) isAggro = true; else isAggro = false;
+        if (fearLevel > 0 && !isPredator) isScared = true; else isScared = false;
+        //if (fearLevel > 0 && fearLevel < fleeThreshold) isAggro = true; else isAggro = false;
         // sleep bool
 
         if (hungerLevel <= 0 || thirstLevel <= 0)
@@ -203,20 +195,27 @@ public class Animal : LivingEntity
                     GrowCreature();
                     // transform.localScale *= 1.15f;
                     nourishmentValue *= 1.5;
-                    this.timeSinceLastBreed = 30.0f;
                     Debug.Log($"Animal, {specieName}, (ID: {instanceID}) is now in the Adult stage.");
                 }
                 break;
             case GrowthStage.Adult:
-                timeSinceLastBreed += Time.fixedDeltaTime;
-                if (timeSinceLastBreed >= breedCooldown && hungerLevel >= 80 && thirstLevel >= 80)
+                isBreedable = false;
+                if (hungerLevel > 80.0 || thirstLevel > 80.0 || !isBreedable)
                 {
-                    isBreedable = true;
+                    double chance = reproductionChance;
+                    if (chance > 1.0) chance = chance / 100.0;
+
+                    if (Random.value < (float)chance)
+                    {
+                        isBreedable = true;
+                        //Debug.Log($"Animal, {specieName} (ID:{instanceID}) became breedable (roll={chance}).");
+                    }
+
                 }
 
-                // if (hungerLevel < hungerThreshold || thirstLevel < thirstThreshold)
+               // if (hungerLevel < hungerThreshold || thirstLevel < thirstThreshold)
                 //{
-                //  isBreedable = false;
+                  //  isBreedable = false;
                 // }
                 // Implement logic for reproduction
                 // if (hungerLevel > 80)
@@ -244,16 +243,10 @@ public class Animal : LivingEntity
                 Max(0, (p1.movementSpeedGene[1] + p2.movementSpeedGene[1]) / 2 + Dist.Normal.Sample(0, 0.05))
         };
 
-        childGenes.breedTimerGene = new double[]
+        childGenes.reproductionChanceGene = new double[]
         {
-                Max(0, (p1.breedTimerGene[0] + p2.breedTimerGene[0]) / 2 + Dist.Normal.Sample(0, 0.1)),
-                Max(0, (p1.breedTimerGene[1] + p2.breedTimerGene[1]) / 2 + Dist.Normal.Sample(0, 0.05))
-        };
-
-        childGenes.litterSizeGene = new double[]
-        {
-                Max(1, (p1.litterSizeGene[0] + p2.litterSizeGene[0]) / 2 + Dist.Normal.Sample(0, 0.1)),
-                Max(0, (p1.litterSizeGene[1] + p2.litterSizeGene[1]) / 2 + Dist.Normal.Sample(0, 0.05))
+                Max(0, (p1.reproductionChanceGene[0] + p2.reproductionChanceGene[0]) / 2 + Dist.Normal.Sample(0, 0.1)),
+                Max(0, (p1.reproductionChanceGene[1] + p2.reproductionChanceGene[1]) / 2 + Dist.Normal.Sample(0, 0.05))
         };
 
         childGenes.attackStrengthGene = new double[]
@@ -375,6 +368,8 @@ public class Animal : LivingEntity
         }
         Vector3 eyeOrigin = transform.position + Vector3.up * eyeHeight;
 
+    
+
         foreach (var hit in hits)
         {
             LivingEntity e = hit.GetComponent<LivingEntity>();
@@ -418,47 +413,78 @@ public class Animal : LivingEntity
 
     public void UpdateFear()
     {
+        Vector3? threat = DetectThreats();
 
-        threat = DetectThreats();
+        if (!threat.HasValue)
+        {
+            fearLevel = 0;
+            isScared = false;
+            return;
+        }
 
-        if (threat == null) { fearLevel = 0;  return; }
-        
+        double distance = Vector3.Distance(this.transform.position, threat.Value);
 
-
-        // closer distance means higher fear, 100 max
-        double fearValue = ((threat.attackStrength) / this.health) * 100.0;
-        fearValue = Max(0.0, Min(100.0, fearValue));
-
-        fearLevel = fearValue;
-
-        if (fearLevel < fleeThreshold) SetTargetEntity(threat);
-
+        // closer distance = higher fear, max 100
+        fearLevel = 100.0 - Mathf.Clamp((float)distance, 0f, 100f);
     }
 
+
     // looks for the closest predator to determine if fleeing is necessary
-    public Animal DetectThreats()
+    public Vector3? DetectThreats()
     {
-        // if (isPredator) return null;
-
         List<LivingEntity> visible = visibleEntities;
+        if (visible == null || visible.Count == 0)
+            return null;
 
-        if (visible.Count == 0) return null;
-
-        // Filter for predators only
         List<Animal> predators = visible
             .Where(e => e != null)
-            .OfType<Animal>()                         // only animals
-            .Where(a => a != this && a.isPredator && a.specieName != this.specieName && a.currentTarget == this)    // must be predator and not self
+            .OfType<Animal>()
+            .Where(a => a != this && a.isPredator)
             .ToList();
-        if (predators.Count == 0) return null;
 
-        // Return the closest predator
-        Animal closestPredator = predators
-            .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
-            .First();
+        if (predators.Count == 0)
+            return null;
 
-        return closestPredator;
+        var nearest = predators
+            .Where(a => Vector3.SqrMagnitude(a.transform.position - transform.position) < (fleeThreshold/2) * (fleeThreshold/2))
+            .ToList();
 
+        if (nearest.Count == 0)
+            return null;
+
+        Vector3 sum = Vector3.zero;
+        foreach (var p in nearest)
+            sum += p.transform.position;
+
+        return sum / nearest.Count;
+    }
+
+
+
+    public Vector3 GetThreat()
+    {
+         if (this.threat != null) return this.threat;
+         return Vector3.zero;
+    }
+
+    public void Flee(Vector3 threat)
+    {
+        if (agent == null) return;
+
+        // 1. Direction away from the threat
+        Vector3 fleeDir = (transform.position - threat).normalized;
+
+        // 2. Create a temporary target far in that direction
+        Vector3 fleeTarget = transform.position + fleeDir * 1.1f; // large number to just move away
+
+        // 3. Project target onto NavMesh
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(fleeTarget, out hit, 100f, NavMesh.AllAreas))
+            fleeTarget = hit.position;
+
+        // 4. Set NavMeshAgent destination
+        agent.speed = (float)movementSpeed;
+        agent.SetDestination(fleeTarget);
     }
 
     public Animal FindBreedTarget()
@@ -626,98 +652,92 @@ public class Animal : LivingEntity
             return;
         }
 
-        for (int j = 0; j < this.litterSize; j++)
+        bool foundSpot = false;
+        Vector3 spawnPos = Vector3.zero;
+
+        // Try multiple random nearby candidates (same approach Plant uses)
+        for (int i = 0; i < 10; i++)
         {
-            bool foundSpot = false;
-            Vector3 spawnPos = Vector3.zero;
+            Vector2 randomCircle = Random.insideUnitCircle * 3f;
+            Vector3 candidate = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
+            candidate = mapLoader.GetValidSpawnPoint(candidate.x, candidate.z, prefab, 2);
 
-            // Try multiple random nearby candidates (same approach Plant uses)
-            for (int i = 0; i < 10; i++)
+            NavMeshHit hit;
+            if (!NavMesh.SamplePosition(candidate, out hit, 1.0f, NavMesh.AllAreas))
             {
-                Vector2 randomCircle = Random.insideUnitCircle * 3f;
-                Vector3 candidate = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
-                candidate = mapLoader.GetValidSpawnPoint(candidate.x, candidate.z, prefab, 2);
-
-                NavMeshHit hit;
-                if (!NavMesh.SamplePosition(candidate, out hit, 1.0f, NavMesh.AllAreas))
-                {
-                    Debug.Log($"Breed() candidate #{i} NavMesh.SamplePosition failed at {candidate}");
-                    continue;
-                }
-
-                Vector3 candidateOnNav = hit.position;
-                int mask = LayerMask.GetMask("LivingEntity");
-                bool overlap = Physics.CheckSphere(candidateOnNav, 3f, mask);
-
-                Debug.Log($"Breed() candidate #{i} pos={candidateOnNav} overlap={overlap}");
-                if (!overlap)
-                {
-                    spawnPos = candidateOnNav;
-                    foundSpot = true;
-                    break;
-                }
-            }
-
-            // Fallback to midpoint between parents if no free spot found
-            if (!foundSpot)
-            {
-                Vector3 midpoint = (parent1.transform.position + parent2.transform.position) * 0.5f;
-                NavMeshHit midHit;
-                if (NavMesh.SamplePosition(midpoint, out midHit, 5f, NavMesh.AllAreas))
-                {
-                    spawnPos = midHit.position;
-                    Debug.LogWarning($"Breed(): fallback to parents' midpoint at {spawnPos}");
-                    foundSpot = true;
-                }
-                else
-                {
-                    Debug.LogError("Breed(): no valid spawn point found; aborting spawn.");
-                    continue;
-                }
-            }
-
-            // Instantiate inactive so we can configure before child's Start/logic runs
-            GameObject childGO = Instantiate(prefab, spawnPos, Quaternion.identity);
-            childGO.SetActive(false);
-
-            // Optional: give unique name to track in logs/hierarchy
-            childGO.name = $"{prefab.name}_child_{System.DateTime.UtcNow.Ticks % 100000}_{parent1.instanceID}_{parent2.instanceID}";
-
-            // Configure Animal component
-            Animal child = childGO.GetComponent<Animal>();
-            if (child == null)
-            {
-                Debug.LogError($"Breed failed: instantiated prefab '{childGO.name}' has no Animal component.");
-                Destroy(childGO);
+                Debug.Log($"Breed() candidate #{i} NavMesh.SamplePosition failed at {candidate}");
                 continue;
             }
 
-            // Assign parent genes so child's Start() can average them if needed
-            child.parent1Genes = parent1.genes;
-            child.parent2Genes = parent2.genes;
+            Vector3 candidateOnNav = hit.position;
+            int mask = LayerMask.GetMask("LivingEntity");
+            bool overlap = Physics.CheckSphere(candidateOnNav, 3f, mask);
 
-            // Ensure sensible runtime defaults (prevent immediate death / invalid state)
-
-
-            // Remove any accidental parenting (prevents container cleanup from destroying children)
-            if (childGO.transform.parent != null)
-                childGO.transform.SetParent(null);
-
-            // Remove any embedded AnimalStateMachine on prefab instance (we will let child's Start create it)
-            var existingSM = childGO.GetComponent<AnimalStateMachine>();
-            if (existingSM != null) Destroy(existingSM);
-
-
-
-            childGO.SetActive(true);
-
-            if (PopulationManager.Instance != null)
-                PopulationManager.Instance.UpdateCount(this.specieName, 1);
-
-            Debug.Log($"Breed: spawned {child.specieName} (ID:{child.instanceID}, name:{childGO.name}) at {spawnPos}");
+            Debug.Log($"Breed() candidate #{i} pos={candidateOnNav} overlap={overlap}");
+            if (!overlap)
+            {
+                spawnPos = candidateOnNav;
+                foundSpot = true;
+                break;
+            }
         }
-    }
 
+        // Fallback to midpoint between parents if no free spot found
+        if (!foundSpot)
+        {
+            Vector3 midpoint = (parent1.transform.position + parent2.transform.position) * 0.5f;
+            NavMeshHit midHit;
+            if (NavMesh.SamplePosition(midpoint, out midHit, 5f, NavMesh.AllAreas))
+            {
+                spawnPos = midHit.position;
+                Debug.LogWarning($"Breed(): fallback to parents' midpoint at {spawnPos}");
+                foundSpot = true;
+            }
+            else
+            {
+                Debug.LogError("Breed(): no valid spawn point found; aborting spawn.");
+                return;
+            }
+        }
+
+        // Instantiate inactive so we can configure before child's Start/logic runs
+        GameObject childGO = Instantiate(prefab, spawnPos, Quaternion.identity);
+        childGO.SetActive(false);
+
+        // Optional: give unique name to track in logs/hierarchy
+        childGO.name = $"{prefab.name}_child_{System.DateTime.UtcNow.Ticks % 100000}_{parent1.instanceID}_{parent2.instanceID}";
+
+        // Configure Animal component
+        Animal child = childGO.GetComponent<Animal>();
+        if (child == null)
+        {
+            Debug.LogError($"Breed failed: instantiated prefab '{childGO.name}' has no Animal component.");
+            Destroy(childGO);
+            return;
+        }
+
+        // Assign parent genes so child's Start() can average them if needed
+        child.parent1Genes = parent1.genes;
+        child.parent2Genes = parent2.genes;
+
+        // Ensure sensible runtime defaults (prevent immediate death / invalid state)
+
+
+        // Remove any accidental parenting (prevents container cleanup from destroying children)
+        if (childGO.transform.parent != null)
+            childGO.transform.SetParent(null);
+
+        // Remove any embedded AnimalStateMachine on prefab instance (we will let child's Start create it)
+        var existingSM = childGO.GetComponent<AnimalStateMachine>();
+        if (existingSM != null) Destroy(existingSM);
+
+        childGO.SetActive(true);
+
+        if (PopulationManager.Instance != null)
+            PopulationManager.Instance.UpdateCount(this.specieName, 1);
+
+        Debug.Log($"Breed: spawned {child.specieName} (ID:{child.instanceID}, name:{childGO.name}) at {spawnPos}");
+    }
 
     void GrowCreature()
     {
@@ -781,7 +801,7 @@ public class Animal : LivingEntity
         return visibleEntities
             .Where(e => e != null)                // filter out destroyed UnityEngine.Objects early
             .OfType<Animal>()                     // cast to Animal safely
-            .Where(a => a != this && a.specieName != this.specieName)
+            .Where(a => a != this && a.specieName != this.specieName && !a.isPredator)
             .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
             .FirstOrDefault();
 
@@ -815,12 +835,6 @@ public class Animal : LivingEntity
 
     // If the target became a corpse and is no longer edible/interesting,
     // clear it so the state machine can move on.
-    if (currentTarget.isCorpse)
-    {
-        currentTarget = null;
-        currentTargetPos = null;
-        return null;
-    }
 
     return currentTarget;
 }
@@ -854,23 +868,14 @@ public class Animal : LivingEntity
         return -1f;
     }
 
-   
-
-  
-
-   
-   
-
     public void PursueTargetTransform(Transform t)
     {
-        if (Vector3.Distance(t.position, transform.position) < 1) return;
-
         if (agent != null)
             agent.speed = (float)movementSpeed;
         agent.SetDestination(t.position);
     }
 
-private float wanderTimer = 0f;
+    private float wanderTimer = 0f;
     private float wanderInterval = .25f; // Retarget every 1 seconds max
 
     public void Wander()
@@ -931,37 +936,11 @@ private float wanderTimer = 0f;
         agent.SetDestination(targetPos);
     }
 
-    public Transform GetThreat()
-    {
-        if (this.threat != null) return this.threat.transform;
-        return null;
-    }
-
-    public void Flee(Transform threat)
-    {
-        if (agent == null || threat == null) return;
-
-        // 1. Direction away from the threat
-        Vector3 fleeDir = (transform.position - threat.position).normalized;
-
-        // 2. Create a temporary target far in that direction
-        Vector3 fleeTarget = transform.position + fleeDir * 10f; // large number to just move away
-
-        // 3. Project target onto NavMesh
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(fleeTarget, out hit, 100f, NavMesh.AllAreas))
-            fleeTarget = hit.position;
-
-        // 4. Set NavMeshAgent destination
-        agent.speed = (float)movementSpeed;
-        agent.SetDestination(fleeTarget);
-    }
-
     public void AttackAnimal(LivingEntity animalTarget)
     {
         if (animalTarget == null) return;
         if ((UnityEngine.Object)animalTarget == null) return; // Unity destroyed check
-        // if (animalTarget.isDead || animalTarget.isCorpse) return;
+        if (animalTarget.isDead || animalTarget.isCorpse) Eat(animalTarget);
 
         // Use Time.time → cooldown scales with simulation speed (Time.timeScale).
         // If you want cooldown to ignore your speed slider, switch to Time.unscaledTime below.
@@ -978,81 +957,32 @@ private float wanderTimer = 0f;
     }
 
     public void Eat(LivingEntity food)
-{
-    if (food == null) return;
-
-    float now = Time.time;
-    if (now < _nextEatTime) return;   // respect bite cooldown
-
-    // If it's already a corpse with no nourishment left, drop it.
-    if (food.isCorpse && food.nourishmentValue <= 0.0)
     {
-        ClearTarget();
-        return;
-    }
+        if (food == null) return;
+     //   float now = Time.time;
+       // if (now < _nextEatTime) return;
 
-    double gainedNourishment = 0.0;
-
-    if (food is Plant plant)
-    {
-        if (plant.nourishmentValue <= 0.0)
+        if (food is Plant plant)
         {
-            // Nothing left to eat
-            ClearTarget();
-            return;
-        }
-
-        // Take a 50% "bite" of the remaining nourishment
-        double bite = plant.nourishmentValue * 0.5;
-
-        gainedNourishment = bite;
-
-        // Reduce plant nourishment
-        plant.nourishmentValue -= bite;
-
-        // Apply gains to this animal
-        hungerLevel = System.Math.Min(100.0, hungerLevel + gainedNourishment);
-        // small thirst benefit from eating plants
-        thirstLevel = System.Math.Min(100.0, thirstLevel + gainedNourishment * 0.2);
-
-        // If plant is fully consumed, mark it as eaten and remove it
-        if (plant.nourishmentValue <= 0.0)
-        {
-            plant.Eaten();         // sets isDead/isCorpse & updates populations
-            plant.RemoveCorpse();  // actually destroys the GameObject
-            ClearTarget();         // stop targeting this plant
-        }
-    }
-    else if (food is Animal prey)
-    {
-        if (prey.nourishmentValue <= 0.0)
-        {
-            // Nothing left to eat
-            ClearTarget();
-            return;
-        }
-
-        // Smaller bite fraction for prey to avoid instant consumption
-        double bite = prey.nourishmentValue * 0.1;
-
-        gainedNourishment = bite;
-
-        prey.nourishmentValue -= bite;
-
-        hungerLevel = System.Math.Min(100.0, hungerLevel + gainedNourishment);
-        thirstLevel = System.Math.Min(100.0, thirstLevel + gainedNourishment * 0.2);
-
-        // If this is a corpse and we've fully stripped its nourishment, remove it
-        if (prey.isCorpse && prey.nourishmentValue <= 0.0)
-        {
-            prey.RemoveCorpse();
+            
+            hungerLevel = Min(100.0, hungerLevel + (plant.nourishmentValue ));
+            thirstLevel = Min(100.0, thirstLevel + (plant.nourishmentValue)) * 0.2;
+          //  plant.nourishmentValue -= plant.nourishmentValue * 0.5;
+           // if (plant.nourishmentValue <= 0)
+            plant.RemoveCorpse(); // consume the plant
             ClearTarget();
         }
-    }
+        else if (food is Animal prey)
+        {
+            hungerLevel = Min(100.0, hungerLevel + (prey.nourishmentValue));
+            thirstLevel = Min(100.0, thirstLevel + (prey.nourishmentValue)) * 0.2;
+           // prey.nourishmentValue -= prey.nourishmentValue * 0.1;
+            // if (prey.nourishmentValue <= 0)
+            prey.RemoveCorpse(); // consume the prey
+            ClearTarget();
 
-    // Schedule next bite
-    _nextEatTime = now + eatCooldown;
-}
+        }
+    }
 
     public void Drink()
     {
