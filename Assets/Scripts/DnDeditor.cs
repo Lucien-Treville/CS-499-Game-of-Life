@@ -53,6 +53,7 @@ public class DnDeditor : MonoBehaviour
         // update population manager stats
         foreach (var specie in PopulationManager.Instance.populationData.Keys)
         {
+            PopulationManager.Instance.populationData[specie].minRecorded = PopulationManager.Instance.populationData[specie].currentCount;
             PopulationManager.Instance.populationData[specie].UpdateStats();
         }
     }
