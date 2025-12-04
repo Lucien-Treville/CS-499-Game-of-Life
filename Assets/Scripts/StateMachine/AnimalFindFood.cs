@@ -67,22 +67,7 @@ public class AnimalFindFood : BaseState<AnimalStateMachine.AnimalState>
         }
 
         // We have a valid target.
-        // If it's a Plant, we can go straight to Eat once in range.
-        float dist = _animal.GetTargetDistance();
-
-        if (_target is Plant)
-        {
-            // Close enough to eat
-            if (dist >= 0f && dist <= 2.0f)
-                return AnimalStateMachine.AnimalState.Eat;
-
-            // Not close yet → chase it
-            return AnimalStateMachine.AnimalState.Chase;
-        }
-        else
-        {
-            // Non-plant food (predators, etc.) → let Chase/Attack handle details.
-            return AnimalStateMachine.AnimalState.Chase;
-        }
+        return AnimalStateMachine.AnimalState.Chase;
+        
     }
 }

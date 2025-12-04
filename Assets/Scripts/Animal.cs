@@ -139,7 +139,7 @@ public class Animal : LivingEntity
         currentStage = GrowthStage.Child;
         hungerLevel = 70; // start mostly nourished
         thirstLevel = 70; //
-
+        corpseHealth = nourishmentValue;
 
         // initialize a default state
         // setstate(new RoamingState());
@@ -208,7 +208,7 @@ public class Animal : LivingEntity
                     if (Random.value < (float)chance)
                     {
                         isBreedable = true;
-                        Debug.Log($"Animal, {specieName} (ID:{instanceID}) became breedable (roll={chance}).");
+                        //Debug.Log($"Animal, {specieName} (ID:{instanceID}) became breedable (roll={chance}).");
                     }
 
                 }
@@ -367,6 +367,8 @@ public class Animal : LivingEntity
             eyeHeight = 0.5f;
         }
         Vector3 eyeOrigin = transform.position + Vector3.up * eyeHeight;
+
+    
 
         foreach (var hit in hits)
         {
@@ -833,12 +835,6 @@ public class Animal : LivingEntity
 
     // If the target became a corpse and is no longer edible/interesting,
     // clear it so the state machine can move on.
-    if (currentTarget.isCorpse)
-    {
-        currentTarget = null;
-        currentTargetPos = null;
-        return null;
-    }
 
     return currentTarget;
 }
@@ -951,7 +947,7 @@ public class Animal : LivingEntity
     {
         if (animalTarget == null) return;
         if ((UnityEngine.Object)animalTarget == null) return; // Unity destroyed check
-        if (animalTarget.isDead || animalTarget.isCorpse) return;
+        if (animalTarget.isDead || animalTarget.isCorpse) Eat(animalTarget);
 
         // Use Time.time → cooldown scales with simulation speed (Time.timeScale).
         // If you want cooldown to ignore your speed slider, switch to Time.unscaledTime below.
@@ -968,81 +964,32 @@ public class Animal : LivingEntity
     }
 
     public void Eat(LivingEntity food)
-{
-    if (food == null) return;
-
-    float now = Time.time;
-    if (now < _nextEatTime) return;   // respect bite cooldown
-
-    // If it's already a corpse with no nourishment left, drop it.
-    if (food.isCorpse && food.nourishmentValue <= 0.0)
     {
-        ClearTarget();
-        return;
-    }
+        if (food == null) return;
+     //   float now = Time.time;
+       // if (now < _nextEatTime) return;
 
-    double gainedNourishment = 0.0;
-
-    if (food is Plant plant)
-    {
-        if (plant.nourishmentValue <= 0.0)
+        if (food is Plant plant)
         {
-            // Nothing left to eat
-            ClearTarget();
-            return;
-        }
-
-        // Take a 50% "bite" of the remaining nourishment
-        double bite = plant.nourishmentValue * 0.5;
-
-        gainedNourishment = bite;
-
-        // Reduce plant nourishment
-        plant.nourishmentValue -= bite;
-
-        // Apply gains to this animal
-        hungerLevel = System.Math.Min(100.0, hungerLevel + gainedNourishment);
-        // small thirst benefit from eating plants
-        thirstLevel = System.Math.Min(100.0, thirstLevel + gainedNourishment * 0.2);
-
-        // If plant is fully consumed, mark it as eaten and remove it
-        if (plant.nourishmentValue <= 0.0)
-        {
-            plant.Eaten();         // sets isDead/isCorpse & updates populations
-            plant.RemoveCorpse();  // actually destroys the GameObject
-            ClearTarget();         // stop targeting this plant
-        }
-    }
-    else if (food is Animal prey)
-    {
-        if (prey.nourishmentValue <= 0.0)
-        {
-            // Nothing left to eat
-            ClearTarget();
-            return;
-        }
-
-        // Smaller bite fraction for prey to avoid instant consumption
-        double bite = prey.nourishmentValue * 0.1;
-
-        gainedNourishment = bite;
-
-        prey.nourishmentValue -= bite;
-
-        hungerLevel = System.Math.Min(100.0, hungerLevel + gainedNourishment);
-        thirstLevel = System.Math.Min(100.0, thirstLevel + gainedNourishment * 0.2);
-
-        // If this is a corpse and we've fully stripped its nourishment, remove it
-        if (prey.isCorpse && prey.nourishmentValue <= 0.0)
-        {
-            prey.RemoveCorpse();
+            
+            hungerLevel = Min(100.0, hungerLevel + (plant.nourishmentValue ));
+            thirstLevel = Min(100.0, thirstLevel + (plant.nourishmentValue)) * 0.2;
+          //  plant.nourishmentValue -= plant.nourishmentValue * 0.5;
+           // if (plant.nourishmentValue <= 0)
+            plant.RemoveCorpse(); // consume the plant
             ClearTarget();
         }
-    }
+        else if (food is Animal prey)
+        {
+            hungerLevel = Min(100.0, hungerLevel + (prey.nourishmentValue));
+            thirstLevel = Min(100.0, thirstLevel + (prey.nourishmentValue)) * 0.2;
+           // prey.nourishmentValue -= prey.nourishmentValue * 0.1;
+            // if (prey.nourishmentValue <= 0)
+            prey.RemoveCorpse(); // consume the prey
+            ClearTarget();
 
-    // Schedule next bite
-    _nextEatTime = now + eatCooldown;
-}
+        }
+    }
 
     public void Drink()
     {

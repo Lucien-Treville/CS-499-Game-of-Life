@@ -15,7 +15,7 @@ public class AnimalFindMate : BaseState<AnimalStateMachine.AnimalState>
     }
     public override void EnterState()
     {
-        Debug.Log("Entering FindMate");
+        //Debug.Log("Entering FindMate");
         _mate = null;
         _animal.currentState = "FindMate";
 
@@ -24,7 +24,7 @@ public class AnimalFindMate : BaseState<AnimalStateMachine.AnimalState>
 
     public override void ExitState()
     {
-        Debug.Log("Exiting FindMate");
+        //Debug.Log("Exiting FindMate");
 
 
     }
@@ -44,7 +44,7 @@ public class AnimalFindMate : BaseState<AnimalStateMachine.AnimalState>
 
     public override AnimalStateMachine.AnimalState GetNextState()
     {
-        Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) [FindMateCheck] hunger={_animal.hungerLevel:F1} thr={_animal.hungerThreshold:F1}");
+        //Debug.Log($"{_animal.specieName} (ID: {_animal.instanceID}) [FindMateCheck] hunger={_animal.hungerLevel:F1} thr={_animal.hungerThreshold:F1}");
 
         // if dead, DIE
         if (_animal.isDead) return AnimalStateMachine.AnimalState.Dead;

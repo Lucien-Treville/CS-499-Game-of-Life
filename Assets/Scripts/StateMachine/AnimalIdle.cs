@@ -24,7 +24,7 @@ public class AnimalIdle : BaseState<AnimalStateMachine.AnimalState>
 
     public override void ExitState()
     {
-        Debug.Log("Exiting Idle");
+        //Debug.Log("Exiting Idle");
     }
 
     public override void UpdateState()

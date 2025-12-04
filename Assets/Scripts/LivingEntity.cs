@@ -16,6 +16,7 @@ public class LivingEntity : MonoBehaviour
     public double height; // in meters
     public double nourishmentValue;
     public int instanceID; // unique ID assigned by Unity
+    public double corpseHealth;
 
     // Death booleans
     public bool isDead = false;
@@ -140,6 +141,18 @@ public class LivingEntity : MonoBehaviour
             Die();
         }
 
+    }
+
+    public virtual void SufferCorpseDamage(double damage)
+    {
+        if (!isCorpse) return;
+
+        this.corpseHealth -= damage;
+
+        if (this.corpseHealth <= 0)
+        {
+            RemoveCorpse();
+        }
     }
 
     void OnDestroy()
