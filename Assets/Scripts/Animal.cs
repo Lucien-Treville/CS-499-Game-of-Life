@@ -19,7 +19,8 @@ public struct AnimalGenes
 
     public double[] nourishmentValueGene;
     public double[] movementSpeedGene;
-    public double[] reproductionChanceGene;
+    public double[] breedTimerGene;
+    public double[] litterSizeGene;
     public double[] attackStrengthGene;
     public double[] heightGene;
     public double[] healthGene;
@@ -55,13 +56,19 @@ public class Animal : LivingEntity
     public double thirstLevel; // 0-100 scale (0 = dying of thirst, 100 = quenched)
     public double sleepLevel; // 0-100 scale (0 = sleep deprived, 100 = rested)
     public double fearLevel; //0-100 scale (0 = safe, 100 = terrified) 
-    public double reproductionChance; // 0-1 scale
+   // public double reproductionChance; // 0-1 scale
     public double attackStrength;
     public bool isPredator; // true if predator
 
     public bool isBreedable = false; // true if looking to breed
     public bool isBreeding = false; // true if currently in breeding process
     public bool hasLaunchedOffspring = false;    // true after this animal initiated offspring spawn recently
+    public int litterSize; // determine size of litter when breeding
+    public int litterCounter = 0;
+    public float breedCooldown = 20f; // seconds between breedable periods
+    public float timeSinceLastBreed = 0f;
+
+
     public bool isHungry = false;
     public bool isThirsty = false;
     public bool isSleepy = false;
@@ -195,27 +202,20 @@ public class Animal : LivingEntity
                     GrowCreature();
                     // transform.localScale *= 1.15f;
                     nourishmentValue *= 1.5;
+                    this.timeSinceLastBreed = 30.0f;
                     Debug.Log($"Animal, {specieName}, (ID: {instanceID}) is now in the Adult stage.");
                 }
                 break;
             case GrowthStage.Adult:
-                isBreedable = false;
-                if (hungerLevel > 80.0 || thirstLevel > 80.0 || !isBreedable)
+                timeSinceLastBreed += Time.fixedDeltaTime;
+                if (timeSinceLastBreed >= breedCooldown && hungerLevel >= 80 && thirstLevel >= 80)
                 {
-                    double chance = reproductionChance;
-                    if (chance > 1.0) chance = chance / 100.0;
-
-                    if (Random.value < (float)chance)
-                    {
-                        isBreedable = true;
-                        //Debug.Log($"Animal, {specieName} (ID:{instanceID}) became breedable (roll={chance}).");
-                    }
-
+                    isBreedable = true;
                 }
 
-               // if (hungerLevel < hungerThreshold || thirstLevel < thirstThreshold)
+                // if (hungerLevel < hungerThreshold || thirstLevel < thirstThreshold)
                 //{
-                  //  isBreedable = false;
+                //  isBreedable = false;
                 // }
                 // Implement logic for reproduction
                 // if (hungerLevel > 80)
@@ -243,10 +243,16 @@ public class Animal : LivingEntity
                 Max(0, (p1.movementSpeedGene[1] + p2.movementSpeedGene[1]) / 2 + Dist.Normal.Sample(0, 0.05))
         };
 
-        childGenes.reproductionChanceGene = new double[]
+        childGenes.breedTimerGene = new double[]
         {
-                Max(0, (p1.reproductionChanceGene[0] + p2.reproductionChanceGene[0]) / 2 + Dist.Normal.Sample(0, 0.1)),
-                Max(0, (p1.reproductionChanceGene[1] + p2.reproductionChanceGene[1]) / 2 + Dist.Normal.Sample(0, 0.05))
+                Max(0, (p1.breedTimerGene[0] + p2.breedTimerGene[0]) / 2 + Dist.Normal.Sample(0, 0.1)),
+                Max(0, (p1.breedTimerGene[1] + p2.breedTimerGene[1]) / 2 + Dist.Normal.Sample(0, 0.05))
+        };
+
+        childGenes.litterSizeGene = new double[]
+        {
+                Max(1, (p1.litterSizeGene[0] + p2.litterSizeGene[0]) / 2 + Dist.Normal.Sample(0, 0.1)),
+                Max(0, (p1.litterSizeGene[1] + p2.litterSizeGene[1]) / 2 + Dist.Normal.Sample(0, 0.05))
         };
 
         childGenes.attackStrengthGene = new double[]
@@ -652,91 +658,96 @@ public class Animal : LivingEntity
             return;
         }
 
-        bool foundSpot = false;
-        Vector3 spawnPos = Vector3.zero;
-
-        // Try multiple random nearby candidates (same approach Plant uses)
-        for (int i = 0; i < 10; i++)
+        for (int j = 0; j < this.litterSize; j++)
         {
-            Vector2 randomCircle = Random.insideUnitCircle * 3f;
-            Vector3 candidate = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
-            candidate = mapLoader.GetValidSpawnPoint(candidate.x, candidate.z, prefab, 2);
+            bool foundSpot = false;
+            Vector3 spawnPos = Vector3.zero;
 
-            NavMeshHit hit;
-            if (!NavMesh.SamplePosition(candidate, out hit, 1.0f, NavMesh.AllAreas))
+            // Try multiple random nearby candidates (same approach Plant uses)
+            for (int i = 0; i < 10; i++)
             {
-                Debug.Log($"Breed() candidate #{i} NavMesh.SamplePosition failed at {candidate}");
+                Vector2 randomCircle = Random.insideUnitCircle * 3f;
+                Vector3 candidate = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
+                candidate = mapLoader.GetValidSpawnPoint(candidate.x, candidate.z, prefab, 2);
+
+                NavMeshHit hit;
+                if (!NavMesh.SamplePosition(candidate, out hit, 1.0f, NavMesh.AllAreas))
+                {
+                    Debug.Log($"Breed() candidate #{i} NavMesh.SamplePosition failed at {candidate}");
+                    continue;
+                }
+
+                Vector3 candidateOnNav = hit.position;
+                int mask = LayerMask.GetMask("LivingEntity");
+                bool overlap = Physics.CheckSphere(candidateOnNav, 3f, mask);
+
+                Debug.Log($"Breed() candidate #{i} pos={candidateOnNav} overlap={overlap}");
+                if (!overlap)
+                {
+                    spawnPos = candidateOnNav;
+                    foundSpot = true;
+                    break;
+                }
+            }
+
+            // Fallback to midpoint between parents if no free spot found
+            if (!foundSpot)
+            {
+                Vector3 midpoint = (parent1.transform.position + parent2.transform.position) * 0.5f;
+                NavMeshHit midHit;
+                if (NavMesh.SamplePosition(midpoint, out midHit, 5f, NavMesh.AllAreas))
+                {
+                    spawnPos = midHit.position;
+                    Debug.LogWarning($"Breed(): fallback to parents' midpoint at {spawnPos}");
+                    foundSpot = true;
+                }
+                else
+                {
+                    Debug.LogError("Breed(): no valid spawn point found; aborting spawn.");
+                    continue;
+                }
+            }
+
+            // Instantiate inactive so we can configure before child's Start/logic runs
+            GameObject childGO = Instantiate(prefab, spawnPos, Quaternion.identity);
+            childGO.SetActive(false);
+
+            // Optional: give unique name to track in logs/hierarchy
+            childGO.name = $"{prefab.name}_child_{System.DateTime.UtcNow.Ticks % 100000}_{parent1.instanceID}_{parent2.instanceID}";
+
+            // Configure Animal component
+            Animal child = childGO.GetComponent<Animal>();
+            if (child == null)
+            {
+                Debug.LogError($"Breed failed: instantiated prefab '{childGO.name}' has no Animal component.");
+                Destroy(childGO);
                 continue;
             }
 
-            Vector3 candidateOnNav = hit.position;
-            int mask = LayerMask.GetMask("LivingEntity");
-            bool overlap = Physics.CheckSphere(candidateOnNav, 3f, mask);
+            // Assign parent genes so child's Start() can average them if needed
+            child.parent1Genes = parent1.genes;
+            child.parent2Genes = parent2.genes;
 
-            Debug.Log($"Breed() candidate #{i} pos={candidateOnNav} overlap={overlap}");
-            if (!overlap)
-            {
-                spawnPos = candidateOnNav;
-                foundSpot = true;
-                break;
-            }
+            // Ensure sensible runtime defaults (prevent immediate death / invalid state)
+
+
+            // Remove any accidental parenting (prevents container cleanup from destroying children)
+            if (childGO.transform.parent != null)
+                childGO.transform.SetParent(null);
+
+            // Remove any embedded AnimalStateMachine on prefab instance (we will let child's Start create it)
+            var existingSM = childGO.GetComponent<AnimalStateMachine>();
+            if (existingSM != null) Destroy(existingSM);
+
+
+
+            childGO.SetActive(true);
+
+            if (PopulationManager.Instance != null)
+                PopulationManager.Instance.UpdateCount(this.specieName, 1);
+
+            Debug.Log($"Breed: spawned {child.specieName} (ID:{child.instanceID}, name:{childGO.name}) at {spawnPos}");
         }
-
-        // Fallback to midpoint between parents if no free spot found
-        if (!foundSpot)
-        {
-            Vector3 midpoint = (parent1.transform.position + parent2.transform.position) * 0.5f;
-            NavMeshHit midHit;
-            if (NavMesh.SamplePosition(midpoint, out midHit, 5f, NavMesh.AllAreas))
-            {
-                spawnPos = midHit.position;
-                Debug.LogWarning($"Breed(): fallback to parents' midpoint at {spawnPos}");
-                foundSpot = true;
-            }
-            else
-            {
-                Debug.LogError("Breed(): no valid spawn point found; aborting spawn.");
-                return;
-            }
-        }
-
-        // Instantiate inactive so we can configure before child's Start/logic runs
-        GameObject childGO = Instantiate(prefab, spawnPos, Quaternion.identity);
-        childGO.SetActive(false);
-
-        // Optional: give unique name to track in logs/hierarchy
-        childGO.name = $"{prefab.name}_child_{System.DateTime.UtcNow.Ticks % 100000}_{parent1.instanceID}_{parent2.instanceID}";
-
-        // Configure Animal component
-        Animal child = childGO.GetComponent<Animal>();
-        if (child == null)
-        {
-            Debug.LogError($"Breed failed: instantiated prefab '{childGO.name}' has no Animal component.");
-            Destroy(childGO);
-            return;
-        }
-
-        // Assign parent genes so child's Start() can average them if needed
-        child.parent1Genes = parent1.genes;
-        child.parent2Genes = parent2.genes;
-
-        // Ensure sensible runtime defaults (prevent immediate death / invalid state)
-
-
-        // Remove any accidental parenting (prevents container cleanup from destroying children)
-        if (childGO.transform.parent != null)
-            childGO.transform.SetParent(null);
-
-        // Remove any embedded AnimalStateMachine on prefab instance (we will let child's Start create it)
-        var existingSM = childGO.GetComponent<AnimalStateMachine>();
-        if (existingSM != null) Destroy(existingSM);
-
-        childGO.SetActive(true);
-
-        if (PopulationManager.Instance != null)
-            PopulationManager.Instance.UpdateCount(this.specieName, 1);
-
-        Debug.Log($"Breed: spawned {child.specieName} (ID:{child.instanceID}, name:{childGO.name}) at {spawnPos}");
     }
 
     void GrowCreature()
